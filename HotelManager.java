@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class HotelManager {
     private ArrayList<Hotel> hotels = new ArrayList<>();
-    
+    // hi
     public HotelManager(ArrayList<Hotel> hotels) {
         this.hotels = hotels;
     }
