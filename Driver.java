@@ -23,22 +23,20 @@ public class Driver {
         
         int option = 0, hotelSelected = 0;
         while (option != -1) {
-            option = display.displayGUI();
-            
-            if (option == 0) {
-                hotels.add(new Hotel("Resort"));
-                hotels.add(new Hotel("Besort"));
-                hotels.add(new Hotel("Desort"));
-                
-                display.displayHotels(hotels);
-                hotelSelected = display.select(hotels.size());
-                if (hotelSelected != -1)
-                    System.out.printf("Hotel: %s\n", hotels.get(hotelSelected).getName());
+            if (hotels.size() == 0) {
+                manager.createHotel();
+
+            } else {
+                option = display.displayGUI();
+
+                if (option == 0) {
+                    manager.createHotel();
+                } else if (option == 1) {
+                    System.out.printf("View hotels");
+                } else if (option == 2) {
+                    manager.manageHotels();
+                }
             }
         }
-        
-        manager.changeName("Resort", "Cesort");
-        
     }
-    
 }

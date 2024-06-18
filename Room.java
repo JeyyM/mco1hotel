@@ -12,9 +12,19 @@ package mco1;
 public class Room {
     private String name;
     private float price;
+    private boolean available;
     
     public Room(String name, float price) {
         this.name = name;
         this.price = price;
+        this.available = true;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isAvailable() {
+        return available;
     }
 }

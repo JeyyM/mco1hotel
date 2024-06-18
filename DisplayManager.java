@@ -20,26 +20,29 @@ public class DisplayManager {
     }
     
     public int select(int max) {
-        System.out.printf("Select: ");
+        System.out.printf("Select an option: ");
         int option = sc.nextInt();
+        sc.nextLine();
         
         while (option < 0 || option > max) {
             System.out.printf("Option is incorrect!\nSelect: ");
             option = sc.nextInt();
+            sc.nextLine();
         }
         
         return option - 1;
     }
     
     public int displayGUI() {
-        System.out.printf("Hotel Reservation System v4521\n");
+        System.out.printf("Hotel Management System v4521\n");
         System.out.printf("------------------------------\n");
-        System.out.printf("[1] Hotel Manager\n");
-        System.out.printf("[2] Hotel Stats\n");
-        System.out.printf("[3] Hotel Reservation\n");
+        System.out.printf("[1] Create Hotel\n");
+        System.out.printf("[2] View Hotels\n");
+        System.out.printf("[3] Manage Hotels\n");
+        System.out.printf("[4] Reserve a Hotel\n");
         System.out.printf("[0] Exit Program\n");
         
-        int option = select(4);
+        int option = select(5);
         
         return option;
     }
