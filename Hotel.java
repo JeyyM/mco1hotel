@@ -17,6 +17,7 @@ public class Hotel {
     // Changed Room to arraylist since deletion is easier
     private ArrayList<Room> rooms = new ArrayList<>();
     private int totalRooms = 0;
+    private int originalTotalRooms = 0;
     private float basePrice = 1299.0f;
     private Scanner sc = new Scanner(System.in);
     
@@ -57,11 +58,12 @@ public class Hotel {
     public void addRoom() {
         if (this.totalRooms < 50) {
             char letterID = (char) ('A' + this.totalRooms / 10);
-            int roomNumber = this.totalRooms % 10 + 1;
+            int roomNumber = this.originalTotalRooms % 10 + 1;
             String roomName = String.format("%c%02d", letterID, roomNumber);
 
-            this.rooms.add(new Room(roomName, basePrice));
+            this.rooms.add(new Room(roomName));
             this.totalRooms++;
+            this.originalTotalRooms++;
         } else {
             System.out.printf("%s is full. Unable to add more rooms.\n", this.name);
         }
@@ -70,7 +72,7 @@ public class Hotel {
 
     public void displayRooms() {
         for (int i = 0; i < this.totalRooms; i++) {
-            System.out.printf("| [%2d] %s [%c] ", i + 1, rooms.get(i).getName(), rooms.get(i).isAvailable() ? 'A' : 'X');
+            System.out.printf("| [%-2d] %s", i + 1, rooms.get(i).getName());
             if ((i + 1) % 5 == 0) {
                 System.out.printf("| \n");
             }
@@ -104,13 +106,12 @@ public class Hotel {
         return counter;
     }
 
-    public boolean checkReservations(){
-        for (int i=0; i < rooms.size(); i++){
-            if (rooms.get(i).isAvailable()){
-                return true;
-            }
-        }
-        return false;
+    public Room getRoom(int index){
+        return rooms.get(index);
     }
 
+    public boolean checkReservations(){
+
+        return false;
+    }
 }

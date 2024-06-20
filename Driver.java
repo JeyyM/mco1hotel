@@ -25,7 +25,6 @@ public class Driver {
         while (option != -1) {
             if (hotels.size() == 0) {
                 manager.createHotel();
-
             } else {
                 option = display.displayGUI();
 
@@ -35,6 +34,8 @@ public class Driver {
                     System.out.printf("View hotels");
                 } else if (option == 2) {
                     manager.manageHotels();
+                } else if (option == 3) {
+                    manager.reserveHotels();
                 }
             }
         }
