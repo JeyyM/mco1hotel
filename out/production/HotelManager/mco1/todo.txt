@@ -1,0 +1,8 @@
+Put are you sure in hotel creation, do the while viewLevel to be able to go back
+Remake baseprice change if there is a reservation
+Remove reservation
+View hotels
+validations if no hotels or no rooms
+put a break in displaycalendar2,  <> gets overruled by {}
+in between timelines in
+put press any key to continues on errors

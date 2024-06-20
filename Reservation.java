@@ -16,11 +16,13 @@ public class Reservation {
         this.endDay = endDay;
         this.endHour = endHour;
         this.dayRange = new ArrayList<>();
+        // Adds the occupied ranges for each reservation
         for (int i = startDay; i <= endDay; i++) {
             dayRange.add(i);
         }
     }
 
+    // Getters
     public ArrayList<Integer> getDayRange() {
         return dayRange;
     }

@@ -20,21 +20,27 @@ public class Driver {
         ArrayList<Hotel> hotels = new ArrayList<>();
         DisplayManager display = new DisplayManager();
         HotelManager manager = new HotelManager(hotels);
-        
-        int option = 0, hotelSelected = 0;
+
+        // Chosen menu option
+        int option = 0;
         while (option != -1) {
+            // Might remove this later
             if (hotels.size() == 0) {
                 manager.createHotel();
             } else {
                 option = display.displayGUI();
 
                 if (option == 0) {
+                    // Hotel creation
                     manager.createHotel();
                 } else if (option == 1) {
+                    // View hotel details
                     System.out.printf("View hotels");
                 } else if (option == 2) {
+                    // Rename, modify rooms, change base price, remove reservations, delete hotel
                     manager.manageHotels();
                 } else if (option == 3) {
+                    // Reserve a hotel room
                     manager.reserveHotels();
                 }
             }
