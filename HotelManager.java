@@ -307,7 +307,7 @@ public class HotelManager {
        Precondition: None
     */
     public void modifyBasePrice(Hotel chosenHotel){
-        boolean editable = !chosenHotel.checkReservations();
+        boolean editable = chosenHotel.checkReservedRooms() != 0;
         float newPrice = 0.0f;
         boolean validatePrice = true;
         int option;
@@ -594,6 +594,8 @@ public class HotelManager {
                                                                 viewLevel--;
                                                             } else if (checkOutHr <=0 || checkOutHr > 24) {
                                                                 System.out.printf("Invalid hour, please select again\n");
+                                                            } else if (checkInDay == checkOutDay && checkInHr >= checkOutHr){
+                                                                System.out.printf("Hour goes to the past, please select again\n");
                                                             } else if (!chosenRoom.checkHourAvailability(checkOutDay, checkOutHr)){
                                                                 System.out.printf("Chosen hours are occupied, please select again\n");
                                                             } else {
@@ -609,7 +611,7 @@ public class HotelManager {
                                                                 chosenRoom.displayCalendar2(checkInDay, checkOutDay);
 
                                                                 System.out.printf("Greetings %s, Are you sure you want to book these dates?\n", customerName);
-                                                                System.out.printf("It will cost you %.2f for %d days in room %s\n", (checkOutDay-checkInDay) * currentHotel.getBasePrice(), checkOutDay-checkInDay, chosenRoom.getName());
+                                                                System.out.printf("It will cost you %.2f for %d day/s in room %s\n", (checkOutDay-checkInDay+1) * currentHotel.getBasePrice(), checkOutDay-checkInDay+1, chosenRoom.getName());
 
                                                                 while (viewLevel >= 7){
                                                                     int suboption2;
@@ -621,9 +623,9 @@ public class HotelManager {
                                                                         viewLevel--;
                                                                     } else if (suboption2 == -1){
                                                                         // Reservation will now be created
-                                                                        Reservation newReservation = new Reservation(checkInDay,checkInHr, checkOutDay, checkOutHr, customerName);
+                                                                        Reservation newReservation = new Reservation(customerName, (checkOutDay-checkInDay+1) * currentHotel.getBasePrice(), checkInDay,checkInHr, checkOutDay, checkOutHr);
                                                                         chosenRoom.addReservation(newReservation);
-                                                                        System.out.printf("Reservations booked, thank you for choosing %s!\n", currentHotel.getName());
+                                                                        System.out.printf("Reservation booked, thank you for choosing %s!\n", currentHotel.getName());
                                                                         System.out.printf("Press any key to continue");
                                                                         sc.nextLine();
                                                                         viewLevel=0;
@@ -640,6 +642,43 @@ public class HotelManager {
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    public void viewHotels(){
+        for (Hotel hotel : hotels){
+            ArrayList<Room> bookedRooms = new ArrayList<>();
+            System.out.printf("Hotel name: %s\n", hotel.getName());
+            System.out.printf("Hotel base price: %s\n", hotel.getBasePrice());
+            System.out.printf("%d/%d rooms available\n",  hotel.getTotalRooms() - hotel.checkReservedRooms() ,hotel.getTotalRooms());
+
+            for (Room room : hotel.getAllRooms()){
+                if (room.getReservations().size() > 0){
+                    bookedRooms.add(room);
+                }
+            }
+
+            if (bookedRooms.size() == 0){
+                System.out.printf("     There are currently no reservations this month\n");
+                System.out.printf("     Monthly earnings: 0.00\n");
+            } else {
+                int reservationCount = 0;
+                float monthlyEarnings = 0.0f;
+
+                for (Room room : bookedRooms){
+                    for (Reservation reservation : room.getReservations()){
+                        reservationCount++;
+                        monthlyEarnings += reservation.getCost();
+                    }
+                }
+                System.out.printf("     There are currently %d reservations\n", reservationCount);
+                System.out.printf("     Monthly earnings: %f\n\n", monthlyEarnings);
+
+                System.out.printf("     Booked Rooms:");
+                for (Room room : bookedRooms){
+                    System.out.printf("         Room %s:\n", room.getName());
                 }
             }
         }

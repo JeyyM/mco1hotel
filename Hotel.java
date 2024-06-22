@@ -59,6 +59,10 @@ public class Hotel {
         return rooms.get(index);
     }
 
+    public ArrayList<Room> getAllRooms(){
+        return rooms;
+    }
+
     /* addRoom - Adds a new room, sets up naming scheme for each new room
        @param none
        @return - none, modifies rooms Arraylist
@@ -137,13 +141,18 @@ public class Hotel {
         return counter;
     }
 
-
-    public boolean checkReservations(){
+    /* checkReservations - Checks if the hotel has any reservations
+       @param none
+       @return boolean - if any room has a reservation
+       Precondition: None
+    */
+    public int checkReservedRooms(){
+        int counter = 0;
         for (Room room : this.rooms) {
             if (room.getReservationTimelineLength() != 0){
-                return false;
+                counter++;
             }
         }
-        return true;
+        return counter;
     }
 }

@@ -1,5 +1,3 @@
 Remove reservation
 View hotels
-put press any key to continues on errors
-Modify sort for same day head/tail reservations since it currently isnt caught
-Add by name to reservation
+Modify insertion sort for same day head/tail reservations since it currently isnt caught

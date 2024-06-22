@@ -3,15 +3,17 @@ package mco1;
 import java.util.ArrayList;
 
 public class Reservation {
-    String name;
+    String customerName;
     int startDay;
     int startHour;
     int endDay;
     int endHour;
+    float cost = 0.0f;
     ArrayList<Integer> dayRange;
 
-    Reservation(int startDay, int startHour, int endDay, int endHour, String name) {
-        this.name = name;
+    Reservation(String customerName, float cost, int startDay, int startHour, int endDay, int endHour) {
+        this.customerName = customerName;
+        this.cost = cost;
         this.startDay = startDay;
         this.startHour = startHour;
         this.endDay = endDay;
@@ -42,5 +44,13 @@ public class Reservation {
 
     public int getEndHour() {
         return endHour;
+    }
+
+    public float getCost(){
+        return cost;
+    }
+
+    public String getCustomerName() {
+        return customerName;
     }
 }

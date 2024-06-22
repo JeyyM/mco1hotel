@@ -26,6 +26,10 @@ public class Room {
         return name;
     }
 
+    public ArrayList<Reservation> getReservations() {
+        return reservations;
+    }
+
     public int getReservationTimelineLength() {
         return reservationTimeline.size();
     }
