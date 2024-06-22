@@ -139,7 +139,11 @@ public class Hotel {
 
 
     public boolean checkReservations(){
-
-        return false;
+        for (Room room : this.rooms) {
+            if (room.getReservationTimelineLength() != 0){
+                return false;
+            }
+        }
+        return true;
     }
 }

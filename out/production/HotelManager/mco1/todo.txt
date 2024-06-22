@@ -1,8 +1,5 @@
-Put are you sure in hotel creation, do the while viewLevel to be able to go back
-Remake baseprice change if there is a reservation
 Remove reservation
 View hotels
-validations if no hotels or no rooms
-put a break in displaycalendar2,  <> gets overruled by {}
-in between timelines in
 put press any key to continues on errors
+Modify sort for same day head/tail reservations since it currently isnt caught
+Add by name to reservation

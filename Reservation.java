@@ -10,7 +10,8 @@ public class Reservation {
     int endHour;
     ArrayList<Integer> dayRange;
 
-    Reservation(int startDay, int startHour, int endDay, int endHour) {
+    Reservation(int startDay, int startHour, int endDay, int endHour, String name) {
+        this.name = name;
         this.startDay = startDay;
         this.startHour = startHour;
         this.endDay = endDay;

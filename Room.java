@@ -26,6 +26,10 @@ public class Room {
         return name;
     }
 
+    public int getReservationTimelineLength() {
+        return reservationTimeline.size();
+    }
+
     /* printCalendarLine - prints --------------------------
        @param none
        @return - none
@@ -35,7 +39,7 @@ public class Room {
         System.out.printf("-----------------------------------------\n");
     }
 
-    /* displayCalendar - will print a 31 day calendar with markers on availability
+    /* displayCalendar - will print a 31-day calendar with markers on availability
        @param none
        @return - none
        Precondition: none
@@ -63,7 +67,7 @@ public class Room {
                 // Day is free
                 System.out.printf("| %-2d ", i);
             }
-            // To set up 7 day rows
+            // To set up 7-day rows
             if (i % 7 == 0) {
                 System.out.printf("|\n");
                 printCalendarLine();
@@ -80,7 +84,7 @@ public class Room {
        Precondition: none
     */
     public void displayCalendar2(int checkInDay, int checkOutDay) {
-        // Array of days between check in and out
+        // Array of days between check-in and check-out
         ArrayList<Integer> daysCovered = new ArrayList<>();
         for (int i = checkInDay; i <= checkOutDay; i++) {
             daysCovered.add(i);
@@ -88,38 +92,46 @@ public class Room {
 
         printCalendarLine();
 
-        // Prior reservations
+        // Print calendar with reservations and preview markers
         for (int i = 1; i <= 31; i++) {
             boolean found = false;
-            for (ArrayList<Integer> range : reservationTimeline) {
-                if (range.contains(i)) {
-                    if (range.get(0) == i || range.get(range.size() - 1) == i) {
-                        System.out.printf("|{%-2d}", i);
-                    } else {
-                        System.out.printf("|*%-2d*", i);
-                    }
-                    found = true;
-                    // To stop checking after find
-                    break;
-                }
-            }
-            if (!found) {
-                // Markers for the preview
-                if (daysCovered.contains(i)) {
-                    if (checkInDay == checkOutDay && checkInDay == i) {
-                        // If just a one day reservation
-                        System.out.printf("|<%-2d>", i);
-                    } else if (i == checkInDay) {
-                        System.out.printf("|<%-2d>", i);
-                    } else if (i == checkOutDay) {
-                        System.out.printf("|>%-2d<", i);
-                    } else {
-                        System.out.printf("|=%-2d=", i);
-                    }
+
+            // Priority check for the preview markers
+            if (daysCovered.contains(i)) {
+                if (checkInDay == checkOutDay && checkInDay == i) {
+                    // If just a one-day reservation
+                    System.out.printf("|<%-2d>", i);
+                } else if (i == checkInDay) {
+                    System.out.printf("|<%-2d>", i);
+                } else if (i == checkOutDay) {
+                    System.out.printf("|>%-2d<", i);
                 } else {
-                    System.out.printf("| %-2d ", i);
+                    System.out.printf("|=%-2d=", i);
+                }
+                found = true;
+            }
+
+            // Prior reservations
+            if (!found) {
+                for (ArrayList<Integer> range : reservationTimeline) {
+                    if (range.contains(i)) {
+                        if (range.get(0) == i || range.get(range.size() - 1) == i) {
+                            System.out.printf("|{%-2d}", i);
+                        } else {
+                            System.out.printf("|*%-2d*", i);
+                        }
+                        found = true;
+                        // To stop checking after finding a reservation
+                        break;
+                    }
                 }
             }
+
+            // If no reservation or preview marker, print day number
+            if (!found) {
+                System.out.printf("| %-2d ", i);
+            }
+
             if (i % 7 == 0) {
                 System.out.printf("|\n");
                 printCalendarLine();
@@ -128,6 +140,7 @@ public class Room {
         System.out.printf("|\n");
         printCalendarLine();
     }
+
 
     /* sortTime - Uses insertion sort to check for the first days of reservations to keep timeline linear
        @param none
@@ -149,13 +162,13 @@ public class Room {
     }
 
     /* addReservation - adds it to Room's list and adds it to the timeline
-       @param Reservation reservation - Contains all dates
+       @param Reservation newReservation - Contains all reservation details
        @return - none, adds to the list of Reservations
        Precondition: none
     */
-    public void addReservation(Reservation reservation) {
-        reservations.add(reservation);
-        reservationTimeline.add(reservation.getDayRange());
+    public void addReservation(Reservation newReservation) {
+        reservations.add(newReservation);
+        reservationTimeline.add(newReservation.getDayRange());
         // Sorts at the end
         sortTime();
     }
@@ -225,7 +238,7 @@ public class Room {
                 int startHour = reservation.getStartHour();
                 int endHour = reservation.getEndHour();
 
-                // If a reservation has the same stard and end day, it is a one-day reservation
+                // If a reservation has the same start and end day, it is a one-day reservation
                 if (reservation.getStartDay() == day && reservation.getEndDay() == day) {
                     // print limited range
                     occupiedHrs.add(startHour + "-" + endHour);

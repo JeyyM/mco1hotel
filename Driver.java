@@ -10,6 +10,7 @@ package mco1;
  * @author Job D. Trocino
  */
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Driver {
 
@@ -17,6 +18,7 @@ public class Driver {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
         ArrayList<Hotel> hotels = new ArrayList<>();
         DisplayManager display = new DisplayManager();
         HotelManager manager = new HotelManager(hotels);
@@ -25,23 +27,25 @@ public class Driver {
         int option = 0;
         while (option != -1) {
             // Might remove this later
-            if (hotels.size() == 0) {
-                manager.createHotel();
-            } else {
-                option = display.displayGUI();
+            option = display.displayGUI();
 
-                if (option == 0) {
-                    // Hotel creation
-                    manager.createHotel();
-                } else if (option == 1) {
-                    // View hotel details
-                    System.out.printf("View hotels");
-                } else if (option == 2) {
-                    // Rename, modify rooms, change base price, remove reservations, delete hotel
-                    manager.manageHotels();
-                } else if (option == 3) {
-                    // Reserve a hotel room
-                    manager.reserveHotels();
+            if (option == 0) {
+                // Hotel creation
+                manager.createHotel();
+            } else if (option == 1 && hotels.size() > 0) {
+                // View hotel details
+                System.out.printf("View hotels");
+            } else if (option == 2 && hotels.size() > 0) {
+                // Rename, modify rooms, change base price, remove reservations, delete hotel
+                manager.manageHotels();
+            } else if (option == 3 && hotels.size() > 0) {
+                // Reserve a hotel room
+                manager.reserveHotels();
+            } else {
+                if (option != -1){
+                    System.out.printf("There are currently no hotels to %s\n", option == 1 ? "view." : option == 2 ? "manage." : option == 3 ? "reserve." : "");
+                    System.out.printf("Press any key to continue");
+                    sc.nextLine();
                 }
             }
         }
