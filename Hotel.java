@@ -28,7 +28,7 @@ public class Hotel {
         this.basePrice = basePrice;
         this.totalRooms = 0;
 
-        // Loops to addRooms based on inital total
+        // Loops to addRooms based on initial total
         for (int i = 0; i < totalRooms; i++) {
             addRoom();
         }
@@ -63,6 +63,43 @@ public class Hotel {
         return rooms;
     }
 
+    public ArrayList<Room> getAllReservedRooms(){
+        ArrayList<Room> reservedRooms = new ArrayList<>();
+
+        for (Room room : this.rooms) {
+            if (room.getReservationTimelineLength() != 0){
+                reservedRooms.add(room);
+            }
+        }
+        return reservedRooms;
+    }
+
+    public ArrayList<Room> getReservedRoomsByDay(int givenDay){
+        ArrayList<Room> reservedRooms = new ArrayList<>();
+
+        for (Room room : this.rooms) {
+            if (room.checkDayAvailability(givenDay) != 1){
+                reservedRooms.add(room);
+            }
+        }
+        return reservedRooms;
+    }
+
+    /* getTotalReservationCount - Returns the number of rooms with a reservation
+       @param none
+       @return int - Number of rooms with a reservation
+       Precondition: None
+    */
+    public int getTotalReservationCount(){
+        int counter = 0;
+        for (Room room : this.rooms) {
+            if (room.getReservationTimelineLength() != 0){
+                counter++;
+            }
+        }
+        return counter;
+    }
+
     /* addRoom - Adds a new room, sets up naming scheme for each new room
        @param none
        @return - none, modifies rooms Arraylist
@@ -94,7 +131,7 @@ public class Hotel {
     */
     public void displayRooms() {
         for (int i = 0; i < this.totalRooms; i++) {
-            System.out.printf("| [%-2d] %s", i + 1, rooms.get(i).getName());
+            System.out.printf("| [%02d] %s", i + 1, rooms.get(i).getName());
             if ((i + 1) % 5 == 0) {
                 System.out.printf("| \n");
             }
@@ -141,18 +178,30 @@ public class Hotel {
         return counter;
     }
 
-    /* checkReservations - Checks if the hotel has any reservations
-       @param none
-       @return boolean - if any room has a reservation
-       Precondition: None
-    */
-    public int checkReservedRooms(){
-        int counter = 0;
-        for (Room room : this.rooms) {
-            if (room.getReservationTimelineLength() != 0){
-                counter++;
+    public boolean deleteReservation(String roomName, int startDay, int startHour){
+        boolean success = false;
+        Room chosenRoom = null;
+        Reservation chosenReservation = null;
+
+        for (Room room : rooms) {
+            if (room.getName().equals(roomName)) {
+                chosenRoom = room;
+                break;
             }
         }
-        return counter;
+
+        for (Reservation reservation : chosenRoom.getReservations()){
+            if (reservation.getStartDay() == startDay && reservation.getStartHour() == startHour){
+                chosenReservation = reservation;
+                break;
+            }
+        }
+
+        if (chosenReservation != null){
+            chosenRoom.getReservations().remove(chosenReservation);
+            success = true;
+        }
+
+        return success;
     }
 }

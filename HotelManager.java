@@ -147,7 +147,7 @@ public class HotelManager {
         sc.nextLine();
 
         while (option < 0 || option > max) {
-            System.out.printf("Option is incorrect!\nSelect: ");
+            System.out.printf("Option is invalid!\nSelect: ");
             option = sc.nextInt();
         }
 
@@ -164,7 +164,7 @@ public class HotelManager {
         boolean validateName = true;
 
         while (validateName) {
-            System.out.printf("Enter the name of the new hotel: ");
+            System.out.printf("Enter the new name of the hotel: ");
             newHotelName = sc.nextLine();
             int option;
 
@@ -179,6 +179,7 @@ public class HotelManager {
                 option = select(1);
 
                 if (option == -1){
+                    System.out.printf("Hotel name has been changed from %s to %s\n", chosenHotel.getName(), newHotelName);
                     chosenHotel.setName(newHotelName);
                 } else if (option == 0){
                     System.out.printf("Name change cancelled.\n");
@@ -307,7 +308,7 @@ public class HotelManager {
        Precondition: None
     */
     public void modifyBasePrice(Hotel chosenHotel){
-        boolean editable = chosenHotel.checkReservedRooms() != 0;
+        boolean editable = chosenHotel.getTotalReservationCount() != 0;
         float newPrice = 0.0f;
         boolean validatePrice = true;
         int option;
@@ -339,6 +340,89 @@ public class HotelManager {
                         System.out.printf("Successfully changed base price to %.2f\n", newPrice);
                         chosenHotel.setBasePrice(newPrice);
                         validatePrice = false;
+                    }
+                }
+            }
+        }
+    }
+
+    /* removeReservation - To remove a reservations from a room
+       @param Hotel chosenHotel - hotel to modify
+       @return - none, removes a reservation
+       Precondition: None
+    */
+    public void removeReservation(Hotel chosenHotel){
+        // for id counting to not have to input a room id and reservation id
+        int counter;
+        // for while menuing
+        int viewLevel = 1;
+
+        int option;
+        int suboption;
+
+        ArrayList<Room> hotelRooms = chosenHotel.getAllReservedRooms();
+        // for totalling all reservations
+        ArrayList<Reservation> hotelReservations = new ArrayList<>();
+        // reservation to delete
+        Reservation chosenReservation = null;
+
+        if (hotelRooms.size() == 0){
+            System.out.printf("There are no reservations to remove\n");
+            System.out.printf("Press any key to continue...\n");
+            sc.nextLine();
+        } else {
+            while (viewLevel >= 1){
+                System.out.printf("Select which reservation would you like to remove:\n");
+                counter = 0;
+
+                // Getting total reservations and printing them
+                for (Room room : hotelRooms){
+                    for (Reservation reservation : room.getReservations()){
+                        counter++;
+                        hotelReservations.add(reservation);
+
+                        System.out.printf("[%d] Room %s:\n", counter, reservation.getRoomName());
+                        System.out.printf("     By: %s\n", reservation.getCustomerName());
+                        System.out.printf("         Total cost: %s:\n", reservation.getCost());
+                        System.out.printf("         From Day %d at %d to Day %d on %d:\n\n", reservation.getStartDay(), reservation.getStartHour(), reservation.getEndDay(), reservation.getEndHour());
+                    }
+                }
+                System.out.printf("[0] Back\n");
+
+                option = select(hotelReservations.size());
+
+                if (option == -1){
+                    viewLevel = 0;
+                } else {
+                    viewLevel++;
+                    // will finalize deletion
+                    while (viewLevel>=2){
+                        chosenReservation = hotelReservations.get(option);
+                        System.out.printf("Are you sure you want to remove this reservation?\n");
+                        System.out.printf("Room %s:\n",chosenReservation.getRoomName());
+                        System.out.printf("     By: %s\n", chosenReservation.getCustomerName());
+                        System.out.printf("         Total cost: %s:\n", chosenReservation.getCost());
+                        System.out.printf("         From Day %d at %d to Day %d on %d:\n\n", chosenReservation.getStartDay(), chosenReservation.getStartHour(), chosenReservation.getEndDay(), chosenReservation.getEndHour());
+                        System.out.printf("[0] Yes\n");
+                        System.out.printf("[1] No\n");
+                        suboption = select(1);
+
+                        if (suboption == -1){
+                            if (chosenHotel.deleteReservation(chosenReservation.getRoomName(), chosenReservation.getStartDay(), chosenReservation.getStartHour())){
+                                hotelReservations.remove(chosenReservation);
+                                counter--;
+                                viewLevel = 1;
+                                System.out.printf("Reservation removal successful\n");
+                            } else {
+                                viewLevel = 1;
+                                System.out.printf("Error in reservation removal\n");
+                            }
+                            System.out.printf("Press any key to continue...\n");
+                            sc.nextLine();
+                        } else {
+                            viewLevel=0;
+                            System.out.printf("Reservation removal cancelled\n");
+                        }
                     }
                 }
             }
@@ -400,7 +484,7 @@ public class HotelManager {
                     } else if (suboption == 3){
                         modifyBasePrice(currentHotel);
                     } else if (suboption == 4){
-                        System.out.printf("Remove Reservation\n");
+                        removeReservation(currentHotel);
                     } else if (suboption == 5){
                         System.out.printf("Are you sure you want to delete the hotel?\n");
                         System.out.printf("This cannot be undone.\n");
@@ -611,7 +695,10 @@ public class HotelManager {
                                                                 chosenRoom.displayCalendar2(checkInDay, checkOutDay);
 
                                                                 System.out.printf("Greetings %s, Are you sure you want to book these dates?\n", customerName);
-                                                                System.out.printf("It will cost you %.2f for %d day/s in room %s\n", (checkOutDay-checkInDay+1) * currentHotel.getBasePrice(), checkOutDay-checkInDay+1, chosenRoom.getName());
+                                                                System.out.printf("It will cost you %.2f for %d %s in room %s\n", checkInDay != checkOutDay ? (checkOutDay-checkInDay) * currentHotel.getBasePrice() : currentHotel.getBasePrice(),
+                                                                                                                                  checkInDay != checkOutDay ? checkOutDay - checkInDay : 1,
+                                                                                                                                  checkInDay != checkOutDay ? "night/s" : "day",
+                                                                                                                                  chosenRoom.getName());
 
                                                                 while (viewLevel >= 7){
                                                                     int suboption2;
@@ -623,12 +710,12 @@ public class HotelManager {
                                                                         viewLevel--;
                                                                     } else if (suboption2 == -1){
                                                                         // Reservation will now be created
-                                                                        Reservation newReservation = new Reservation(customerName, (checkOutDay-checkInDay+1) * currentHotel.getBasePrice(), checkInDay,checkInHr, checkOutDay, checkOutHr);
+                                                                        Reservation newReservation = new Reservation(customerName, checkInDay != checkOutDay ? (checkOutDay-checkInDay) * currentHotel.getBasePrice() : currentHotel.getBasePrice(), checkInDay,checkInHr, checkOutDay, checkOutHr, chosenRoom.getName());
                                                                         chosenRoom.addReservation(newReservation);
                                                                         System.out.printf("Reservation booked, thank you for choosing %s!\n", currentHotel.getName());
                                                                         System.out.printf("Press any key to continue");
                                                                         sc.nextLine();
-                                                                        viewLevel=0;
+                                                                        viewLevel=1;
                                                                     }
                                                                 }
                                                             }
@@ -647,23 +734,43 @@ public class HotelManager {
         }
     }
 
+    /* viewHotels - To view the current information of a hotel such as
+                    hotel details like room count and monthly earnings
+                    room availability and reservations
+                    total reservations for the month
+       @param none
+       @return - none
+       Precondition: a hotel exists
+    */
     public void viewHotels(){
+        // hotel to be viewed
+        Hotel currentHotel = null;
+
+        // while menuing
+        int viewLevel = 1;
+        int option;
+        int hotelCount = hotels.size();
+
+        // Overview of all hotels
         for (Hotel hotel : hotels){
             ArrayList<Room> bookedRooms = new ArrayList<>();
             System.out.printf("Hotel name: %s\n", hotel.getName());
             System.out.printf("Hotel base price: %s\n", hotel.getBasePrice());
-            System.out.printf("%d/%d rooms available\n",  hotel.getTotalRooms() - hotel.checkReservedRooms() ,hotel.getTotalRooms());
+            System.out.printf("%d/%d rooms fully available\n",  hotel.getTotalRooms() - hotel.getTotalReservationCount() ,hotel.getTotalRooms());
 
+            // adds a room to the overview of a hotel
             for (Room room : hotel.getAllRooms()){
                 if (room.getReservations().size() > 0){
                     bookedRooms.add(room);
                 }
             }
 
+            // no reservations
             if (bookedRooms.size() == 0){
                 System.out.printf("     There are currently no reservations this month\n");
-                System.out.printf("     Monthly earnings: 0.00\n");
+                System.out.printf("     Monthly earnings: 0.00\n\n");
             } else {
+                // if reservations exist
                 int reservationCount = 0;
                 float monthlyEarnings = 0.0f;
 
@@ -674,11 +781,133 @@ public class HotelManager {
                     }
                 }
                 System.out.printf("     There are currently %d reservations\n", reservationCount);
-                System.out.printf("     Monthly earnings: %f\n\n", monthlyEarnings);
+                System.out.printf("     Monthly earnings: %.2f\n\n", monthlyEarnings);
+            }
 
-                System.out.printf("     Booked Rooms:");
-                for (Room room : bookedRooms){
-                    System.out.printf("         Room %s:\n", room.getName());
+            // hotel selection
+            while (viewLevel >= 1) {
+                System.out.printf("Which hotel would you like to view?\n");
+                for (int i = 0; i < hotelCount; i++) {
+                    System.out.printf("[%d] %s \n", i + 1, hotels.get(i).getName());
+                }
+                System.out.printf("[0] Exit Viewing\n");
+                option = select(hotels.size() + 1);
+
+                if (option == -1) {
+                    viewLevel = 0;
+                } else {
+                    viewLevel++;
+                    while (viewLevel >= 2) {
+                        currentHotel = hotels.get(option);
+                        int suboption1;
+
+                        System.out.printf("You chose to view hotel %s\n", currentHotel.getName());
+                        System.out.printf("[1] Check available rooms by date\n");
+                        System.out.printf("[2] Check room availability for the month\n");
+                        System.out.printf("[3] View data by reservations\n");
+                        System.out.printf("[0] Back\n");
+
+                        suboption1 = select(3);
+
+                        if (suboption1 == -1) {
+                            viewLevel--;
+                        } else if (currentHotel.getTotalRooms() == 0){
+                            // no hotels exist
+                            viewLevel--;
+                            System.out.printf("Cannot view data, there are currently 0 rooms\n");
+                            System.out.printf("Press any key to continue");
+                            sc.nextLine();
+                        } else {
+                            // hotels exist, viewing in proper
+                            viewLevel++;
+                            while (viewLevel >= 3) {
+                                // for checking room availability on a certain day
+                                if (suboption1 == 0){
+                                    int chosenDate = 0;
+                                    int availableRooms = currentHotel.getTotalRooms();
+                                    System.out.printf("Select a day from 1 to 31\n");
+                                    System.out.printf("[0] Back\n");
+
+                                    chosenDate = select(31) + 1;
+
+                                    if (chosenDate == 0) {
+                                        viewLevel--;
+                                    } else {
+                                        // Will use getReservedRoomsByDay
+                                        ArrayList<Room> reservedRooms = currentHotel.getReservedRoomsByDay(chosenDate);
+
+                                        if (reservedRooms.size() > 0){
+                                            System.out.printf("On day %d, %d/%d rooms available\n", chosenDate, availableRooms-reservedRooms.size(), availableRooms);
+                                            // Prints reserved room names
+                                            System.out.printf("%d rooms reserved:\n", reservedRooms.size());
+                                            for (Room rooms : reservedRooms){
+                                                System.out.printf("Room %s\n", rooms.getName());
+                                            }
+                                        } else {
+                                            System.out.printf("On day %d, no reservations found, %d/%d rooms available\n", chosenDate, availableRooms, availableRooms);
+                                        }
+                                    }
+                                // For checking the calendar availability of a specific room
+                                } else if (suboption1 == 1){
+                                    // room to be chosen
+                                    int chosenRoomID = 0;
+                                    Room chosenRoom = null;
+
+                                    currentHotel.displayRooms();
+                                    System.out.printf("Which room would you like to view?\n");
+                                    System.out.printf("[0] Back\n");
+
+                                    chosenRoomID = select(currentHotel.getTotalRooms());
+
+                                    if (chosenRoomID == -1){
+                                        viewLevel--;
+                                    } else {
+                                        chosenRoom = currentHotel.getRoom(chosenRoomID);
+                                        int reservationCount = chosenRoom.getReservationTimelineLength();
+                                        chosenRoom = currentHotel.getRoom(chosenRoomID);
+
+                                        // Room overview
+                                        System.out.printf("You chose room %s\n", chosenRoom.getName());
+                                        System.out.printf("Price per night: %.2f\n", currentHotel.getBasePrice());
+                                        System.out.printf("Earnings this month: %.2f\n", chosenRoom.getMonthlyEarnings());
+                                        if (reservationCount == 0){
+                                            System.out.printf("Room has 0 reservations and is fully free this month\n", chosenRoom.getName());
+                                        } else {
+                                            // show the calendar availability
+                                            chosenRoom.displayCalendar();
+                                            System.out.printf("*##* - Day is fully booked\n");
+                                            System.out.printf("{##} - Day is partially booked\n");
+                                            System.out.printf("None - Day is fully available\n");
+                                            System.out.printf("There are %d reservations this month:\n", reservationCount);
+
+                                            // displays the reservation data
+                                            chosenRoom.displayReservations();
+                                        }
+                                        System.out.printf("Press any key to continue");
+                                        sc.nextLine();
+                                    }
+                                // For viewing based only on reservations
+                                } else if (suboption1 == 2){
+                                    ArrayList<Room> reservedRooms = currentHotel.getAllReservedRooms();
+
+                                    if (reservedRooms.size() == 0){
+                                        System.out.printf("There are no reservations for hotel %s\n", currentHotel.getName());
+                                    } else {
+                                        System.out.printf("There are a total of %d reservations for hotel %s\n", currentHotel.getTotalReservationCount(), currentHotel.getName());
+
+                                        // Shows reservation for only booked rooms
+                                        for (Room room : reservedRooms){
+                                            System.out.printf("In Room %s:\n", room.getName());
+                                            room.displayReservations();
+                                        }
+                                    }
+                                    viewLevel--;
+                                    System.out.printf("Press any key to continue");
+                                    sc.nextLine();
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

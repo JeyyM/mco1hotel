@@ -1,3 +1,3 @@
 Remove reservation
-View hotels
 Modify insertion sort for same day head/tail reservations since it currently isnt caught
+put hasNextInt, etc for all validation checks

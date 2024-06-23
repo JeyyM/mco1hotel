@@ -33,7 +33,7 @@ public class DisplayManager {
 
         // Validates input limitations
         while (option < 0 || option > max) {
-            System.out.printf("Option is incorrect!\nSelect: ");
+            System.out.printf("Option is invalid!\nSelect: ");
             option = sc.nextInt();
             sc.nextLine();
         }
@@ -66,9 +66,5 @@ public class DisplayManager {
             System.out.printf("[%d] %s\n", i + 1, hotels.get(i).getName());
         }
         System.out.printf("[0] Cancel Selection\n");
-    }
-    
-    public int displayManager() {
-        return 0;
     }
 }

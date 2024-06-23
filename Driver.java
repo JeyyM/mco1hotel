@@ -26,7 +26,6 @@ public class Driver {
         // Chosen menu option
         int option = 0;
         while (option != -1) {
-            // Might remove this later
             option = display.displayGUI();
 
             if (option == 0) {
@@ -34,7 +33,7 @@ public class Driver {
                 manager.createHotel();
             } else if (option == 1 && hotels.size() > 0) {
                 // View hotel details
-                System.out.printf("View hotels");
+                manager.viewHotels();
             } else if (option == 2 && hotels.size() > 0) {
                 // Rename, modify rooms, change base price, remove reservations, delete hotel
                 manager.manageHotels();
@@ -42,6 +41,7 @@ public class Driver {
                 // Reserve a hotel room
                 manager.reserveHotels();
             } else {
+                // No hotels
                 if (option != -1){
                     System.out.printf("There are currently no hotels to %s\n", option == 1 ? "view." : option == 2 ? "manage." : option == 3 ? "reserve." : "");
                     System.out.printf("Press any key to continue");

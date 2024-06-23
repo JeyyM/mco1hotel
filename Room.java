@@ -34,6 +34,15 @@ public class Room {
         return reservationTimeline.size();
     }
 
+    public float getMonthlyEarnings(){
+        float total = 0.0f;
+        for (Reservation reservation : reservations){
+            total += reservation.getCost();
+        }
+
+        return total;
+    }
+
     /* printCalendarLine - prints --------------------------
        @param none
        @return - none
@@ -245,12 +254,12 @@ public class Room {
                 // If a reservation has the same start and end day, it is a one-day reservation
                 if (reservation.getStartDay() == day && reservation.getEndDay() == day) {
                     // print limited range
-                    occupiedHrs.add(startHour + "-" + endHour);
+                    occupiedHrs.add(startHour + " to " + endHour);
                     //The rest are for showing that it is part of a continuum
                 } else if (reservation.getStartDay() == day) {
-                    occupiedHrs.add(startHour + "-*");
+                    occupiedHrs.add(startHour + " to next day");
                 } else if (reservation.getEndDay() == day) {
-                    occupiedHrs.add("*-" + endHour);
+                    occupiedHrs.add("previous day to " + endHour);
                 }
             }
         }
@@ -291,7 +300,19 @@ public class Room {
                     }                   }
             }
         }
-
         return true;
+    }
+
+    /* displayReservations - Displays the reservation details of a room
+       @param none
+       @return none
+       Precondition: none
+    */
+    public void displayReservations(){
+        for (Reservation reservation : reservations){
+            System.out.printf("By: %s\n", reservation.getCustomerName());
+            System.out.printf("     From Day %d at %s to Day %d on %d\n", reservation.getStartDay(), reservation.getStartHour(), reservation.getEndDay(), reservation.getEndHour());
+            System.out.printf("     Total cost: %.2f\n\n", reservation.getCost());
+        }
     }
 }
