@@ -636,6 +636,7 @@ public class HotelManager {
                                         chosenRoom.displayOccupiedHours(checkInDay);
                                     }
                                     while (viewLevel >= 4){
+
                                         // For picking check-in hour
                                         int checkInHr;
 
@@ -780,22 +781,21 @@ public class HotelManager {
         int hotelCount = hotels.size();
 
         // Overview of all hotels
-        for (Hotel hotel : hotels){
-            System.out.println(hotels);
+        for (Hotel hotel : hotels) {
             ArrayList<Room> bookedRooms = new ArrayList<>();
             System.out.printf("Hotel name: %s\n", hotel.getName());
             System.out.printf("Hotel base price: %s\n", hotel.getBasePrice());
-            System.out.printf("%d/%d rooms fully available\n",  hotel.getTotalRooms() - hotel.getTotalReservationCount() ,hotel.getTotalRooms());
+            System.out.printf("%d/%d rooms fully available\n", hotel.getTotalRooms() - hotel.getTotalReservationCount(), hotel.getTotalRooms());
 
             // adds a room to the overview of a hotel
-            for (Room room : hotel.getAllRooms()){
-                if (room.getReservations().size() > 0){
+            for (Room room : hotel.getAllRooms()) {
+                if (room.getReservations().size() > 0) {
                     bookedRooms.add(room);
                 }
             }
 
             // no reservations
-            if (bookedRooms.size() == 0){
+            if (bookedRooms.size() == 0) {
                 System.out.printf("     There are currently no reservations this month\n");
                 System.out.printf("     Monthly earnings: 0.00\n\n");
             } else {
@@ -803,8 +803,8 @@ public class HotelManager {
                 int reservationCount = 0;
                 float monthlyEarnings = 0.0f;
 
-                for (Room room : bookedRooms){
-                    for (Reservation reservation : room.getReservations()){
+                for (Room room : bookedRooms) {
+                    for (Reservation reservation : room.getReservations()) {
                         reservationCount++;
                         monthlyEarnings += reservation.getCost();
                     }
@@ -812,6 +812,7 @@ public class HotelManager {
                 System.out.printf("     There are currently %d reservations\n", reservationCount);
                 System.out.printf("     Monthly earnings: %.2f\n\n", monthlyEarnings);
             }
+        }
 
             // hotel selection
             while (viewLevel >= 1) {
@@ -939,6 +940,5 @@ public class HotelManager {
                     }
                 }
             }
-        }
     }
 }
