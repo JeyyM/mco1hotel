@@ -30,6 +30,10 @@ public class Room {
         return reservations;
     }
 
+    public ArrayList<ArrayList<Integer>> getReservationTimeline() {
+        return reservationTimeline;
+    }
+
     public int getReservationTimelineLength() {
         return reservationTimeline.size();
     }
@@ -49,7 +53,7 @@ public class Room {
        Precondition: none
     */
     public void printCalendarLine(){
-        System.out.printf("-----------------------------------------\n");
+        System.out.printf("------------------------------------\n");
     }
 
     /* displayCalendar - will print a 31-day calendar with markers on availability
@@ -67,10 +71,10 @@ public class Room {
                 if (range.contains(i)) {
                     // The day is a head or tail of a reservation
                     if (range.get(0) == i || range.get(range.size()-1) == i) {
-                        System.out.printf("|{%-2d}", i);
+                        System.out.printf("|{%02d}", i);
                     } else {
                         // Fully taken days in between head and tail
-                        System.out.printf("|*%-2d*", i);
+                        System.out.printf("|*%02d*", i);
                     }
                     found = true;
                     break;
@@ -78,7 +82,7 @@ public class Room {
             }
             if (!found) {
                 // Day is free
-                System.out.printf("| %-2d ", i);
+                System.out.printf("| %02d ", i);
             }
             // To set up 7-day rows
             if (i % 7 == 0) {
@@ -113,13 +117,13 @@ public class Room {
             if (daysCovered.contains(i)) {
                 if (checkInDay == checkOutDay && checkInDay == i) {
                     // If just a one-day reservation
-                    System.out.printf("|<%-2d>", i);
+                    System.out.printf("|<%02d>", i);
                 } else if (i == checkInDay) {
-                    System.out.printf("|<%-2d>", i);
+                    System.out.printf("|<%02d>", i);
                 } else if (i == checkOutDay) {
-                    System.out.printf("|>%-2d<", i);
+                    System.out.printf("|>%02d<", i);
                 } else {
-                    System.out.printf("|=%-2d=", i);
+                    System.out.printf("|=%02d=", i);
                 }
                 found = true;
             }
@@ -129,9 +133,9 @@ public class Room {
                 for (ArrayList<Integer> range : reservationTimeline) {
                     if (range.contains(i)) {
                         if (range.get(0) == i || range.get(range.size() - 1) == i) {
-                            System.out.printf("|{%-2d}", i);
+                            System.out.printf("|{%02d}", i);
                         } else {
-                            System.out.printf("|*%-2d*", i);
+                            System.out.printf("|*%02d*", i);
                         }
                         found = true;
                         // To stop checking after finding a reservation
@@ -142,7 +146,7 @@ public class Room {
 
             // If no reservation or preview marker, print day number
             if (!found) {
-                System.out.printf("| %-2d ", i);
+                System.out.printf("| %02d ", i);
             }
 
             if (i % 7 == 0) {
@@ -156,9 +160,10 @@ public class Room {
 
 
     /* sortTime - Uses insertion sort to check for the first days of reservations to keep timeline linear
+                  Sorts the reservations by startDay
        @param none
        @return - none, sorts the array
-       Precondition: none
+       Precondition: Array must at least have 1 element
     */
     public void sortTime() {
         // Uses insertion sort
@@ -171,6 +176,17 @@ public class Room {
                 j = j - 1;
             }
             reservationTimeline.set(j + 1, key);
+        }
+
+        for (int i = 1; i < reservations.size(); i++) {
+            Reservation key = reservations.get(i);
+            int j = i - 1;
+
+            while (j >= 0 && reservations.get(j).getStartDay() > key.getStartDay()) {
+                reservations.set(j + 1, reservations.get(j));
+                j = j - 1;
+            }
+            reservations.set(j + 1, key);
         }
     }
 
@@ -204,10 +220,10 @@ public class Room {
         return 1;
     }
 
-    /* checkDayAvailability2 - Checks for days between head and tail too
+    /* checkDayAvailability2 - Checks for days between head and tail
        @param int checkInDay - Reservation tail
        @param int checkOutDay - Reservation head
-       @return int - Result code
+       @return int - Result code, -1 for a conflict, 0 for none
        Precondition: none
     */
     public int checkDayAvailability2(int checkInDay, int checkOutDay) {
@@ -215,25 +231,48 @@ public class Room {
         for (int day = checkInDay; day <= checkOutDay; day++) {
             for (ArrayList<Integer> range : reservationTimeline) {
                 if (range.contains(day)) {
-                    if (range.get(0) == day || range.get(range.size() - 1) == day) {
-                        // do nothing since head and tails can be booked
+                    if (range.get(range.size() - 1) == day) {
+                        // Day matches the end of another reservation
+                        // Allow check-in on this day if it's the start day
+                        if (day != checkInDay) {
+                            return -1;
+                        }
+                    } else if (range.get(0) == day) {
+                        // Day matches the start of another reservation
+                        // Allow check-out on this day if it's the end day
+                        if (day != checkOutDay) {
+                            return -1;
+                        }
                     } else {
+                        // Day is fully between another reservation range
                         return -1;
                     }
                 }
             }
         }
 
-        // Will validate specific days as usual
+        // Validate specific days as usual
         for (ArrayList<Integer> range : reservationTimeline) {
-            if (range.contains(checkOutDay)) {
-                if (range.get(0) == checkOutDay || range.get(range.size() - 1) == checkOutDay) {
-                    return 0;
-                }
+            if (range.contains(checkOutDay) && range.get(0) != checkOutDay) {
+                // If the checkout day is within a range and not the start of the range
                 return -1;
             }
         }
-        return 1;
+
+        return 0;
+    }
+
+    /* displayReservations - Displays the reservation details of a room
+       @param none
+       @return none
+       Precondition: none
+    */
+    public void displayReservations(){
+        for (Reservation reservation : reservations){
+            System.out.printf("By: %s\n", reservation.getCustomerName());
+            System.out.printf("     From Day %d to Day %d\n", reservation.getStartDay(), reservation.getEndDay());
+            System.out.printf("     Total cost: %.2f\n\n", reservation.getCost());
+        }
     }
 
     //MIGHT BE RETURNED FOR MCO2
@@ -304,17 +343,4 @@ public class Room {
 //        }
 //        return true;
 //    }
-
-    /* displayReservations - Displays the reservation details of a room
-       @param none
-       @return none
-       Precondition: none
-    */
-    public void displayReservations(){
-        for (Reservation reservation : reservations){
-            System.out.printf("By: %s\n", reservation.getCustomerName());
-            System.out.printf("     From Day %d to Day %d\n", reservation.getStartDay(), reservation.getEndDay());
-            System.out.printf("     Total cost: %.2f\n\n", reservation.getCost());
-        }
-    }
 }

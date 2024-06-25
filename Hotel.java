@@ -94,7 +94,7 @@ public class Hotel {
         int counter = 0;
         for (Room room : this.rooms) {
             if (room.getReservationTimelineLength() != 0){
-                counter++;
+                counter += room.getReservationTimelineLength();
             }
         }
         return counter;
@@ -178,10 +178,18 @@ public class Hotel {
         return counter;
     }
 
+    /* deleteReservation - Receives a roomName, startDay, and endDay and deletes the matching reservation and timeline item
+       @param String roomName - room name
+       @param int startDay - start day of a reservation
+       @param int endDay - end day of a reservation
+       @return boolean - If deletion is successful
+       Precondition: None
+    */
     public boolean deleteReservation(String roomName, int startDay, int endDay){
         boolean success = false;
         Room chosenRoom = null;
         Reservation chosenReservation = null;
+        ArrayList<Integer> chosenTimelineItem = null;
 
         for (Room room : rooms) {
             if (room.getName().equals(roomName)) {
@@ -197,8 +205,15 @@ public class Hotel {
             }
         }
 
+        for (ArrayList<Integer> timeline : chosenRoom.getReservationTimeline()){
+            if (timeline.get(0) == startDay && timeline.get(timeline.size() - 1) == endDay){
+                chosenTimelineItem = timeline;
+            }
+        }
+
         if (chosenReservation != null){
             chosenRoom.getReservations().remove(chosenReservation);
+            chosenRoom.getReservationTimeline().remove(chosenTimelineItem);
             success = true;
         }
 
