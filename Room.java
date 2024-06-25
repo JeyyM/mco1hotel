@@ -7,10 +7,6 @@ package mco1;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author Job D. Trocino
- */
 public class Room {
     private String name;
     private ArrayList<Reservation> reservations = new ArrayList<>();

@@ -5,16 +5,13 @@
  */
 package mco1;
 
-/**
- *
- * @author Job D. Trocino
- */
 import java.util.Scanner;
-import java.util.ArrayList;
 
+/**
+ * Holds menu used in main
+ */
 public class DisplayManager {
     private Scanner sc;
-
 
     public DisplayManager() {
         this.sc = new Scanner(System.in);
@@ -60,13 +57,5 @@ public class DisplayManager {
         int option = select(4);
         
         return option;
-    }
-    
-    public void displayHotels(ArrayList<Hotel> hotels) {
-        System.out.printf("Hotels Managed by J&J Co.\n");
-        for (int i = 0; i < hotels.size(); i++) {
-            System.out.printf("[%d] %s\n", i + 1, hotels.get(i).getName());
-        }
-        System.out.printf("[0] Cancel Selection\n");
     }
 }

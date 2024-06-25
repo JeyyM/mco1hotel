@@ -5,13 +5,15 @@
  */
 package mco1;
 
-/**
- *
- * @author Job D. Trocino
- */
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Contains a majority of methods used to modify the hotels
+ * It contains the validations and inputs gathering
+ * Mostly leaves the detailed modification of a Hotel, Room, or Reservation to
+ * their respective classes
+ */
 public class HotelManager {
     private Scanner sc = new Scanner(System.in);
 
@@ -19,11 +21,6 @@ public class HotelManager {
     private ArrayList<Hotel> hotels = new ArrayList<>();
     HotelManager(ArrayList<Hotel> hotels) {
         this.hotels = hotels;
-    }
-
-    public void printHotels() {
-        for (int i = 0; i < hotels.size(); i++)
-            System.out.printf("%s\n", hotels.get(i).getName());
     }
 
     /* checkName - For finding a previously existing name

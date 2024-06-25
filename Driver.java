@@ -5,10 +5,6 @@
  */
 package mco1;
 
-/**
- *
- * @author Job D. Trocino
- */
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,6 +12,7 @@ public class Driver {
 
     /**
      * @param args the command line arguments
+     * Holds the starting menu that calls the methods of HotelManager
      */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);

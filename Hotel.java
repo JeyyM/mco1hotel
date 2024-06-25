@@ -5,12 +5,11 @@
  */
 package mco1;
 
+import java.util.ArrayList;
+
 /**
  *
- * @author Job D. Trocino
  */
-
-import java.util.ArrayList;
 public class Hotel {
     // Hotel details
     private String name;
