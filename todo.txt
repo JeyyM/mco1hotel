@@ -1,5 +1,4 @@
-Modify insertion sort for same day head/tail reservations since it currently isnt caught
-put hasNextInt, etc for all validation checks
+put hasNextInt, etc for all validation checks might be nice
 check all inline docs, put class comments
 postconditions??
 
