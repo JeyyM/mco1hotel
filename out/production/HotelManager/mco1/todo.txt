@@ -1,3 +1,9 @@
-Remove reservation
 Modify insertion sort for same day head/tail reservations since it currently isnt caught
 put hasNextInt, etc for all validation checks
+check all inline docs, put class comments
+postconditions??
+
+use switch cases, too many ifs dummy
+
+Remove hotels.add in createhotel
+remove same day reserves

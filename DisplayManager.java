@@ -36,6 +36,8 @@ public class DisplayManager {
             System.out.printf("Option is invalid!\nSelect: ");
             option = sc.nextInt();
             sc.nextLine();
+
+            System.out.println(option);
         }
         
         return option - 1;
@@ -55,7 +57,7 @@ public class DisplayManager {
         System.out.printf("[4] Reserve a Hotel\n");
         System.out.printf("[0] Exit Program\n");
         
-        int option = select(5);
+        int option = select(4);
         
         return option;
     }

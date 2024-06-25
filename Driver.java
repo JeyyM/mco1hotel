@@ -25,23 +25,38 @@ public class Driver {
 
         // Chosen menu option
         int option = 0;
+        // Once option becomes -1, ends while
         while (option != -1) {
+            // for printing menu and asking for an input
             option = display.displayGUI();
 
             if (option == 0) {
                 // Hotel creation
                 manager.createHotel();
-            } else if (option == 1 && hotels.size() > 0) {
-                // View hotel details
-                manager.viewHotels();
-            } else if (option == 2 && hotels.size() > 0) {
-                // Rename, modify rooms, change base price, remove reservations, delete hotel
-                manager.manageHotels();
-            } else if (option == 3 && hotels.size() > 0) {
-                // Reserve a hotel room
-                manager.reserveHotels();
+            // Only triggers if more than 1 hotel
+            } else if (hotels.size() > 0){
+                switch (option){
+                    case 1:{
+                        // View hotel details
+                        manager.viewHotels();
+                        break;
+                    }
+                    case 2:{
+                        // Rename, modify rooms, change base price, remove reservations, delete hotel
+                        manager.manageHotels();
+                        break;
+                    }
+                    case 3:{
+                        // Reserve a hotel room
+                        manager.reserveHotels();
+                        break;
+                    }
+                    default:{
+                        break;
+                    }
+                }
             } else {
-                // No hotels
+                // If there are no hotels
                 if (option != -1){
                     System.out.printf("There are currently no hotels to %s\n", option == 1 ? "view." : option == 2 ? "manage." : option == 3 ? "reserve." : "");
                     System.out.printf("Press any key to continue");

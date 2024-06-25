@@ -71,22 +71,35 @@ public class HotelManager {
         float newBasePrice = 1299.0f;
         int newRoomCount = 1;
 
-        System.out.printf("There are currently: ");
-        if (hotelCount == 0) {
-            System.out.printf("no hotels.\n");
-        } else if (hotelCount == 1) {
-            System.out.printf("1 hotel.\n");
-        } else {
-            System.out.printf("%d hotels.\n", hotelCount);
+        System.out.printf("There %s currently: ", hotelCount == 1 ? "is" : "are");
+
+        switch (hotelCount){
+            case 0:{
+                System.out.printf("no hotels\n");
+                break;
+            }
+            case 1:{
+                System.out.printf("1 hotel\n");
+                break;
+            }
+
+            default:{
+                System.out.printf("%d hotels\n", hotelCount);
+                break;
+            }
         }
 
         // Name selection
         while (viewLevel == 1) {
-            System.out.printf("Enter the name of the new hotel, input blank to go back: ");
+            System.out.printf("Enter the name of the new hotel, input a blank to go back: ");
             newHotelName = sc.nextLine();
 
+            //blank input exits
             if (newHotelName.equals("")){
                 viewLevel = 0;
+                hotels.add(new Hotel("Hotel 1 Renamed", 1299.0f, 8));
+                hotels.add(new Hotel("Second Hotel", 1299.0f, 2));
+                hotels.add(new Hotel("Third Hotel !", 1299.0f, 3));
             } else {
                 if (!checkName(newHotelName)){
                     System.out.printf("Hotel name has been taken, please pick a new one\n");
@@ -164,13 +177,24 @@ public class HotelManager {
         boolean validateName = true;
 
         while (validateName) {
-            System.out.printf("Enter the new name of the hotel: ");
+            System.out.printf("Enter the new name of the hotel, input a blank to go back: ");
             newHotelName = sc.nextLine();
             int option;
 
+            // Go back
+            if (newHotelName.equals("")){
+                validateName = false;
+            } else if (newHotelName.equals(chosenHotel.getName())){
+                validateName = false;
+                System.out.printf("Hotel name is the same, cancelling change\n");
+                System.out.printf("Press any key to continue");
+                sc.nextLine();
+            }
             // Does name exist
-            if (!checkName(newHotelName)){
+            else if (!checkName(newHotelName)){
                 System.out.printf("Hotel name has been taken, please pick a new one\n");
+                System.out.printf("Press any key to continue");
+                sc.nextLine();
             } else {
                 validateName = false;
                 System.out.printf("%s is an available name, would you like to confirm the change?\n", newHotelName);
@@ -184,7 +208,6 @@ public class HotelManager {
                 } else if (option == 0){
                     System.out.printf("Name change cancelled.\n");
                 }
-
             }
         }
     }
@@ -211,10 +234,13 @@ public class HotelManager {
             if (additions == 0){
                 validateAdd = false;
                 System.out.printf("Room adding cancelled.\n");
-                // Room validation
-            } else if (chosenHotel.getTotalRooms() + additions > 50){
+                // Addition amount validation
+            } else if (checkRoomCount(additions) == -1){
+                System.out.printf("Additions can't be less than 1, please try again\n");
+            } else if (checkRoomCount(additions+chosenHotel.getTotalRooms()) == 0){
                 System.out.printf("Maximum rooms of 50 rooms exceeded, please try again\n");
             } else {
+                // Valid sum
                 System.out.printf("Are you sure you want to add %d rooms?\n", additions);
                 System.out.printf("[0] Yes\n");
                 System.out.printf("[1] No\n");
@@ -235,11 +261,11 @@ public class HotelManager {
         System.out.printf("New Room Count: %d\n", chosenHotel.getTotalRooms());
         System.out.printf("Current Rooms\n");
         chosenHotel.displayRooms();
-        System.out.printf("Press any key to continue");
+        System.out.printf("Press any key to continue\n");
         sc.nextLine();
     }
 
-    /* removeRoom - Sets up room deletions
+    /* removeRoom - Sets up room names to delete
        @param Hotel chosenHotel - hotel to modify
        @return - none, sets up for deleteRoom call
        Precondition: None
@@ -448,7 +474,7 @@ public class HotelManager {
                 System.out.printf("[%d] %s \n", i + 1, hotels.get(i).getName());
             }
             System.out.printf("[0] Exit Management\n");
-            option = select(hotels.size()+1);
+            option = select(hotels.size());
 
             if (option == -1){
                 viewLevel = 0;
@@ -459,6 +485,7 @@ public class HotelManager {
                 while (viewLevel >= 2) {
                     currentHotel = hotels.get(option);
                     System.out.printf("Current Hotel: %s\n", currentHotel.getName());
+                    System.out.printf("Room Count: %d\n", currentHotel.getTotalRooms());
                     System.out.printf("Base Price: %.2f\n", currentHotel.getBasePrice());
 
                     System.out.printf("[1] Rename Hotel\n");
@@ -486,19 +513,20 @@ public class HotelManager {
                     } else if (suboption == 4){
                         removeReservation(currentHotel);
                     } else if (suboption == 5){
+                        int suboption2;
                         System.out.printf("Are you sure you want to delete the hotel?\n");
                         System.out.printf("This cannot be undone.\n");
                         System.out.printf("[0] Yes\n");
                         System.out.printf("[1] No\n");
-                        option = select(1);
+                        suboption2 = select(1);
 
-                        if (option == -1){
+                        if (suboption2 == -1){
                             viewLevel = 0;
                             System.out.printf("Hotel has been removed.\n");
                             hotels.remove((currentHotel));
                             System.out.printf("Press any key to continue...\n");
                             sc.nextLine();
-                        } else if (option == 0){
+                        } else if (suboption2 == 0){
                             System.out.printf("Hotel deletion cancelled.\n");
                         }
                     }
@@ -753,6 +781,7 @@ public class HotelManager {
 
         // Overview of all hotels
         for (Hotel hotel : hotels){
+            System.out.println(hotels);
             ArrayList<Room> bookedRooms = new ArrayList<>();
             System.out.printf("Hotel name: %s\n", hotel.getName());
             System.out.printf("Hotel base price: %s\n", hotel.getBasePrice());
