@@ -236,72 +236,74 @@ public class Room {
         return 1;
     }
 
+    //MIGHT BE RETURNED FOR MCO2
     /* displayOccupiedHours - loops through a reserved head or tail to show taken ranges
                               since many reservations can be done as long as it is a head/tail
        @param int day - Day to check
        @return none - only prints invalid slots
        Precondition: none
     */
-    public void displayOccupiedHours(int day) {
-        ArrayList<String> occupiedHrs = new ArrayList<>();
+//    public void displayOccupiedHours(int day) {
+//        ArrayList<String> occupiedHrs = new ArrayList<>();
+//
+//        // Puts all outputs in a String array
+//        for (Reservation reservation : reservations) {
+//            if (reservation.getDayRange().contains(day)) {
+//                int startHour = reservation.getStartHour();
+//                int endHour = reservation.getEndHour();
+//
+//                // If a reservation has the same start and end day, it is a one-day reservation
+//                if (reservation.getStartDay() == day && reservation.getEndDay() == day) {
+//                    // print limited range
+//                    occupiedHrs.add(startHour + " to " + endHour);
+//                    //The rest are for showing that it is part of a continuum
+//                } else if (reservation.getStartDay() == day) {
+//                    occupiedHrs.add(startHour + " to next day");
+//                } else if (reservation.getEndDay() == day) {
+//                    occupiedHrs.add("previous day to " + endHour);
+//                }
+//            }
+//        }
+//
+//        // Will print out taken strings
+//        for (String taken : occupiedHrs) {
+//            System.out.printf("%s\n", taken);
+//        }
+//    }
 
-        // Puts all outputs in a String array
-        for (Reservation reservation : reservations) {
-            if (reservation.getDayRange().contains(day)) {
-                int startHour = reservation.getStartHour();
-                int endHour = reservation.getEndHour();
-
-                // If a reservation has the same start and end day, it is a one-day reservation
-                if (reservation.getStartDay() == day && reservation.getEndDay() == day) {
-                    // print limited range
-                    occupiedHrs.add(startHour + " to " + endHour);
-                    //The rest are for showing that it is part of a continuum
-                } else if (reservation.getStartDay() == day) {
-                    occupiedHrs.add(startHour + " to next day");
-                } else if (reservation.getEndDay() == day) {
-                    occupiedHrs.add("previous day to " + endHour);
-                }
-            }
-        }
-
-        // Will print out taken strings
-        for (String taken : occupiedHrs) {
-            System.out.printf("%s\n", taken);
-        }
-    }
-
+    //MIGHT BE RETURNED FOR MCO2
     /* checkHourAvailability - Checks for a head/tail day's hour inputs
        @param int day - Day to check
        @param int hour - Hour to check
        @return boolean - If the timeslot is valid
        Precondition: none
     */
-    public boolean checkHourAvailability(int day, int hour) {
-        for (Reservation reservation : reservations) {
-            // Checks the list of reservations timelines
-            if (reservation.getDayRange().contains(day)) {
-                int startHour = reservation.getStartHour();
-                int endHour = reservation.getEndHour();
-
-                // The remaining checks are for in between days
-                // One-days
-                if (startHour == day && endHour == day) {
-                    if (hour >= startHour && hour <= endHour) {
-                        return false;
-                    }
-                    // Continuum ends
-                } else if (reservation.getStartDay() == day) {
-                    if (hour >= startHour && hour <= 24) {
-                        return false;
-                    }
-                } else if (reservation.getEndDay() == day) {
-                    if (hour <= endHour && hour >= 0) {
-                        return false;
-                    }                   }
-            }
-        }
-        return true;
-    }
+//    public boolean checkHourAvailability(int day, int hour) {
+//        for (Reservation reservation : reservations) {
+//            // Checks the list of reservations timelines
+//            if (reservation.getDayRange().contains(day)) {
+//                int startHour = reservation.getStartHour();
+//                int endHour = reservation.getEndHour();
+//
+//                // The remaining checks are for in between days
+//                // One-days
+//                if (startHour == day && endHour == day) {
+//                    if (hour >= startHour && hour <= endHour) {
+//                        return false;
+//                    }
+//                    // Continuum ends
+//                } else if (reservation.getStartDay() == day) {
+//                    if (hour >= startHour && hour <= 24) {
+//                        return false;
+//                    }
+//                } else if (reservation.getEndDay() == day) {
+//                    if (hour <= endHour && hour >= 0) {
+//                        return false;
+//                    }                   }
+//            }
+//        }
+//        return true;
+//    }
 
     /* displayReservations - Displays the reservation details of a room
        @param none
@@ -311,7 +313,7 @@ public class Room {
     public void displayReservations(){
         for (Reservation reservation : reservations){
             System.out.printf("By: %s\n", reservation.getCustomerName());
-            System.out.printf("     From Day %d at %s to Day %d on %d\n", reservation.getStartDay(), reservation.getStartHour(), reservation.getEndDay(), reservation.getEndHour());
+            System.out.printf("     From Day %d to Day %d\n", reservation.getStartDay(), reservation.getEndDay());
             System.out.printf("     Total cost: %.2f\n\n", reservation.getCost());
         }
     }

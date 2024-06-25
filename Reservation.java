@@ -5,20 +5,18 @@ import java.util.ArrayList;
 public class Reservation {
     private String customerName;
     private int startDay;
-    private int startHour;
+//    private int startHour;
     private int endDay;
-    private int endHour;
+//    private int endHour;
     private float cost = 0.0f;
     private ArrayList<Integer> dayRange = new ArrayList<>();
     private String roomName;
 
-    Reservation(String customerName, float cost, int startDay, int startHour, int endDay, int endHour, String roomName) {
+    Reservation(String customerName, float cost, int startDay, int endDay, String roomName) {
         this.customerName = customerName;
         this.cost = cost;
         this.startDay = startDay;
-        this.startHour = startHour;
         this.endDay = endDay;
-        this.endHour = endHour;
         this.roomName = roomName;
         // Adds the occupied ranges for each reservation
         for (int i = startDay; i <= endDay; i++) {
@@ -35,17 +33,17 @@ public class Reservation {
         return this.startDay;
     }
 
-    public int getStartHour() {
-        return this.startHour;
-    }
+//    public int getStartHour() {
+//        return this.startHour;
+//    }
 
     public int getEndDay() {
         return this.endDay;
     }
 
-    public int getEndHour() {
-        return this.endHour;
-    }
+//    public int getEndHour() {
+//        return this.endHour;
+//    }
 
     public float getCost(){
         return this.cost;

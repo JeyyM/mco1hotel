@@ -410,7 +410,7 @@ public class HotelManager {
                         System.out.printf("[%d] Room %s:\n", counter, reservation.getRoomName());
                         System.out.printf("     By: %s\n", reservation.getCustomerName());
                         System.out.printf("         Total cost: %s:\n", reservation.getCost());
-                        System.out.printf("         From Day %d at %d to Day %d on %d:\n\n", reservation.getStartDay(), reservation.getStartHour(), reservation.getEndDay(), reservation.getEndHour());
+                        System.out.printf("         From Day %d to Day %d:\n\n", reservation.getStartDay(), reservation.getEndDay());
                     }
                 }
                 System.out.printf("[0] Back\n");
@@ -428,13 +428,13 @@ public class HotelManager {
                         System.out.printf("Room %s:\n",chosenReservation.getRoomName());
                         System.out.printf("     By: %s\n", chosenReservation.getCustomerName());
                         System.out.printf("         Total cost: %s:\n", chosenReservation.getCost());
-                        System.out.printf("         From Day %d at %d to Day %d on %d:\n\n", chosenReservation.getStartDay(), chosenReservation.getStartHour(), chosenReservation.getEndDay(), chosenReservation.getEndHour());
+                        System.out.printf("         From Day %d to Day %d:\n\n", chosenReservation.getStartDay(), chosenReservation.getEndDay());
                         System.out.printf("[0] Yes\n");
                         System.out.printf("[1] No\n");
                         suboption = select(1);
 
                         if (suboption == -1){
-                            if (chosenHotel.deleteReservation(chosenReservation.getRoomName(), chosenReservation.getStartDay(), chosenReservation.getStartHour())){
+                            if (chosenHotel.deleteReservation(chosenReservation.getRoomName(), chosenReservation.getStartDay(), chosenReservation.getEndDay())){
                                 hotelReservations.remove(chosenReservation);
                                 counter--;
                                 viewLevel = 1;
@@ -541,215 +541,161 @@ public class HotelManager {
    @return - none, adds a Reservation to a Room
    Precondition: a Room exists
 */
-    public void reserveHotels(){
-        // viewLevel is for while menuing
-        int viewLevel = 1;
-        Hotel currentHotel = null;
-        int hotelCount = hotels.size();
-        int option = 0;
-        Room chosenRoom = null;
+public void reserveHotels() {
+    // viewLevel is for while menuing
+    int viewLevel = 1;
+    Hotel currentHotel = null;
+    int hotelCount = hotels.size();
+    int option = 0;
+    Room chosenRoom = null;
 
-        // hotel selection
-        while (viewLevel >= 1){
-            System.out.printf("Which hotel would you like make a reservation at?\n");
-            for (int i = 0; i < hotelCount; i++) {
-                System.out.printf("[%d] %s \n", i + 1, hotels.get(i).getName());
-            }
-            System.out.printf("[0] Exit Reserving\n");
-            option = select(hotels.size()+1);
+    // hotel selection
+    while (viewLevel >= 1) {
+        System.out.printf("Which hotel would you like make a reservation at?\n");
+        for (int i = 0; i < hotelCount; i++) {
+            System.out.printf("[%d] %s \n", i + 1, hotels.get(i).getName());
+        }
+        System.out.printf("[0] Exit Reserving\n");
+        option = select(hotels.size() + 1);
 
-            if (option == -1){
-                viewLevel = 0;
-            } else {
-                viewLevel++;
-                // sets up chosen hotel
-                while (viewLevel >= 2) {
-                    currentHotel = hotels.get(option);
-                    int suboption1;
+        if (option == -1) {
+            viewLevel = 0;
+        } else {
+            viewLevel++;
+            // sets up chosen hotel
+            while (viewLevel >= 2) {
+                currentHotel = hotels.get(option);
+                int suboption1;
 
-                    // Shows list of rooms without status yet
-                    System.out.printf("Which room would you like to reserve?\n");
-                    currentHotel.displayRooms();
-                    System.out.printf("[0] Back\n");
+                // Shows list of rooms without status yet
+                System.out.printf("Which room would you like to reserve?\n");
+                currentHotel.displayRooms();
+                System.out.printf("[0] Back\n");
 
-                    suboption1 = select(currentHotel.getTotalRooms());
+                suboption1 = select(currentHotel.getTotalRooms());
 
-                    if (suboption1 == -1){
-                        viewLevel--;
-                    } else {
-                        viewLevel++;
-                        chosenRoom = currentHotel.getRoom(suboption1);
+                if (suboption1 == -1) {
+                    viewLevel--;
+                } else {
+                    viewLevel++;
+                    chosenRoom = currentHotel.getRoom(suboption1);
 
-                        // Room has been selected
-                        while (viewLevel >= 3) {
-                            String customerName = "";
-                            // checkInDay and validation
-                            int checkInDay;
-                            int availabilityStatus;
-                            boolean customerValidate = true;
+                    // Room has been selected
+                    while (viewLevel >= 3) {
+                        String customerName = "";
+                        // checkInDay and validation
+                        int checkInDay;
+                        int availabilityStatus;
+                        boolean customerValidate = true;
 
-                            while (customerValidate) {
-                                System.out.printf("What is your name: ");
-                                customerName = sc.nextLine();
+                        while (customerValidate) {
+                            System.out.printf("What is your name: ");
+                            customerName = sc.nextLine();
 
-                                if (customerName.length()==0){
-                                    System.out.printf("Invalid name, please try again \n");
-                                } else {
-                                    customerValidate = false;
-                                }
-                            }
-
-                            // Prints room's reservation calendar
-                            System.out.printf("Room %s's Reservation Calendar\n", chosenRoom.getName());
-                            chosenRoom.displayCalendar();
-                            System.out.printf("*##* - Day is fully booked\n");
-                            System.out.printf("{##} - Day is partially booked\n");
-                            System.out.printf("None - Day is fully available\n");
-                            System.out.printf("[0] Back\n\n");
-
-                            System.out.printf("Select a day to check-in: \n");
-                            // Adds +1 since select has a -1
-                            checkInDay = select(31) + 1;
-                            availabilityStatus = chosenRoom.checkDayAvailability(checkInDay);
-
-                            if (checkInDay == 0){
-                                viewLevel--;
+                            if (customerName.length() == 0) {
+                                System.out.printf("Invalid name, please try again \n");
                             } else {
-                                // No check-in on 31 allowed
-                                if (checkInDay == 31){
-                                    System.out.printf("Cannot check-in on the 31st day, please pick another\n");
-                                    System.out.printf("Press any key to continue");
-                                    sc.nextLine();
+                                customerValidate = false;
+                            }
+                        }
+
+                        // Prints room's reservation calendar
+                        System.out.printf("Room %s's Reservation Calendar\n", chosenRoom.getName());
+                        chosenRoom.displayCalendar();
+                        System.out.printf("*##* - Day is fully booked\n");
+                        System.out.printf("{##} - Day is partially booked\n");
+                        System.out.printf("None - Day is fully available\n");
+                        System.out.printf("[0] Back\n");
+
+                        System.out.printf("Select a day to check-in: \n");
+                        // Adds +1 since select has a -1
+                        checkInDay = select(31) + 1;
+                        availabilityStatus = chosenRoom.checkDayAvailability(checkInDay);
+
+                        if (checkInDay == 0) {
+                            viewLevel--;
+                        } else {
+                            // No check-in on 31 allowed
+                            if (checkInDay == 31) {
+                                System.out.printf("Cannot check-in on the 31st day, please pick another\n");
+                                System.out.printf("Press any key to continue");
+                                sc.nextLine();
                                 // taken days
-                                } else if (availabilityStatus == -1){
-                                    System.out.printf("Day is fully booked, please pick another\n");
-                                    System.out.printf("Press any key to continue");
-                                } else {
-                                    viewLevel++;
-                                    //Fully available day
-                                    if (availabilityStatus == 1){
-                                        System.out.printf("Day is fully available!\n");
-                                    } else if (availabilityStatus == 0){
-                                        // Day is a start or end of stay
-                                        System.out.printf("Day is partially available, here are the occupied hours:\n");
-                                        // Shows hour ranges of other reservations
-                                        chosenRoom.displayOccupiedHours(checkInDay);
-                                    }
-                                    while (viewLevel >= 4){
+                            } else if (availabilityStatus == -1) {
+                                System.out.printf("Day is fully booked, please pick another\n");
+                                System.out.printf("Press any key to continue");
+                            } else {
+                                viewLevel++;
+                                // Fully available day
+                                if (availabilityStatus == 1) {
+                                    System.out.printf("Day is fully available!\n");
+                                } else if (availabilityStatus == 0) {
+                                    // Day is a start or end of stay
+                                    System.out.printf("Day is partially available\n");
+                                }
+                                while (viewLevel >= 4) {
+                                    int checkOutDay;
+                                    int availabilityStatus2;
 
-                                        // For picking check-in hour
-                                        int checkInHr;
+                                    System.out.printf("Select a day to check-out (after check-in day): \n");
+                                    System.out.printf("[0] Back\n");
+                                    checkOutDay = select(31) + 1;
 
-                                        System.out.printf("Select the check-in hour (1-24)\n");
-                                        System.out.printf("[0] Back\n");
-                                        checkInHr = select(24)+1;
+                                    // Will check for day availability again but this time will catch in-betweens
+                                    availabilityStatus2 = chosenRoom.checkDayAvailability2(checkInDay, checkOutDay);
 
-                                        if (checkInHr == 0){
-                                            viewLevel--;
-                                        // Invalid hours
-                                        } else if (checkInHr < 0 || checkInHr > 24) {
-                                            System.out.printf("Invalid hour, please select again\n");
-                                            // Checks hour ranges
-                                        } else if (!chosenRoom.checkHourAvailability(checkInDay, checkInHr)){
-                                            System.out.printf("Chosen hours are occupied, please select again\n");
+                                    if (checkOutDay == 0) {
+                                        viewLevel--;
+                                    } else {
+                                        if (checkOutDay <= checkInDay) {
+                                            System.out.printf("Invalid day, check-out must be after check-in\n");
+                                            System.out.printf("Press any key to continue");
+                                            sc.nextLine();
+                                        } else if (checkOutDay == 31) {
+                                            // No check-out on 31 allowed
+                                            System.out.printf("Cannot check-out on the 31st day, please pick another\n");
+                                            System.out.printf("Press any key to continue");
+                                            sc.nextLine();
+                                        } else if (availabilityStatus2 == -1) {
+                                            // This time checks ranges of other reservations
+                                            System.out.printf("A prior reservation in that range, please pick another\n");
+                                            System.out.printf("Press any key to continue");
                                         } else {
                                             viewLevel++;
-                                            // All check-in times valid
-                                            System.out.printf("Your check-in day is %d and your check-in hour is %d\n\n", checkInDay, checkInHr);
+                                            // Final look at selection
+                                            System.out.printf("Booking dates chosen:\n");
+                                            System.out.printf("Your check-in day is %d\n\n", checkInDay);
+                                            System.out.printf("Your check-out day is %d\n\n", checkOutDay);
 
-                                            // Will show calendar with <##> for only their currently chosen check-in day
+                                            // Shows range of dates to book
                                             System.out.printf("Room %s's Reservation Calendar\n", chosenRoom.getName());
-                                            chosenRoom.displayCalendar2(checkInDay, checkInDay);
+                                            chosenRoom.displayCalendar2(checkInDay, checkOutDay);
 
-                                            while (viewLevel >= 5){
-                                                int checkOutDay;
-                                                int availabilityStatus2;
+                                            System.out.printf("Greetings %s, Are you sure you want to book these dates?\n", customerName);
+                                            System.out.printf("It will cost you %.2f for %d %s in room %s\n",
+                                                    (checkOutDay - checkInDay) * currentHotel.getBasePrice(),
+                                                    checkOutDay - checkInDay,
+                                                    "night(s)",
+                                                    chosenRoom.getName());
 
-                                                System.out.printf("Now selecting check-out day.\n");
-                                                System.out.printf("[0] Back\n\n");
-                                                checkOutDay = select(31) + 1;
+                                            while (viewLevel >= 5) {
+                                                int suboption2;
+                                                System.out.printf("[0] Yes\n");
+                                                System.out.printf("[1] No\n");
+                                                suboption2 = select(1);
 
-                                                // Will check for day availability again but this time will catch in-betweens
-                                                availabilityStatus2 = chosenRoom.checkDayAvailability2(checkInDay, checkOutDay);
-
-                                                if (checkOutDay == 0){
+                                                if (suboption2 == 0) {
                                                     viewLevel--;
-                                                } else {
-                                                    if (checkOutDay < checkInDay){
-                                                        System.out.printf("Invalid day, booking is only limited to 31 days\n");
-                                                        System.out.printf("Press any key to continue");
-                                                        sc.nextLine();
-                                                    } else if (checkOutDay == 1){
-                                                        // No check-out in first day allowed
-                                                        System.out.printf("Cannot check-out on the 1st day, please pick another\n");
-                                                        System.out.printf("Press any key to continue");
-                                                        sc.nextLine();
-                                                    } else if (availabilityStatus2 == -1){
-                                                        // This time checks ranges af other reservations
-                                                        System.out.printf("A prior reservation in that range, please pick another\n");
-                                                        System.out.printf("Press any key to continue");
-                                                    } else {
-                                                        viewLevel++;
-                                                        if (availabilityStatus2 == 1){
-                                                            System.out.printf("Day is fully available!\n");
-                                                        } else if (chosenRoom.checkDayAvailability2(checkInDay, checkOutDay) == 0){
-                                                            System.out.printf("Day is partially available, here are the occupied hours:\n");
-                                                            chosenRoom.displayOccupiedHours(checkOutDay);
-                                                        }
-                                                        while (viewLevel >= 6){
-                                                            int checkOutHr;
-
-                                                            System.out.printf("Select the check-out hour (1-24)\n");
-                                                            System.out.printf("[0] Back\n");
-                                                            checkOutHr = select(24)+1;
-
-                                                            if (checkOutHr == -1){
-                                                                viewLevel--;
-                                                            } else if (checkOutHr <=0 || checkOutHr > 24) {
-                                                                System.out.printf("Invalid hour, please select again\n");
-                                                            } else if (checkInDay == checkOutDay && checkInHr >= checkOutHr){
-                                                                System.out.printf("Hour goes to the past, please select again\n");
-                                                            } else if (!chosenRoom.checkHourAvailability(checkOutDay, checkOutHr)){
-                                                                System.out.printf("Chosen hours are occupied, please select again\n");
-                                                            } else {
-                                                                viewLevel++;
-
-                                                                // Final look at selection
-                                                                System.out.printf("Booking hours chosen:\n");
-                                                                System.out.printf("Your check-in day is %d and your check-in hour is %d\n\n", checkInDay, checkInHr);
-                                                                System.out.printf("Your check-out day is %d and your check-out hour is %d\n\n", checkOutDay, checkOutHr);
-
-                                                                // Shows range of dates to book
-                                                                System.out.printf("Room %s's Reservation Calendar\n", chosenRoom.getName());
-                                                                chosenRoom.displayCalendar2(checkInDay, checkOutDay);
-
-                                                                System.out.printf("Greetings %s, Are you sure you want to book these dates?\n", customerName);
-                                                                System.out.printf("It will cost you %.2f for %d %s in room %s\n", checkInDay != checkOutDay ? (checkOutDay-checkInDay) * currentHotel.getBasePrice() : currentHotel.getBasePrice(),
-                                                                                                                                  checkInDay != checkOutDay ? checkOutDay - checkInDay : 1,
-                                                                                                                                  checkInDay != checkOutDay ? "night/s" : "day",
-                                                                                                                                  chosenRoom.getName());
-
-                                                                while (viewLevel >= 7){
-                                                                    int suboption2;
-                                                                    System.out.printf("[0] Yes\n");
-                                                                    System.out.printf("[1] No\n");
-                                                                    suboption2 = select(1);
-
-                                                                    if (suboption2 == 0){
-                                                                        viewLevel--;
-                                                                    } else if (suboption2 == -1){
-                                                                        // Reservation will now be created
-                                                                        Reservation newReservation = new Reservation(customerName, checkInDay != checkOutDay ? (checkOutDay-checkInDay) * currentHotel.getBasePrice() : currentHotel.getBasePrice(), checkInDay,checkInHr, checkOutDay, checkOutHr, chosenRoom.getName());
-                                                                        chosenRoom.addReservation(newReservation);
-                                                                        System.out.printf("Reservation booked, thank you for choosing %s!\n", currentHotel.getName());
-                                                                        System.out.printf("Press any key to continue");
-                                                                        sc.nextLine();
-                                                                        viewLevel=1;
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
+                                                } else if (suboption2 == -1) {
+                                                    // Reservation will now be created
+                                                    Reservation newReservation = new Reservation(customerName,
+                                                            (checkOutDay - checkInDay) * currentHotel.getBasePrice(),
+                                                            checkInDay, checkOutDay, chosenRoom.getName());
+                                                    chosenRoom.addReservation(newReservation);
+                                                    System.out.printf("Reservation booked, thank you for choosing %s!\n", currentHotel.getName());
+                                                    System.out.printf("Press any key to continue");
+                                                    sc.nextLine();
+                                                    viewLevel = 1;
                                                 }
                                             }
                                         }
@@ -762,6 +708,7 @@ public class HotelManager {
             }
         }
     }
+}
 
     /* viewHotels - To view the current information of a hotel such as
                     hotel details like room count and monthly earnings
@@ -942,3 +889,228 @@ public class HotelManager {
             }
     }
 }
+
+
+// old version of reserveHotels with check in hours
+/*
+    public void reserveHotels(){
+        // viewLevel is for while menuing
+        int viewLevel = 1;
+        Hotel currentHotel = null;
+        int hotelCount = hotels.size();
+        int option = 0;
+        Room chosenRoom = null;
+
+        // hotel selection
+        while (viewLevel >= 1){
+            System.out.printf("Which hotel would you like make a reservation at?\n");
+            for (int i = 0; i < hotelCount; i++) {
+                System.out.printf("[%d] %s \n", i + 1, hotels.get(i).getName());
+            }
+            System.out.printf("[0] Exit Reserving\n");
+            option = select(hotels.size()+1);
+
+            if (option == -1){
+                viewLevel = 0;
+            } else {
+                viewLevel++;
+                // sets up chosen hotel
+                while (viewLevel >= 2) {
+                    currentHotel = hotels.get(option);
+                    int suboption1;
+
+                    // Shows list of rooms without status yet
+                    System.out.printf("Which room would you like to reserve?\n");
+                    currentHotel.displayRooms();
+                    System.out.printf("[0] Back\n");
+
+                    suboption1 = select(currentHotel.getTotalRooms());
+
+                    if (suboption1 == -1){
+                        viewLevel--;
+                    } else {
+                        viewLevel++;
+                        chosenRoom = currentHotel.getRoom(suboption1);
+
+                        // Room has been selected
+                        while (viewLevel >= 3) {
+                            String customerName = "";
+                            // checkInDay and validation
+                            int checkInDay;
+                            int availabilityStatus;
+                            boolean customerValidate = true;
+
+                            while (customerValidate) {
+                                System.out.printf("What is your name: ");
+                                customerName = sc.nextLine();
+
+                                if (customerName.length()==0){
+                                    System.out.printf("Invalid name, please try again \n");
+                                } else {
+                                    customerValidate = false;
+                                }
+                            }
+
+                            // Prints room's reservation calendar
+                            System.out.printf("Room %s's Reservation Calendar\n", chosenRoom.getName());
+                            chosenRoom.displayCalendar();
+                            System.out.printf("*##* - Day is fully booked\n");
+                            System.out.printf("{##} - Day is partially booked\n");
+                            System.out.printf("None - Day is fully available\n");
+                            System.out.printf("[0] Back\n\n");
+
+                            System.out.printf("Select a day to check-in: \n");
+                            // Adds +1 since select has a -1
+                            checkInDay = select(31) + 1;
+                            availabilityStatus = chosenRoom.checkDayAvailability(checkInDay);
+
+                            if (checkInDay == 0){
+                                viewLevel--;
+                            } else {
+                                // No check-in on 31 allowed
+                                if (checkInDay == 31){
+                                    System.out.printf("Cannot check-in on the 31st day, please pick another\n");
+                                    System.out.printf("Press any key to continue");
+                                    sc.nextLine();
+                                // taken days
+                                } else if (availabilityStatus == -1){
+                                    System.out.printf("Day is fully booked, please pick another\n");
+                                    System.out.printf("Press any key to continue");
+                                } else {
+                                    viewLevel++;
+                                    //Fully available day
+                                    if (availabilityStatus == 1){
+                                        System.out.printf("Day is fully available!\n");
+                                    } else if (availabilityStatus == 0){
+                                        // Day is a start or end of stay
+                                        System.out.printf("Day is partially available, here are the occupied hours:\n");
+                                        // Shows hour ranges of other reservations
+                                        chosenRoom.displayOccupiedHours(checkInDay);
+                                    }
+                                    while (viewLevel >= 4){
+                                        // For picking check-in hour
+                                        int checkInHr;
+
+                                        System.out.printf("Select the check-in hour (1-24)\n");
+                                        System.out.printf("[0] Back\n");
+                                        checkInHr = select(24)+1;
+
+                                        if (checkInHr == 0){
+                                            viewLevel--;
+                                        // Invalid hours
+                                        } else if (checkInHr < 0 || checkInHr > 24) {
+                                            System.out.printf("Invalid hour, please select again\n");
+                                            // Checks hour ranges
+                                        } else if (!chosenRoom.checkHourAvailability(checkInDay, checkInHr)){
+                                            System.out.printf("Chosen hours are occupied, please select again\n");
+                                        } else {
+                                            viewLevel++;
+                                            // All check-in times valid
+                                            System.out.printf("Your check-in day is %d and your check-in hour is %d\n\n", checkInDay, checkInHr);
+
+                                            // Will show calendar with <##> for only their currently chosen check-in day
+                                            System.out.printf("Room %s's Reservation Calendar\n", chosenRoom.getName());
+                                            chosenRoom.displayCalendar2(checkInDay, checkInDay);
+
+                                            while (viewLevel >= 5){
+                                                int checkOutDay;
+                                                int availabilityStatus2;
+
+                                                System.out.printf("Now selecting check-out day.\n");
+                                                System.out.printf("[0] Back\n\n");
+                                                checkOutDay = select(31) + 1;
+
+                                                // Will check for day availability again but this time will catch in-betweens
+                                                availabilityStatus2 = chosenRoom.checkDayAvailability2(checkInDay, checkOutDay);
+
+                                                if (checkOutDay == 0){
+                                                    viewLevel--;
+                                                } else {
+                                                    if (checkOutDay < checkInDay){
+                                                        System.out.printf("Invalid day, booking is only limited to 31 days\n");
+                                                        System.out.printf("Press any key to continue");
+                                                        sc.nextLine();
+                                                    } else if (checkOutDay == 1){
+                                                        // No check-out in first day allowed
+                                                        System.out.printf("Cannot check-out on the 1st day, please pick another\n");
+                                                        System.out.printf("Press any key to continue");
+                                                        sc.nextLine();
+                                                    } else if (availabilityStatus2 == -1){
+                                                        // This time checks ranges af other reservations
+                                                        System.out.printf("A prior reservation in that range, please pick another\n");
+                                                        System.out.printf("Press any key to continue");
+                                                    } else {
+                                                        viewLevel++;
+                                                        if (availabilityStatus2 == 1){
+                                                            System.out.printf("Day is fully available!\n");
+                                                        } else if (chosenRoom.checkDayAvailability2(checkInDay, checkOutDay) == 0){
+                                                            System.out.printf("Day is partially available, here are the occupied hours:\n");
+                                                            chosenRoom.displayOccupiedHours(checkOutDay);
+                                                        }
+                                                        while (viewLevel >= 6){
+                                                            int checkOutHr;
+
+                                                            System.out.printf("Select the check-out hour (1-24)\n");
+                                                            System.out.printf("[0] Back\n");
+                                                            checkOutHr = select(24)+1;
+
+                                                            if (checkOutHr == -1){
+                                                                viewLevel--;
+                                                            } else if (checkOutHr <=0 || checkOutHr > 24) {
+                                                                System.out.printf("Invalid hour, please select again\n");
+                                                            } else if (checkInDay == checkOutDay && checkInHr >= checkOutHr){
+                                                                System.out.printf("Hour goes to the past, please select again\n");
+                                                            } else if (!chosenRoom.checkHourAvailability(checkOutDay, checkOutHr)){
+                                                                System.out.printf("Chosen hours are occupied, please select again\n");
+                                                            } else {
+                                                                viewLevel++;
+
+                                                                // Final look at selection
+                                                                System.out.printf("Booking hours chosen:\n");
+                                                                System.out.printf("Your check-in day is %d and your check-in hour is %d\n\n", checkInDay, checkInHr);
+                                                                System.out.printf("Your check-out day is %d and your check-out hour is %d\n\n", checkOutDay, checkOutHr);
+
+                                                                // Shows range of dates to book
+                                                                System.out.printf("Room %s's Reservation Calendar\n", chosenRoom.getName());
+                                                                chosenRoom.displayCalendar2(checkInDay, checkOutDay);
+
+                                                                System.out.printf("Greetings %s, Are you sure you want to book these dates?\n", customerName);
+                                                                System.out.printf("It will cost you %.2f for %d %s in room %s\n", checkInDay != checkOutDay ? (checkOutDay-checkInDay) * currentHotel.getBasePrice() : currentHotel.getBasePrice(),
+                                                                                                                                  checkInDay != checkOutDay ? checkOutDay - checkInDay : 1,
+                                                                                                                                  checkInDay != checkOutDay ? "night/s" : "day",
+                                                                                                                                  chosenRoom.getName());
+
+                                                                while (viewLevel >= 7){
+                                                                    int suboption2;
+                                                                    System.out.printf("[0] Yes\n");
+                                                                    System.out.printf("[1] No\n");
+                                                                    suboption2 = select(1);
+
+                                                                    if (suboption2 == 0){
+                                                                        viewLevel--;
+                                                                    } else if (suboption2 == -1){
+                                                                        // Reservation will now be created
+                                                                        Reservation newReservation = new Reservation(customerName, checkInDay != checkOutDay ? (checkOutDay-checkInDay) * currentHotel.getBasePrice() : currentHotel.getBasePrice(), checkInDay,checkInHr, checkOutDay, checkOutHr, chosenRoom.getName());
+                                                                        chosenRoom.addReservation(newReservation);
+                                                                        System.out.printf("Reservation booked, thank you for choosing %s!\n", currentHotel.getName());
+                                                                        System.out.printf("Press any key to continue");
+                                                                        sc.nextLine();
+                                                                        viewLevel=1;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+* */

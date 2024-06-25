@@ -178,7 +178,7 @@ public class Hotel {
         return counter;
     }
 
-    public boolean deleteReservation(String roomName, int startDay, int startHour){
+    public boolean deleteReservation(String roomName, int startDay, int endDay){
         boolean success = false;
         Room chosenRoom = null;
         Reservation chosenReservation = null;
@@ -191,7 +191,7 @@ public class Hotel {
         }
 
         for (Reservation reservation : chosenRoom.getReservations()){
-            if (reservation.getStartDay() == startDay && reservation.getStartHour() == startHour){
+            if (reservation.getStartDay() == startDay && reservation.getEndDay() == endDay){
                 chosenReservation = reservation;
                 break;
             }
