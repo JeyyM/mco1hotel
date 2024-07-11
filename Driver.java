@@ -5,10 +5,6 @@
  */
 package mco1;
 
-/**
- *
- * @author Job D. Trocino
- */
 import java.util.ArrayList;
 import java.util.Scanner;
 

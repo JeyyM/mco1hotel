@@ -575,6 +575,14 @@ public class HotelManager {
                     currentHotel = hotels.get(option);
                     int suboption1;
 
+                    if (currentHotel.getTotalRooms() == 0){
+                        System.out.printf("Sorry %s, there are no rooms to reserve\n", customerName);
+                        System.out.printf("Press any key to continue\n");
+                        sc.nextLine();
+                        viewLevel = 0;
+                        break;
+                    }
+
                     // Shows list of rooms without status yet
                     System.out.printf("Which room would you like to reserve?\n");
                     currentHotel.displayRooms();

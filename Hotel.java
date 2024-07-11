@@ -200,8 +200,16 @@ public class Hotel {
             // Will set if a deletion was successful or not
             boolean found = false;
             for (int i = 0; i < this.rooms.size(); i++) {
-                // Deletes the item, will print that it successfully found a name
                 if (this.rooms.get(i).getName().equals(deleteIds[j])) {
+
+                    // Room has a reservation, can't delete
+                    if (this.rooms.get(i).getReservations().size() > 0){
+                        System.out.printf("Room with ID %s was found with at least 1 reservation, cancelling...\n", deleteIds[j]);
+                        found = true;
+                        break;
+                    }
+
+                    // Deletes the item, will print that it successfully found a name
                     System.out.printf("Room with ID %s was found, now deleting...\n", deleteIds[j]);
                     this.rooms.remove(i);
                     counter++;
