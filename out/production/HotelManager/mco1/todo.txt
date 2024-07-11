@@ -1,0 +1,10 @@
+put hasNextInt, etc for all validation checks might be nice
+check all inline docs, put class comments
+postconditions??
+
+use switch cases, too many ifs dummy
+
+Remove hotels.add in createhotel
+remove same day reserves
+
+VIEWHOTEL NOT PRINTING THE OTHERS
