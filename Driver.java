@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mco1;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -21,6 +16,9 @@ public class Driver {
         MVC_View gui = new MVC_View(hotels, manager);
         MVC_Model model = new MVC_Model(hotels, manager);
         MVC_Controller controller = new MVC_Controller(model, gui);
+
+        // the controller has to be passed on to be able to use the switchers
+        gui.setManageHotelsPanelController(controller);
 
         // Chosen menu option
         int option = 0;

@@ -22,6 +22,15 @@ public class Hotel {
     // originalTotalRooms is for maintaining name scheme
     private int totalRooms = 0;
     private int originalTotalRooms = 0;
+    private int buttonIndex;
+
+    //!!!
+    public void setIndex(int index) {
+        this.buttonIndex = index;
+    }
+    public int getIndex(){
+        return buttonIndex;
+    }
 
     // Constructor
     /**

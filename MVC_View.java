@@ -26,6 +26,12 @@ public class MVC_View extends JFrame {
         manageHotelButton.addActionListener(listener);
     }
 
+    public void setManageHotelsPanelController(MVC_Controller controller) {
+        if (manageHotelsPanel != null) {
+            manageHotelsPanel.setController(controller);
+        }
+    }
+
     MVC_View(ArrayList<Hotel> hotels, HotelManager manager) {
         super("Hotel Manager");
         this.manager = manager;

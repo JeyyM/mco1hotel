@@ -13,6 +13,9 @@ public class MVC_Controller {
     private int manageHotelsPanelWidth = 680;
     private int manageHotelsPanelHeight = 500;
 
+    private int manageSpecificHotelPanelWidth = 450;
+    private int manageSpecificHotelPanelHeight = 500;
+
     public MVC_Controller(MVC_Model model, MVC_View view) {
         this.model = model;
         this.view = view;
@@ -22,6 +25,12 @@ public class MVC_Controller {
             switchToManageHotelsPanel();
             updateManageHotelsPanel();
         });
+
+        if (view.getManageHotelsPanel() != null) {
+            view.getManageHotelsPanel().setController(this);
+        }
+
+
     }
 
     // To update the shown number
@@ -118,6 +127,7 @@ public class MVC_Controller {
         if (view.getManageHotelsPanel() == null) {
             view.setManageHotelsPanel(new ManageHotelsPanel(model.getHotels(), model.getManager()));
         }
+        view.getManageHotelsPanel().setController(this); // Ensure the controller is set
         view.getManageHotelsPanel().addBackButtonListener(e -> {
             switchToMainPanel();
         });
@@ -126,6 +136,17 @@ public class MVC_Controller {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         view.add(scrollPane, BorderLayout.CENTER);
         view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+
+    public void switchToSpecificHotelPanel(Hotel hotel) {
+        ManageSpecificHotelPanel specificHotelPanel = new ManageSpecificHotelPanel(hotel);
+        specificHotelPanel.addBackButtonListener(e -> switchToManageHotelsPanel());
+        view.getContentPane().removeAll();
+        view.add(specificHotelPanel, BorderLayout.CENTER);
+        view.setSize(manageSpecificHotelPanelWidth, manageSpecificHotelPanelHeight);
         view.setResizable(false);
         view.revalidate();
         view.repaint();
