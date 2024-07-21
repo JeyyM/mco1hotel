@@ -901,6 +901,19 @@ public class HotelManager {
                 }
             }
     }
+
+    public boolean createHotel2(String newHotelName, int newRoomCount) {
+        if (checkName(newHotelName) && checkRoomCount(newRoomCount) == 1) {
+//            hotels.add(new Hotel(newHotelName, 1299.0f, newRoomCount));
+
+            for (int i = 0; i < 3; i++){
+                hotels.add(new Hotel("hotezz zzzzz ffffffl", 1299.0f, i));
+            }
+
+            return true;
+        }
+        return false;
+    }
 }
 
 

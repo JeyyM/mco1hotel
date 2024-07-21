@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package mco1;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -18,6 +17,10 @@ public class Driver {
         ArrayList<Hotel> hotels = new ArrayList<>();
         DisplayManager display = new DisplayManager();
         HotelManager manager = new HotelManager(hotels);
+
+        MVC_View gui = new MVC_View(hotels, manager);
+        MVC_Model model = new MVC_Model(hotels, manager);
+        MVC_Controller controller = new MVC_Controller(model, gui);
 
         // Chosen menu option
         int option = 0;
