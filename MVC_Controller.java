@@ -16,6 +16,8 @@ public class MVC_Controller {
     private int manageSpecificHotelPanelWidth = 450;
     private int manageSpecificHotelPanelHeight = 500;
 
+    private ManageSpecificHotelPanel specificHotelPanel;
+
     public MVC_Controller(MVC_Model model, MVC_View view) {
         this.model = model;
         this.view = view;
@@ -23,14 +25,12 @@ public class MVC_Controller {
         view.addCreateHotelListener(e -> showCreateHotelDialog());
         view.addManageHotelListener(e -> {
             switchToManageHotelsPanel();
-            updateManageHotelsPanel();
+            updateHotels();
         });
 
         if (view.getManageHotelsPanel() != null) {
             view.getManageHotelsPanel().setController(this);
         }
-
-
     }
 
     // To update the shown number
@@ -39,7 +39,7 @@ public class MVC_Controller {
     }
 
     // For setting the hotel count in ManageHotelsPanel so MVC
-    public void updateManageHotelsPanel() {
+    public void updateHotels() {
         ManageHotelsPanel manageHotelsPanel = view.getManageHotelsPanel();
         if (manageHotelsPanel != null) {
             manageHotelsPanel.setHotels(model.getHotels());
@@ -48,68 +48,15 @@ public class MVC_Controller {
 
     /*
     For making warning pop-ups in hotel creation
-    * */
+    */
     public void showCreateHotelDialog() {
-        JDialog modal1 = new JDialog(view, "Create Hotel", true);
-        modal1.setLayout(new BorderLayout());
+        // the this:: allows you to send functions to be ran
+        Modals.showCreateHotelDialog(view, model, this::updateHotelCount, this::updateHotels);
+    }
 
-        JPanel inputArea = new JPanel(new GridLayout(3, 2, 5, 5));
-        JTextField nameEntry = new JTextField(20);
-        JTextField roomCountEntry = new JTextField(20);
-        JButton createButton = new JButton("Finish Creation");
-
-        inputArea.add(new JLabel("Hotel Name:"));
-        inputArea.add(nameEntry);
-        inputArea.add(new JLabel("Room Count:"));
-        inputArea.add(roomCountEntry);
-        // put a blank label to keep that area clear
-        inputArea.add(new JLabel());
-        inputArea.add(createButton);
-
-        createButton.addActionListener(e -> {
-            int roomCount;
-            String newName = nameEntry.getText();
-            String roomCountText = roomCountEntry.getText();
-
-            // Validations
-            if (newName.isEmpty()) {
-                JOptionPane.showMessageDialog(modal1, "Hotel name cannot be empty.", "Error", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            if (model.isNameTaken(newName)) {
-                JOptionPane.showMessageDialog(modal1, "Hotel name has been taken. Please choose another name.", "Error", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            // Valid integer string
-            try {
-                roomCount = Integer.parseInt(roomCountText);
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(modal1, "Room count must be a valid number.", "Error", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            if (!model.isValidRoomCount(roomCount)) {
-                JOptionPane.showMessageDialog(modal1, "Invalid room count. Must be between 1 and 50.", "Error", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            // Success
-            if (model.createHotel(newName, roomCount)) {
-                updateHotelCount();
-                modal1.dispose();
-                JOptionPane.showMessageDialog(view, "Hotel successfully added.", "Success", JOptionPane.INFORMATION_MESSAGE);
-                updateManageHotelsPanel(); // Call to update the ManageHotelsPanel
-            } else {
-                JOptionPane.showMessageDialog(modal1, "Failed to create hotel. Please try again.", "Error", JOptionPane.WARNING_MESSAGE);
-            }
-        });
-
-        modal1.add(inputArea, BorderLayout.CENTER);
-        modal1.pack();
-        modal1.setLocationRelativeTo(view);
-        modal1.setVisible(true);
+    public void showRenameHotelDialog(Hotel chosenHotel){
+        // the updaters are so it changes on the current panel and the hotel selection list
+        Modals.showRenameHotelDialog(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateHotels);
     }
 
     // Switchers
@@ -142,13 +89,20 @@ public class MVC_Controller {
     }
 
     public void switchToSpecificHotelPanel(Hotel hotel) {
-        ManageSpecificHotelPanel specificHotelPanel = new ManageSpecificHotelPanel(hotel);
+        specificHotelPanel = new ManageSpecificHotelPanel(hotel);
         specificHotelPanel.addBackButtonListener(e -> switchToManageHotelsPanel());
+        specificHotelPanel.addRenameHotelButtonListener(e -> showRenameHotelDialog(hotel));
         view.getContentPane().removeAll();
         view.add(specificHotelPanel, BorderLayout.CENTER);
         view.setSize(manageSpecificHotelPanelWidth, manageSpecificHotelPanelHeight);
         view.setResizable(false);
         view.revalidate();
         view.repaint();
+    }
+
+    public void updateSpecificHotelPanel() {
+        if (specificHotelPanel != null) {
+            specificHotelPanel.updateHotelInfo();
+        }
     }
 }

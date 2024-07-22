@@ -905,7 +905,6 @@ public class HotelManager {
     public boolean createHotel2(String newHotelName, int newRoomCount) {
         if (checkName(newHotelName) && checkRoomCount(newRoomCount) == 1) {
             hotels.add(new Hotel(newHotelName, 1299.0f, newRoomCount));
-
 //            for (int i = 0; i < 50; i++){
 //                hotels.add(new Hotel("hotel", 1299.0f, i));
 //            }
@@ -913,7 +912,60 @@ public class HotelManager {
         }
         return false;
     }
+
+    public void changeName2(Hotel chosenHotel, String newHotelName) {
+        chosenHotel.setName(newHotelName);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // old version of reserveHotels with check in hours

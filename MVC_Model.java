@@ -36,4 +36,8 @@ public class MVC_Model {
     public boolean isValidRoomCount(int roomCount) {
         return manager.checkRoomCount(roomCount) == 1;
     }
+
+    public void changeName(Hotel chosenHotel, String newHotelName) {
+        manager.changeName2(chosenHotel, newHotelName);
+    }
 }

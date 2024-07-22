@@ -15,6 +15,7 @@ public class ManageSpecificHotelPanel extends JPanel {
     private JButton removeReservationsButton;
     private JButton deleteHotelButton;
     private JButton backButton;
+    private JLabel managingLabel;
 
     private JPanel panelNorth = new JPanel();
     private int fullWidth = 450;
@@ -25,7 +26,6 @@ public class ManageSpecificHotelPanel extends JPanel {
     private int northLabelFontSize = 20;
 
     ManageSpecificHotelPanel(Hotel hotel) {
-        super();
         this.hotel = hotel;
         setLayout(new BorderLayout());
 
@@ -38,10 +38,10 @@ public class ManageSpecificHotelPanel extends JPanel {
         backButton.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
         panelNorth.add(backButton, BorderLayout.WEST);
 
-        JLabel labelManageHotels = new JLabel("Managing " + hotel.getName(), JLabel.CENTER);
-        labelManageHotels.setForeground(Color.WHITE);
-        labelManageHotels.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
-        panelNorth.add(labelManageHotels, BorderLayout.CENTER);
+        managingLabel = new JLabel("Managing " + hotel.getName(), JLabel.CENTER);
+        managingLabel.setForeground(Color.WHITE);
+        managingLabel.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
+        panelNorth.add(managingLabel, BorderLayout.CENTER);
 
         add(panelNorth, BorderLayout.NORTH);
 
@@ -52,6 +52,18 @@ public class ManageSpecificHotelPanel extends JPanel {
 
     public void addBackButtonListener(ActionListener listener) {
         backButton.addActionListener(listener);
+    }
+
+    public void addRenameHotelButtonListener(ActionListener listener) {
+        renameHotelButton.addActionListener(listener);
+    }
+
+    public void updateHotelInfo() {
+        managingLabel.setText("Managing " + hotel.getName()); // UPDATE THIS LINE
+        roomCountLabel.setText(String.format("Number of Rooms: %d", hotel.getTotalRooms()));
+        basePriceLabel.setText(String.format("Base Price: %.2f", hotel.getBasePrice()));
+        revalidate();
+        repaint();
     }
 
     public void initializeContent(JPanel panel) {
