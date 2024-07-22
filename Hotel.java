@@ -22,13 +22,13 @@ public class Hotel {
     // originalTotalRooms is for maintaining name scheme
     private int totalRooms = 0;
     private int originalTotalRooms = 0;
-    private int buttonIndex;
 
     //!!!
+    private int buttonIndex;
     public void setIndex(int index) {
         this.buttonIndex = index;
     }
-    public int getIndex(){
+    public int getIndex() {
         return buttonIndex;
     }
 
@@ -80,7 +80,7 @@ public class Hotel {
     * Setter for the base price of this hotel
     * @param basePrice  the new base price of this hotel; cannot be less than 100.0f
     */
-    public void setBasePrice(float basePrice){
+    public void setBasePrice(float basePrice) {
         this.basePrice = basePrice;
     }
 
@@ -97,7 +97,7 @@ public class Hotel {
     * @param index  the index of the room in the rooms ArrayList
     * @return       the specific room instance chosen
     */
-    public Room getRoom(int index){
+    public Room getRoom(int index) {
         return rooms.get(index);
     }
     
@@ -105,7 +105,7 @@ public class Hotel {
     * Getter for all the room instances of this hotel
     * @return   an ArrayList of all the room instances in this hotel
     */
-    public ArrayList<Room> getAllRooms(){
+    public ArrayList<Room> getAllRooms() {
         return rooms;
     }
 
@@ -113,11 +113,11 @@ public class Hotel {
     * Getter for all the rooms with reservations of this hotel
     * @return  an ArrayList of all the rooms with reservations in this hotel
     */
-    public ArrayList<Room> getAllReservedRooms(){
+    public ArrayList<Room> getAllReservedRooms() {
         ArrayList<Room> reservedRooms = new ArrayList<>();
 
         for (Room room : this.rooms) {
-            if (room.getReservationTimelineLength() != 0){
+            if (room.getReservationTimelineLength() != 0) {
                 reservedRooms.add(room);
             }
         }
@@ -129,11 +129,11 @@ public class Hotel {
     * @param givenDay   the selected day to check rooms with reservations on
     * @return           an ArrayList of all the rooms with reservations on a certain day
     */
-    public ArrayList<Room> getReservedRoomsByDay(int givenDay){
+    public ArrayList<Room> getReservedRoomsByDay(int givenDay) {
         ArrayList<Room> reservedRooms = new ArrayList<>();
 
         for (Room room : this.rooms) {
-            if (room.checkDayAvailability(givenDay) != 1){
+            if (room.checkDayAvailability(givenDay) != 1) {
                 reservedRooms.add(room);
             }
         }
@@ -145,10 +145,10 @@ public class Hotel {
     * with reservations in this hotel
     * @return   total number of rooms with reservations
     */
-    public int getTotalReservationCount(){
+    public int getTotalReservationCount() {
         int counter = 0;
         for (Room room : this.rooms) {
-            if (room.getReservationTimelineLength() != 0){
+            if (room.getReservationTimelineLength() != 0) {
                 counter += room.getReservationTimelineLength();
             }
         }
@@ -188,7 +188,7 @@ public class Hotel {
             }
         }
 
-        if (totalRooms % 5 != 0){
+        if (totalRooms % 5 != 0) {
             System.out.printf("|\n");
         }
     }
@@ -199,27 +199,27 @@ public class Hotel {
     * @param deleteIds  the room names of the rooms to be deleted
     * @return           the number of deleted elements
     */
-    public int deleteRooms(String[] deleteIds) {
+    public int deleteRooms(ArrayList<String> deleteIds) {
         // Totals number of deletions
         int counter = 0;
 
         // Will loop through all deleteIds
         // Then loops through whole rooms array
-        for (int j = 0; j < deleteIds.length; j++) {
+        for (int j = 0; j < deleteIds.size(); j++) {
             // Will set if a deletion was successful or not
             boolean found = false;
             for (int i = 0; i < this.rooms.size(); i++) {
-                if (this.rooms.get(i).getName().equals(deleteIds[j])) {
+                if (this.rooms.get(i).getName().equals(deleteIds.get(j))) {
 
                     // Room has a reservation, can't delete
-                    if (this.rooms.get(i).getReservations().size() > 0){
-                        System.out.printf("Room with ID %s was found with at least 1 reservation, cancelling...\n", deleteIds[j]);
+                    if (this.rooms.get(i).getReservations().size() > 0) {
+                        System.out.printf("Room with ID %s was found with at least 1 reservation, cancelling...\n", deleteIds.get(j));
                         found = true;
                         break;
                     }
 
                     // Deletes the item, will print that it successfully found a name
-                    System.out.printf("Room with ID %s was found, now deleting...\n", deleteIds[j]);
+                    System.out.printf("Room with ID %s was found, now deleting...\n", deleteIds.get(j));
                     this.rooms.remove(i);
                     counter++;
                     found = true;
@@ -229,7 +229,7 @@ public class Hotel {
             }
             // Name was not found
             if (!found) {
-                System.out.printf("Room with ID %s not found.\n", deleteIds[j]);
+                System.out.printf("Room with ID %s not found.\n", deleteIds.get(j));
             }
         }
 
@@ -246,7 +246,7 @@ public class Hotel {
     * @param endDay     the check-out date of the reservation to be deleted
     * @return           true or false if the deletion is successful or not
     */
-    public boolean deleteReservation(String roomName, int startDay, int endDay){
+    public boolean deleteReservation(String roomName, int startDay, int endDay) {
         boolean success = false;
         Room chosenRoom = null;
         Reservation chosenReservation = null;
@@ -259,20 +259,20 @@ public class Hotel {
             }
         }
 
-        for (Reservation reservation : chosenRoom.getReservations()){
-            if (reservation.getStartDay() == startDay && reservation.getEndDay() == endDay){
+        for (Reservation reservation : chosenRoom.getReservations()) {
+            if (reservation.getStartDay() == startDay && reservation.getEndDay() == endDay) {
                 chosenReservation = reservation;
                 break;
             }
         }
 
-        for (ArrayList<Integer> timeline : chosenRoom.getReservationTimeline()){
-            if (timeline.get(0) == startDay && timeline.get(timeline.size() - 1) == endDay){
+        for (ArrayList<Integer> timeline : chosenRoom.getReservationTimeline()) {
+            if (timeline.get(0) == startDay && timeline.get(timeline.size() - 1) == endDay) {
                 chosenTimelineItem = timeline;
             }
         }
 
-        if (chosenReservation != null){
+        if (chosenReservation != null) {
             chosenRoom.getReservations().remove(chosenReservation);
             chosenRoom.getReservationTimeline().remove(chosenTimelineItem);
             success = true;

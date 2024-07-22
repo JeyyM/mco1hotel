@@ -2,6 +2,7 @@ package mco1;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MVC_Controller {
     private MVC_Model model;
@@ -17,6 +18,9 @@ public class MVC_Controller {
     private int manageSpecificHotelPanelHeight = 500;
 
     private ManageSpecificHotelPanel specificHotelPanel;
+    private ShowRooms showRooms;
+
+    private String[] toDelete;
 
     public MVC_Controller(MVC_Model model, MVC_View view) {
         this.model = model;
@@ -33,6 +37,7 @@ public class MVC_Controller {
         }
     }
 
+    // Updaters
     // To update the shown number
     public void updateHotelCount() {
         view.getCurrentHotelsCount().setText(String.format("Current Hotels: %d", model.getHotelCount()));
@@ -46,6 +51,20 @@ public class MVC_Controller {
         }
     }
 
+    // To update current hotel in panel
+    public void updateSpecificHotelPanel() {
+        if (specificHotelPanel != null) {
+            specificHotelPanel.updateHotelInfo();
+        }
+    }
+
+    // To update the current rooms when in specific
+    public void updateRoomsShown() {
+        if (showRooms != null) {
+            showRooms.updateShowRoomInfo();
+        }
+    }
+
     /*
     For making warning pop-ups in hotel creation
     */
@@ -54,9 +73,26 @@ public class MVC_Controller {
         Modals.showCreateHotelDialog(view, model, this::updateHotelCount, this::updateHotels);
     }
 
-    public void showRenameHotelDialog(Hotel chosenHotel){
+    public void showRenameHotelDialog(Hotel chosenHotel) {
         // the updaters are so it changes on the current panel and the hotel selection list
         Modals.showRenameHotelDialog(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateHotels);
+    }
+
+    public void showModifyBasePriceDialog(Hotel chosenHotel) {
+        Modals.showModifyBasePriceDialog(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateHotels);
+    }
+
+    public void showAddRoomsDialog(Hotel chosenHotel) {
+        Modals.showAddRoomsDialog(view, model, chosenHotel, this::updateHotels, this::updateRoomsShown);
+    }
+
+    public int showRemoveRoomsDialog(Hotel chosenHotel, ArrayList<String> toDelete) {
+        int answer = 1;
+        if (toDelete.size() > 0) {
+            answer = Modals.showRemoveRoomsDialog(view, model, chosenHotel, toDelete, this::updateHotels, this::updateRoomsShown);
+        }
+
+        return answer;
     }
 
     // Switchers
@@ -74,7 +110,7 @@ public class MVC_Controller {
         if (view.getManageHotelsPanel() == null) {
             view.setManageHotelsPanel(new ManageHotelsPanel(model.getHotels(), model.getManager()));
         }
-        view.getManageHotelsPanel().setController(this); // Ensure the controller is set
+        view.getManageHotelsPanel().setController(this);
         view.getManageHotelsPanel().addBackButtonListener(e -> {
             switchToMainPanel();
         });
@@ -92,6 +128,8 @@ public class MVC_Controller {
         specificHotelPanel = new ManageSpecificHotelPanel(hotel);
         specificHotelPanel.addBackButtonListener(e -> switchToManageHotelsPanel());
         specificHotelPanel.addRenameHotelButtonListener(e -> showRenameHotelDialog(hotel));
+        specificHotelPanel.addModifyRoomsButtonListener(e -> switchToShowRooms(hotel));
+        specificHotelPanel.addModifyBasePriceButtonListener(e -> showModifyBasePriceDialog(hotel));
         view.getContentPane().removeAll();
         view.add(specificHotelPanel, BorderLayout.CENTER);
         view.setSize(manageSpecificHotelPanelWidth, manageSpecificHotelPanelHeight);
@@ -100,9 +138,21 @@ public class MVC_Controller {
         view.repaint();
     }
 
-    public void updateSpecificHotelPanel() {
-        if (specificHotelPanel != null) {
-            specificHotelPanel.updateHotelInfo();
-        }
+    public void switchToShowRooms(Hotel hotel) {
+        showRooms = new ShowRooms(hotel);
+        showRooms.addBackButtonListener(e -> switchToSpecificHotelPanel(hotel));
+        showRooms.addAddButtonListener(e -> showAddRoomsDialog(hotel));
+        showRooms.addRemoveButtonListener(e -> {
+            if (showRemoveRoomsDialog(hotel, showRooms.getToDelete()) == 0){
+                showRooms.resetRemove();
+            }
+        });
+
+        view.getContentPane().removeAll();
+        view.add(showRooms, BorderLayout.CENTER);
+        view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
     }
 }

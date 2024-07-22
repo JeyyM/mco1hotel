@@ -39,7 +39,7 @@ public class Driver {
                 manager.reserveHotels();
             } else {
                 // No hotels
-                if (option != -1){
+                if (option != -1) {
                     System.out.printf("There are currently no hotels to %s\n", option == 1 ? "view." : option == 2 ? "manage." : option == 3 ? "reserve." : "");
                     System.out.printf("Press any key to continue");
                     sc.nextLine();

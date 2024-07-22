@@ -16,6 +16,15 @@ public class Room {
     private ArrayList<Reservation> reservations = new ArrayList<>();
     // Sorted list of Reservation AL to keep a linear timeline
     ArrayList<ArrayList<Integer>> reservationTimeline = new ArrayList<>();
+
+    //!!!
+    private int buttonIndex;
+    public void setIndex(int index) {
+        this.buttonIndex = index;
+    }
+    public int getIndex() {
+        return buttonIndex;
+    }
     
     /**
     * Constructor for Room
@@ -63,9 +72,9 @@ public class Room {
     * Computes and returns the monthly earnings of the room
     * @return   total amount of earnings of the room
     */
-    public float getMonthlyEarnings(){
+    public float getMonthlyEarnings() {
         float total = 0.0f;
-        for (Reservation reservation : reservations){
+        for (Reservation reservation : reservations) {
             total += reservation.getCost();
         }
 
@@ -75,7 +84,7 @@ public class Room {
     /**
     * Prints --------------------------
     */
-    public void printCalendarLine(){
+    public void printCalendarLine() {
         System.out.printf("------------------------------------\n");
     }
 
@@ -280,8 +289,8 @@ public class Room {
     /**
     * Displays the reservation details of a room
     */
-    public void displayReservations(){
-        for (Reservation reservation : reservations){
+    public void displayReservations() {
+        for (Reservation reservation : reservations) {
             System.out.printf("By: %s\n", reservation.getCustomerName());
             System.out.printf("     From Day %d to Day %d\n", reservation.getStartDay(), reservation.getEndDay());
             System.out.printf("     Total cost: %.2f\n\n", reservation.getCost());

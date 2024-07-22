@@ -20,7 +20,7 @@ public class MVC_Model {
         return hotels;
     }
 
-    public HotelManager getManager(){
+    public HotelManager getManager() {
         return manager;
     }
 
@@ -39,5 +39,13 @@ public class MVC_Model {
 
     public void changeName(Hotel chosenHotel, String newHotelName) {
         manager.changeName2(chosenHotel, newHotelName);
+    }
+
+    public void addRooms(Hotel chosenHotel, int newAdds) {
+        manager.addRooms2(chosenHotel, newAdds);
+    }
+
+    public void modifyBasePrice(Hotel chosenHotel, float basePrice) {
+        manager.modifyBasePrice2(chosenHotel, basePrice);
     }
 }

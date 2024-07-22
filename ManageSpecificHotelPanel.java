@@ -9,8 +9,7 @@ public class ManageSpecificHotelPanel extends JPanel {
     private JLabel roomCountLabel;
     private JLabel basePriceLabel;
     private JButton renameHotelButton;
-    private JButton addRoomsButton;
-    private JButton removeRoomsButton;
+    private JButton modifyRoomsButton;
     private JButton modifyBasePriceButton;
     private JButton removeReservationsButton;
     private JButton deleteHotelButton;
@@ -58,8 +57,16 @@ public class ManageSpecificHotelPanel extends JPanel {
         renameHotelButton.addActionListener(listener);
     }
 
+    public void addModifyRoomsButtonListener(ActionListener listener) {
+        modifyRoomsButton.addActionListener(listener);
+    }
+
+    public void addModifyBasePriceButtonListener(ActionListener listener) {
+        modifyBasePriceButton.addActionListener(listener);
+    }
+
     public void updateHotelInfo() {
-        managingLabel.setText("Managing " + hotel.getName()); // UPDATE THIS LINE
+        managingLabel.setText("Managing " + hotel.getName());
         roomCountLabel.setText(String.format("Number of Rooms: %d", hotel.getTotalRooms()));
         basePriceLabel.setText(String.format("Base Price: %.2f", hotel.getBasePrice()));
         revalidate();
@@ -83,15 +90,13 @@ public class ManageSpecificHotelPanel extends JPanel {
 
         // Add buttons to the button panel
         renameHotelButton = new JButton("Rename Hotel");
-        addRoomsButton = new JButton("Add Rooms");
-        removeRoomsButton = new JButton("Remove Rooms");
+        modifyRoomsButton = new JButton("Modify Rooms");
         modifyBasePriceButton = new JButton("Modify Base Price");
         removeReservationsButton = new JButton("Remove Reservations");
         deleteHotelButton = new JButton("Delete Hotel");
 
         buttonPanel.add(renameHotelButton);
-        buttonPanel.add(addRoomsButton);
-        buttonPanel.add(removeRoomsButton);
+        buttonPanel.add(modifyRoomsButton);
         buttonPanel.add(modifyBasePriceButton);
         buttonPanel.add(removeReservationsButton);
         buttonPanel.add(deleteHotelButton);

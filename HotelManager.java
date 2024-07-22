@@ -36,7 +36,7 @@ public class HotelManager {
     public boolean checkName(String givenName) {
         int hotelCount = hotels.size();
             for (int i = 0; i < hotelCount; i++) {
-                if (hotels.get(i).getName().equals(givenName)){
+                if (hotels.get(i).getName().equals(givenName)) {
                     return false;
                 }
         }
@@ -48,10 +48,10 @@ public class HotelManager {
     * @param givenRoomCount     Number to validate
     * @return                   Error code
     */
-    public int checkRoomCount(int givenRoomCount){
-        if (givenRoomCount < 1){
+    public int checkRoomCount(int givenRoomCount) {
+        if (givenRoomCount < 1) {
             return -1;
-        } else if (givenRoomCount > 50){
+        } else if (givenRoomCount > 50) {
             return 0;
         }
         return 1;
@@ -61,7 +61,7 @@ public class HotelManager {
     * For creating a hotel to be stored in the manager,
     * contains all the processes and constructors for a Hotel
     */
-    public void createHotel(){
+    public void createHotel() {
         // Validations for while loops
         int viewLevel = 1;
 
@@ -74,7 +74,7 @@ public class HotelManager {
 
         System.out.printf("There %s currently: ", hotelCount == 1 ? "is" : "are");
 
-        switch (hotelCount){
+        switch (hotelCount) {
             case 0:{
                 System.out.printf("no hotels\n");
                 break;
@@ -96,10 +96,10 @@ public class HotelManager {
             newHotelName = sc.nextLine();
 
             //blank input exits
-            if (newHotelName.equals("")){
+            if (newHotelName.equals("")) {
                 viewLevel = 0;
             } else {
-                if (!checkName(newHotelName)){
+                if (!checkName(newHotelName)) {
                     System.out.printf("Hotel name has been taken, please pick a new one\n");
                 } else {
                     viewLevel++;
@@ -109,11 +109,11 @@ public class HotelManager {
                         newRoomCount = sc.nextInt();
                         sc.nextLine();
 
-                        if (newRoomCount == 0){
+                        if (newRoomCount == 0) {
                             viewLevel--;
-                        } else if (checkRoomCount(newRoomCount) == -1){
+                        } else if (checkRoomCount(newRoomCount) == -1) {
                             System.out.printf("Invalid choice, room count must be positive\n");
-                        } else if (checkRoomCount(newRoomCount) == 0){
+                        } else if (checkRoomCount(newRoomCount) == 0) {
                             System.out.printf("Invalid choice, maximum of 50 rooms\n");
                         } else {
                             viewLevel++;
@@ -126,7 +126,7 @@ public class HotelManager {
                                 System.out.printf("[1] No\n");
                                 int option = select(1);
 
-                                if (option == -1){
+                                if (option == -1) {
                                     // adds hotel at the end
                                     hotels.add(new Hotel(newHotelName, 1299.0f, newRoomCount));
                                     viewLevel=0;
@@ -135,7 +135,7 @@ public class HotelManager {
                                     System.out.printf("Press any key to continue\n");
                                     sc.nextLine();
 
-                                } else if (option == 0){
+                                } else if (option == 0) {
                                     viewLevel--;
                                 }
                             }
@@ -179,16 +179,16 @@ public class HotelManager {
             int option;
 
             // Go back
-            if (newHotelName.equals("")){
+            if (newHotelName.equals("")) {
                 validateName = false;
-            } else if (newHotelName.equals(chosenHotel.getName())){
+            } else if (newHotelName.equals(chosenHotel.getName())) {
                 validateName = false;
                 System.out.printf("Hotel name is the same, cancelling change\n");
                 System.out.printf("Press any key to continue\n");
                 sc.nextLine();
             }
             // Does name exist
-            else if (!checkName(newHotelName)){
+            else if (!checkName(newHotelName)) {
                 System.out.printf("Hotel name has been taken, please pick a new one\n");
                 System.out.printf("Press any key to continue\n");
                 sc.nextLine();
@@ -199,10 +199,10 @@ public class HotelManager {
                 System.out.printf("[1] No\n");
                 option = select(1);
 
-                if (option == -1){
+                if (option == -1) {
                     System.out.printf("Hotel name has been changed from %s to %s\n", chosenHotel.getName(), newHotelName);
                     chosenHotel.setName(newHotelName);
-                } else if (option == 0){
+                } else if (option == 0) {
                     System.out.printf("Name change cancelled.\n");
                 }
             }
@@ -213,7 +213,7 @@ public class HotelManager {
     * Adds one or more rooms to the room ArrayList in the chosen hotel, contains all validations
     * @param chosenHotel    hotel that the room/s will be added to
     */
-    public void addRooms(Hotel chosenHotel){
+    public void addRooms(Hotel chosenHotel) {
         int additions;
         boolean validateAdd = true;
         int option;
@@ -223,17 +223,17 @@ public class HotelManager {
         System.out.printf("Current Rooms\n");
         chosenHotel.displayRooms();
 
-        while (validateAdd){
+        while (validateAdd) {
             System.out.printf("How many rooms would you like to add (0 to cancel): ");
             additions = sc.nextInt();
 
-            if (additions == 0){
+            if (additions == 0) {
                 validateAdd = false;
                 System.out.printf("Room adding cancelled.\n");
                 // Addition amount validation
-            } else if (checkRoomCount(additions) == -1){
+            } else if (checkRoomCount(additions) == -1) {
                 System.out.printf("Additions can't be less than 1, please try again\n");
-            } else if (checkRoomCount(additions+chosenHotel.getTotalRooms()) == 0){
+            } else if (checkRoomCount(additions+chosenHotel.getTotalRooms()) == 0) {
                 System.out.printf("Maximum rooms of 50 rooms exceeded, please try again\n");
             } else {
                 // Valid sum
@@ -242,7 +242,7 @@ public class HotelManager {
                 System.out.printf("[1] No\n");
                 option = select(1);
 
-                if (option == -1){
+                if (option == -1) {
                     // Adds the room, loops through additions
                     System.out.printf("Successfully added %d rooms\n", additions);
                     for (int i = 0; i < additions; i++) {
@@ -265,7 +265,7 @@ public class HotelManager {
     * Removes one or more rooms from the room ArrayList in the chosen hotel, contains all validations
     * @param chosenHotel    hotel that the room/s will be removed from
     */
-    public void removeRoom(Hotel chosenHotel){
+    public void removeRoom(Hotel chosenHotel) {
         String input;
         String[] toDelete;
         int option;
@@ -281,14 +281,14 @@ public class HotelManager {
 
         input = sc.nextLine();
 
-        if (input.equals("QUIT")){
+        if (input.equals("QUIT")) {
             System.out.printf("Cancelled deletion\n");
         } else {
             toDelete = input.split(" ");
             System.out.printf("Are you sure you want to delete the following: \n");
 
             // Prints all ids to delete
-            if (toDelete.length == 1){
+            if (toDelete.length == 1) {
                 System.out.println(toDelete[0]);
             } else {
                 for (int i = 0; i < toDelete.length; i++) {
@@ -310,14 +310,14 @@ public class HotelManager {
             option = select(1);
 
             // Calls deletion with deleteRooms
-            if (option == -1){
+            if (option == -1) {
                 System.out.printf("Deletion in progress\n");
-                deletions = chosenHotel.deleteRooms(toDelete);
+//                deletions = chosenHotel.deleteRooms(toDelete);
 
-                System.out.printf("Successfully deleted %d rooms\n", deletions);
-                System.out.printf("Press any key to continue...\n", deletions);
+//                System.out.printf("Successfully deleted %d rooms\n", deletions);
+//                System.out.printf("Press any key to continue...\n", deletions);
                 sc.nextLine();
-            } else if (option == 1){
+            } else if (option == 1) {
                 System.out.printf("Deletion Cancelled\n");
             }
         }
@@ -328,28 +328,28 @@ public class HotelManager {
     * as long as the new base price is above 100.0f
     * @param chosenHotel    hotel that the will have its base price changed
     */
-    public void modifyBasePrice(Hotel chosenHotel){
+    public void modifyBasePrice(Hotel chosenHotel) {
         boolean editable = chosenHotel.getTotalReservationCount() != 0;
         float newPrice = 0.0f;
         boolean validatePrice = true;
         int option;
 
         // Cancelled by a reservation
-        if (editable){
+        if (editable) {
             System.out.printf("You cannot change the base price because there is an affected reservation\n");
             System.out.printf("Press any key to continue...\n");
             sc.nextLine();
         } else {
             // Validations
-            while (validatePrice){
+            while (validatePrice) {
                 System.out.printf("Write new base price, minimum of 100.0 (0 to cancel): ");
                 newPrice = sc.nextFloat();
                 sc.nextLine();
 
-                if (newPrice == 0){
+                if (newPrice == 0) {
                     validatePrice = false;
                     System.out.printf("Price change cancelled.\n");
-                } else if (newPrice < 100){
+                } else if (newPrice < 100) {
                     System.out.printf("Minimum price of at least 100.00\n");
                 } else {
                     System.out.printf("Are you sure you want to change the base price from %.2f to %.2f?\n", chosenHotel.getBasePrice(), newPrice);
@@ -357,7 +357,7 @@ public class HotelManager {
                     System.out.printf("[1] No\n");
                     option = select(1);
 
-                    if (option == -1){
+                    if (option == -1) {
                         System.out.printf("Successfully changed base price to %.2f\n", newPrice);
                         chosenHotel.setBasePrice(newPrice);
                         validatePrice = false;
@@ -371,7 +371,7 @@ public class HotelManager {
     * Removes a reservation from a chosen room in a chosen hotel
     * @param chosenHotel    hotel that will have its rooms and reservations displayed
     */
-    public void removeReservation(Hotel chosenHotel){
+    public void removeReservation(Hotel chosenHotel) {
         // for id counting to not have to input a room id and reservation id
         int counter;
         // for while menuing
@@ -386,18 +386,18 @@ public class HotelManager {
         // reservation to delete
         Reservation chosenReservation = null;
 
-        if (hotelRooms.size() == 0){
+        if (hotelRooms.size() == 0) {
             System.out.printf("There are no reservations to remove\n");
             System.out.printf("Press any key to continue...\n");
             sc.nextLine();
         } else {
-            while (viewLevel >= 1){
+            while (viewLevel >= 1) {
                 System.out.printf("Select which reservation would you like to remove:\n");
                 counter = 0;
 
                 // Getting total reservations and printing them
-                for (Room room : hotelRooms){
-                    for (Reservation reservation : room.getReservations()){
+                for (Room room : hotelRooms) {
+                    for (Reservation reservation : room.getReservations()) {
                         counter++;
                         hotelReservations.add(reservation);
 
@@ -411,12 +411,12 @@ public class HotelManager {
 
                 option = select(hotelReservations.size());
 
-                if (option == -1){
+                if (option == -1) {
                     viewLevel = 0;
                 } else {
                     viewLevel++;
                     // will finalize deletion
-                    while (viewLevel>=2){
+                    while (viewLevel>=2) {
                         chosenReservation = hotelReservations.get(option);
                         System.out.printf("Are you sure you want to remove this reservation?\n");
                         System.out.printf("Room %s:\n",chosenReservation.getRoomName());
@@ -427,14 +427,14 @@ public class HotelManager {
                         System.out.printf("[1] No\n");
                         suboption = select(1);
 
-                        if (suboption == -1){
-                            if (chosenHotel.deleteReservation(chosenReservation.getRoomName(), chosenReservation.getStartDay(), chosenReservation.getEndDay())){
+                        if (suboption == -1) {
+                            if (chosenHotel.deleteReservation(chosenReservation.getRoomName(), chosenReservation.getStartDay(), chosenReservation.getEndDay())) {
                                 hotelReservations.remove(chosenReservation);
                                 counter--;
                                 viewLevel = 1;
                                 System.out.printf("Reservation removal successful\n");
 
-                                if (chosenHotel.getTotalReservationCount() == 0){
+                                if (chosenHotel.getTotalReservationCount() == 0) {
                                     viewLevel--;
                                 }
                             } else {
@@ -457,7 +457,7 @@ public class HotelManager {
     * Shows all the menus needed to manage all the hotels
     * and contains all the calls to necessary functions
     */
-    public void manageHotels(){
+    public void manageHotels() {
         // viewLevel is for while menuing
         int viewLevel = 1;
         Hotel currentHotel = null;
@@ -465,7 +465,7 @@ public class HotelManager {
         int option = 0;
 
         // Choose hotel
-        while (viewLevel >= 1){
+        while (viewLevel >= 1) {
             System.out.printf("Which hotel would you like to manage?\n");
             for (int i = 0; i < hotelCount; i++) {
                 System.out.printf("[%d] %s \n", i + 1, hotels.get(i).getName());
@@ -473,7 +473,7 @@ public class HotelManager {
             System.out.printf("[0] Exit Management\n");
             option = select(hotels.size());
 
-            if (option == -1){
+            if (option == -1) {
                 viewLevel = 0;
             } else {
                 // Function choices
@@ -499,17 +499,17 @@ public class HotelManager {
                         viewLevel--;
                     }
 
-                    if (suboption == 0){
+                    if (suboption == 0) {
                         changeName(currentHotel);
-                    } else if (suboption == 1){
+                    } else if (suboption == 1) {
                         addRooms(currentHotel);
-                    } else if (suboption == 2){
+                    } else if (suboption == 2) {
                         removeRoom(currentHotel);
-                    } else if (suboption == 3){
+                    } else if (suboption == 3) {
                         modifyBasePrice(currentHotel);
-                    } else if (suboption == 4){
+                    } else if (suboption == 4) {
                         removeReservation(currentHotel);
-                    } else if (suboption == 5){
+                    } else if (suboption == 5) {
                         int suboption2;
                         System.out.printf("Are you sure you want to delete the hotel?\n");
                         System.out.printf("This cannot be undone.\n");
@@ -517,13 +517,13 @@ public class HotelManager {
                         System.out.printf("[1] No\n");
                         suboption2 = select(1);
 
-                        if (suboption2 == -1){
+                        if (suboption2 == -1) {
                             viewLevel = 0;
                             System.out.printf("Hotel has been removed.\n");
                             hotels.remove((currentHotel));
                             System.out.printf("Press any key to continue...\n");
                             sc.nextLine();
-                        } else if (suboption2 == 0){
+                        } else if (suboption2 == 0) {
                             System.out.printf("Hotel deletion cancelled.\n");
                         }
                     }
@@ -575,7 +575,7 @@ public class HotelManager {
                     currentHotel = hotels.get(option);
                     int suboption1;
 
-                    if (currentHotel.getTotalRooms() == 0){
+                    if (currentHotel.getTotalRooms() == 0) {
                         System.out.printf("Sorry %s, there are no rooms to reserve\n", customerName);
                         System.out.printf("Press any key to continue\n");
                         sc.nextLine();
@@ -729,7 +729,7 @@ public class HotelManager {
     * and low-level information about the hotels such as room count,
     * monthly earnings, room availability, and reservations for the month
     */
-    public void viewHotels(){
+    public void viewHotels() {
         // hotel to be viewed
         Hotel currentHotel = null;
 
@@ -801,7 +801,7 @@ public class HotelManager {
 
                         if (suboption1 == -1) {
                             viewLevel--;
-                        } else if (currentHotel.getTotalRooms() == 0){
+                        } else if (currentHotel.getTotalRooms() == 0) {
                             // no hotels exist
                             viewLevel--;
                             System.out.printf("Cannot view data, there are currently 0 rooms\n");
@@ -812,7 +812,7 @@ public class HotelManager {
                             viewLevel++;
                             while (viewLevel >= 3) {
                                 // for checking room availability on a certain day
-                                if (suboption1 == 0){
+                                if (suboption1 == 0) {
                                     int chosenDate = 0;
                                     int availableRooms = currentHotel.getTotalRooms();
                                     System.out.printf("Select a day from 1 to 31\n");
@@ -826,11 +826,11 @@ public class HotelManager {
                                         // Will use getReservedRoomsByDay
                                         ArrayList<Room> reservedRooms = currentHotel.getReservedRoomsByDay(chosenDate);
 
-                                        if (reservedRooms.size() > 0){
+                                        if (reservedRooms.size() > 0) {
                                             System.out.printf("On day %d, %d/%d rooms available\n", chosenDate, availableRooms-reservedRooms.size(), availableRooms);
                                             // Prints reserved room names
                                             System.out.printf("%d rooms reserved:\n", reservedRooms.size());
-                                            for (Room rooms : reservedRooms){
+                                            for (Room rooms : reservedRooms) {
                                                 System.out.printf("Room %s\n", rooms.getName());
                                             }
                                         } else {
@@ -838,7 +838,7 @@ public class HotelManager {
                                         }
                                     }
                                 // For checking the calendar availability of a specific room
-                                } else if (suboption1 == 1){
+                                } else if (suboption1 == 1) {
                                     // room to be chosen
                                     int chosenRoomID = 0;
                                     Room chosenRoom = null;
@@ -849,7 +849,7 @@ public class HotelManager {
 
                                     chosenRoomID = select(currentHotel.getTotalRooms());
 
-                                    if (chosenRoomID == -1){
+                                    if (chosenRoomID == -1) {
                                         viewLevel--;
                                     } else {
                                         chosenRoom = currentHotel.getRoom(chosenRoomID);
@@ -860,7 +860,7 @@ public class HotelManager {
                                         System.out.printf("You chose room %s\n", chosenRoom.getName());
                                         System.out.printf("Price per night: %.2f\n", currentHotel.getBasePrice());
                                         System.out.printf("Earnings this month: %.2f\n", chosenRoom.getMonthlyEarnings());
-                                        if (reservationCount == 0){
+                                        if (reservationCount == 0) {
                                             System.out.printf("Room has 0 reservations and is fully free this month\n", chosenRoom.getName());
                                         } else {
                                             // show the calendar availability
@@ -877,16 +877,16 @@ public class HotelManager {
                                         sc.nextLine();
                                     }
                                 // For viewing based only on reservations
-                                } else if (suboption1 == 2){
+                                } else if (suboption1 == 2) {
                                     ArrayList<Room> reservedRooms = currentHotel.getAllReservedRooms();
 
-                                    if (reservedRooms.size() == 0){
+                                    if (reservedRooms.size() == 0) {
                                         System.out.printf("There are no reservations for hotel %s\n", currentHotel.getName());
                                     } else {
                                         System.out.printf("There are a total of %d reservations for hotel %s\n", currentHotel.getTotalReservationCount(), currentHotel.getName());
 
                                         // Shows reservation for only booked rooms
-                                        for (Room room : reservedRooms){
+                                        for (Room room : reservedRooms) {
                                             System.out.printf("In Room %s:\n", room.getName());
                                             room.displayReservations();
                                         }
@@ -905,7 +905,7 @@ public class HotelManager {
     public boolean createHotel2(String newHotelName, int newRoomCount) {
         if (checkName(newHotelName) && checkRoomCount(newRoomCount) == 1) {
             hotels.add(new Hotel(newHotelName, 1299.0f, newRoomCount));
-//            for (int i = 0; i < 50; i++){
+//            for (int i = 0; i < 50; i++) {
 //                hotels.add(new Hotel("hotel", 1299.0f, i));
 //            }
             return true;
@@ -915,6 +915,16 @@ public class HotelManager {
 
     public void changeName2(Hotel chosenHotel, String newHotelName) {
         chosenHotel.setName(newHotelName);
+    }
+
+    public void addRooms2(Hotel chosenHotel, int newAdds) {
+        for (int i = 0; i < newAdds; i++) {
+            chosenHotel.addRoom();
+        }
+    }
+
+    public void modifyBasePrice2(Hotel chosenHotel, float newPrice) {
+        chosenHotel.setBasePrice(newPrice);
     }
 }
 
@@ -970,7 +980,7 @@ public class HotelManager {
 
 // old version of reserveHotels with check in hours
 /*
-    public void reserveHotels(){
+    public void reserveHotels() {
         // viewLevel is for while menuing
         int viewLevel = 1;
         Hotel currentHotel = null;
@@ -979,7 +989,7 @@ public class HotelManager {
         Room chosenRoom = null;
 
         // hotel selection
-        while (viewLevel >= 1){
+        while (viewLevel >= 1) {
             System.out.printf("Which hotel would you like make a reservation at?\n");
             for (int i = 0; i < hotelCount; i++) {
                 System.out.printf("[%d] %s \n", i + 1, hotels.get(i).getName());
@@ -987,7 +997,7 @@ public class HotelManager {
             System.out.printf("[0] Exit Reserving\n");
             option = select(hotels.size()+1);
 
-            if (option == -1){
+            if (option == -1) {
                 viewLevel = 0;
             } else {
                 viewLevel++;
@@ -1003,7 +1013,7 @@ public class HotelManager {
 
                     suboption1 = select(currentHotel.getTotalRooms());
 
-                    if (suboption1 == -1){
+                    if (suboption1 == -1) {
                         viewLevel--;
                     } else {
                         viewLevel++;
@@ -1021,7 +1031,7 @@ public class HotelManager {
                                 System.out.printf("What is your name: ");
                                 customerName = sc.nextLine();
 
-                                if (customerName.length()==0){
+                                if (customerName.length()==0) {
                                     System.out.printf("Invalid name, please try again \n");
                                 } else {
                                     customerValidate = false;
@@ -1041,30 +1051,30 @@ public class HotelManager {
                             checkInDay = select(31) + 1;
                             availabilityStatus = chosenRoom.checkDayAvailability(checkInDay);
 
-                            if (checkInDay == 0){
+                            if (checkInDay == 0) {
                                 viewLevel--;
                             } else {
                                 // No check-in on 31 allowed
-                                if (checkInDay == 31){
+                                if (checkInDay == 31) {
                                     System.out.printf("Cannot check-in on the 31st day, please pick another\n");
                                     System.out.printf("Press any key to continue");
                                     sc.nextLine();
                                 // taken days
-                                } else if (availabilityStatus == -1){
+                                } else if (availabilityStatus == -1) {
                                     System.out.printf("Day is fully booked, please pick another\n");
                                     System.out.printf("Press any key to continue");
                                 } else {
                                     viewLevel++;
                                     //Fully available day
-                                    if (availabilityStatus == 1){
+                                    if (availabilityStatus == 1) {
                                         System.out.printf("Day is fully available!\n");
-                                    } else if (availabilityStatus == 0){
+                                    } else if (availabilityStatus == 0) {
                                         // Day is a start or end of stay
                                         System.out.printf("Day is partially available, here are the occupied hours:\n");
                                         // Shows hour ranges of other reservations
                                         chosenRoom.displayOccupiedHours(checkInDay);
                                     }
-                                    while (viewLevel >= 4){
+                                    while (viewLevel >= 4) {
                                         // For picking check-in hour
                                         int checkInHr;
 
@@ -1072,13 +1082,13 @@ public class HotelManager {
                                         System.out.printf("[0] Back\n");
                                         checkInHr = select(24)+1;
 
-                                        if (checkInHr == 0){
+                                        if (checkInHr == 0) {
                                             viewLevel--;
                                         // Invalid hours
                                         } else if (checkInHr < 0 || checkInHr > 24) {
                                             System.out.printf("Invalid hour, please select again\n");
                                             // Checks hour ranges
-                                        } else if (!chosenRoom.checkHourAvailability(checkInDay, checkInHr)){
+                                        } else if (!chosenRoom.checkHourAvailability(checkInDay, checkInHr)) {
                                             System.out.printf("Chosen hours are occupied, please select again\n");
                                         } else {
                                             viewLevel++;
@@ -1089,7 +1099,7 @@ public class HotelManager {
                                             System.out.printf("Room %s's Reservation Calendar\n", chosenRoom.getName());
                                             chosenRoom.displayCalendar2(checkInDay, checkInDay);
 
-                                            while (viewLevel >= 5){
+                                            while (viewLevel >= 5) {
                                                 int checkOutDay;
                                                 int availabilityStatus2;
 
@@ -1100,44 +1110,44 @@ public class HotelManager {
                                                 // Will check for day availability again but this time will catch in-betweens
                                                 availabilityStatus2 = chosenRoom.checkDayAvailability2(checkInDay, checkOutDay);
 
-                                                if (checkOutDay == 0){
+                                                if (checkOutDay == 0) {
                                                     viewLevel--;
                                                 } else {
-                                                    if (checkOutDay < checkInDay){
+                                                    if (checkOutDay < checkInDay) {
                                                         System.out.printf("Invalid day, booking is only limited to 31 days\n");
                                                         System.out.printf("Press any key to continue");
                                                         sc.nextLine();
-                                                    } else if (checkOutDay == 1){
+                                                    } else if (checkOutDay == 1) {
                                                         // No check-out in first day allowed
                                                         System.out.printf("Cannot check-out on the 1st day, please pick another\n");
                                                         System.out.printf("Press any key to continue");
                                                         sc.nextLine();
-                                                    } else if (availabilityStatus2 == -1){
+                                                    } else if (availabilityStatus2 == -1) {
                                                         // This time checks ranges af other reservations
                                                         System.out.printf("A prior reservation in that range, please pick another\n");
                                                         System.out.printf("Press any key to continue");
                                                     } else {
                                                         viewLevel++;
-                                                        if (availabilityStatus2 == 1){
+                                                        if (availabilityStatus2 == 1) {
                                                             System.out.printf("Day is fully available!\n");
-                                                        } else if (chosenRoom.checkDayAvailability2(checkInDay, checkOutDay) == 0){
+                                                        } else if (chosenRoom.checkDayAvailability2(checkInDay, checkOutDay) == 0) {
                                                             System.out.printf("Day is partially available, here are the occupied hours:\n");
                                                             chosenRoom.displayOccupiedHours(checkOutDay);
                                                         }
-                                                        while (viewLevel >= 6){
+                                                        while (viewLevel >= 6) {
                                                             int checkOutHr;
 
                                                             System.out.printf("Select the check-out hour (1-24)\n");
                                                             System.out.printf("[0] Back\n");
                                                             checkOutHr = select(24)+1;
 
-                                                            if (checkOutHr == -1){
+                                                            if (checkOutHr == -1) {
                                                                 viewLevel--;
                                                             } else if (checkOutHr <=0 || checkOutHr > 24) {
                                                                 System.out.printf("Invalid hour, please select again\n");
-                                                            } else if (checkInDay == checkOutDay && checkInHr >= checkOutHr){
+                                                            } else if (checkInDay == checkOutDay && checkInHr >= checkOutHr) {
                                                                 System.out.printf("Hour goes to the past, please select again\n");
-                                                            } else if (!chosenRoom.checkHourAvailability(checkOutDay, checkOutHr)){
+                                                            } else if (!chosenRoom.checkHourAvailability(checkOutDay, checkOutHr)) {
                                                                 System.out.printf("Chosen hours are occupied, please select again\n");
                                                             } else {
                                                                 viewLevel++;
@@ -1157,15 +1167,15 @@ public class HotelManager {
                                                                                                                                   checkInDay != checkOutDay ? "night/s" : "day",
                                                                                                                                   chosenRoom.getName());
 
-                                                                while (viewLevel >= 7){
+                                                                while (viewLevel >= 7) {
                                                                     int suboption2;
                                                                     System.out.printf("[0] Yes\n");
                                                                     System.out.printf("[1] No\n");
                                                                     suboption2 = select(1);
 
-                                                                    if (suboption2 == 0){
+                                                                    if (suboption2 == 0) {
                                                                         viewLevel--;
-                                                                    } else if (suboption2 == -1){
+                                                                    } else if (suboption2 == -1) {
                                                                         // Reservation will now be created
                                                                         Reservation newReservation = new Reservation(customerName, checkInDay != checkOutDay ? (checkOutDay-checkInDay) * currentHotel.getBasePrice() : currentHotel.getBasePrice(), checkInDay,checkInHr, checkOutDay, checkOutHr, chosenRoom.getName());
                                                                         chosenRoom.addReservation(newReservation);
