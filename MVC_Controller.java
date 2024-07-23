@@ -35,6 +35,15 @@ public class MVC_Controller {
         if (view.getManageHotelsPanel() != null) {
             view.getManageHotelsPanel().setController(this);
         }
+
+        view.addReserveHotelListener(e -> {
+            switchToReservationsPanel();
+            updateHotels();
+        });
+        if (view.getReservationsPanel() != null) {
+            view.getReservationsPanel().setController(this);
+        }
+
     }
 
     // Updaters
@@ -48,6 +57,11 @@ public class MVC_Controller {
         ManageHotelsPanel manageHotelsPanel = view.getManageHotelsPanel();
         if (manageHotelsPanel != null) {
             manageHotelsPanel.setHotels(model.getHotels());
+        }
+
+        ReservationsPanel reservationsPanel = view.getReservationsPanel();
+        if (reservationsPanel != null) {
+            reservationsPanel.setHotels(model.getHotels());
         }
     }
 
@@ -91,8 +105,18 @@ public class MVC_Controller {
         if (toDelete.size() > 0) {
             answer = Modals.showRemoveRoomsDialog(view, model, chosenHotel, toDelete, this::updateHotels, this::updateRoomsShown);
         }
-
         return answer;
+    }
+
+    public void showDeleteHotelDialog(ArrayList<Hotel> hotels, Hotel chosenHotel) {
+        int answer = 1;
+
+        answer = Modals.showDeleteHotelDialog(view, model, hotels, chosenHotel, this::updateHotels, this::updateHotels);
+
+        if (answer == 0) {
+            switchToManageHotelsPanel();
+            updateHotelCount();
+        }
     }
 
     // Switchers
@@ -129,7 +153,18 @@ public class MVC_Controller {
         specificHotelPanel.addBackButtonListener(e -> switchToManageHotelsPanel());
         specificHotelPanel.addRenameHotelButtonListener(e -> showRenameHotelDialog(hotel));
         specificHotelPanel.addModifyRoomsButtonListener(e -> switchToShowRooms(hotel));
-        specificHotelPanel.addModifyBasePriceButtonListener(e -> showModifyBasePriceDialog(hotel));
+        specificHotelPanel.addModifyBasePriceButtonListener(e -> {
+            if (hotel.getTotalReservationCount() == 0){
+                showModifyBasePriceDialog(hotel);
+            } else {
+                JOptionPane.showMessageDialog(specificHotelPanel, "There is at least one reservation, cannot change base price.", "Error", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+        specificHotelPanel.addDeleteHotelButtonListener(e -> {
+            ArrayList<Hotel> hotels = model.getHotels();
+            showDeleteHotelDialog(hotels, hotel);
+        });
+
         view.getContentPane().removeAll();
         view.add(specificHotelPanel, BorderLayout.CENTER);
         view.setSize(manageSpecificHotelPanelWidth, manageSpecificHotelPanelHeight);
@@ -150,6 +185,25 @@ public class MVC_Controller {
 
         view.getContentPane().removeAll();
         view.add(showRooms, BorderLayout.CENTER);
+        view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+
+    public void switchToReservationsPanel() {
+        view.getContentPane().removeAll();
+        if (view.getReservationsPanel() == null) {
+            view.setReservationsPanel(new ReservationsPanel(model.getHotels(), model.getManager()));
+        }
+        view.getReservationsPanel().setController(this);
+        view.getReservationsPanel().addBackButtonListener(e -> {
+            switchToMainPanel();
+        });
+        JScrollPane scrollPane = new JScrollPane(view.getReservationsPanel());
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        view.add(scrollPane, BorderLayout.CENTER);
         view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
         view.setResizable(false);
         view.revalidate();

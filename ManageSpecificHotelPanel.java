@@ -65,6 +65,10 @@ public class ManageSpecificHotelPanel extends JPanel {
         modifyBasePriceButton.addActionListener(listener);
     }
 
+    public void addDeleteHotelButtonListener(ActionListener listener) {
+        deleteHotelButton.addActionListener(listener);
+    }
+
     public void updateHotelInfo() {
         managingLabel.setText("Managing " + hotel.getName());
         roomCountLabel.setText(String.format("Number of Rooms: %d", hotel.getTotalRooms()));

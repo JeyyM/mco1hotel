@@ -9,7 +9,11 @@ public class MVC_View extends JFrame {
     private HotelManager manager;
     private ArrayList<Hotel> hotels;
     private JButton createHotelButton;
+    private JButton viewHotelButton;
     private JButton manageHotelButton;
+    private JButton reserveHotelButton;
+    private JButton exitProgramButton;
+
     private JLabel currentHotelsCount;
 
     private int menuSize = 450;
@@ -17,6 +21,7 @@ public class MVC_View extends JFrame {
 
     private JPanel mainPanel;
     private ManageHotelsPanel manageHotelsPanel;
+    private ReservationsPanel reservationsPanel;
 
     public void addCreateHotelListener(ActionListener listener) {
         createHotelButton.addActionListener(listener);
@@ -24,6 +29,10 @@ public class MVC_View extends JFrame {
 
     public void addManageHotelListener(ActionListener listener) {
         manageHotelButton.addActionListener(listener);
+    }
+
+    public void addReserveHotelListener(ActionListener listener) {
+        reserveHotelButton.addActionListener(listener);
     }
 
     public void setManageHotelsPanelController(MVC_Controller controller) {
@@ -54,17 +63,25 @@ public class MVC_View extends JFrame {
         return currentHotelsCount;
     }
 
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
+
     // Get Panels for Switching
     public ManageHotelsPanel getManageHotelsPanel() {
         return manageHotelsPanel;
     }
 
-    public JPanel getMainPanel() {
-        return mainPanel;
-    }
-
     public void setManageHotelsPanel(ManageHotelsPanel manageHotelsPanel) {
         this.manageHotelsPanel = manageHotelsPanel;
+    }
+
+    public ReservationsPanel getReservationsPanel() {
+        return reservationsPanel;
+    }
+
+    public void setReservationsPanel(ReservationsPanel reservationsPanel) {
+        this.reservationsPanel = reservationsPanel;
     }
 
     // To create menu
@@ -95,16 +112,16 @@ public class MVC_View extends JFrame {
 
         // Add buttons to the button panel
         createHotelButton = new JButton("Create Hotel");
-        JButton button2 = new JButton("View Hotels");
+        viewHotelButton = new JButton("View Hotels");
         manageHotelButton = new JButton("Manage Hotel");
-        JButton button4 = new JButton("Reserve a Hotel");
-        JButton button5 = new JButton("Exit Program");
+        reserveHotelButton = new JButton("Reserve a Hotel");
+        exitProgramButton = new JButton("Exit Program");
 
         buttonPanel.add(createHotelButton);
-        buttonPanel.add(button2);
+        buttonPanel.add(viewHotelButton);
         buttonPanel.add(manageHotelButton);
-        buttonPanel.add(button4);
-        buttonPanel.add(button5);
+        buttonPanel.add(reserveHotelButton);
+        buttonPanel.add(exitProgramButton);
 
         panelCenter.add(buttonPanel);
         panel.add(panelCenter, BorderLayout.CENTER);

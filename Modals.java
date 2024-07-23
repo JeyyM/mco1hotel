@@ -106,6 +106,11 @@ public class Modals {
             updateSpecificHotelPanel.run();
             updateHotels.run();
         });
+
+        modal1.add(inputArea, BorderLayout.CENTER);
+        modal1.pack();
+        modal1.setLocationRelativeTo(parent);
+        modal1.setVisible(true);
     }
 
     public static void showAddRoomsDialog(JFrame parent, MVC_Model model, Hotel chosenHotel, Runnable updateHotels, Runnable updateRoomsShown) {
@@ -201,15 +206,11 @@ public class Modals {
             }
 
             // Success
-//            if (model.createHotel(newName, basePrice)) {
-//                updateHotelCount.run();
-//                modal1.dispose();
-//                JOptionPane.showMessageDialog(parent, "Hotel successfully added.", "Success", JOptionPane.INFORMATION_MESSAGE);
-//                // To update the hotels list
-//                updateHotels.run();
-//            } else {
-//                JOptionPane.showMessageDialog(modal1, "Failed to create hotel. Please try again.", "Error", JOptionPane.WARNING_MESSAGE);
-//            }
+            model.modifyBasePrice(chosenHotel, basePrice);
+            modal1.dispose();
+            JOptionPane.showMessageDialog(parent, "Base price successfully changed.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            updateSpecificHotelPanel.run();
+            updateHotels.run();
         });
 
         modal1.add(inputArea, BorderLayout.CENTER);
@@ -218,4 +219,24 @@ public class Modals {
         modal1.setVisible(true);
     }
 
+    public static int showDeleteHotelDialog(JFrame parent, MVC_Model model, ArrayList<Hotel> hotels, Hotel chosenHotel, Runnable updateHotels, Runnable updateRoomsShown) {
+        // Format the message string
+        String message = String.format("Are you sure you want to delete hotel %s?\nThis cannot be undone.", chosenHotel.getName());
+
+        // Show the confirmation dialog with an exclamation mark symbol
+        int option = JOptionPane.showConfirmDialog(parent, message, "Confirm Deletion", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        // Handle the user's response
+        if (option == JOptionPane.YES_OPTION) {
+            // Perform the deletion
+            hotels.remove(chosenHotel);
+            updateRoomsShown.run();
+            updateHotels.run();
+
+            JOptionPane.showMessageDialog(parent, "Hotel successfully deleted.", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+        }
+
+        return option;
+    }
 }
