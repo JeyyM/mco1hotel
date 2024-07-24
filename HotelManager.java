@@ -926,6 +926,12 @@ public class HotelManager {
     public void modifyBasePrice2(Hotel chosenHotel, float newPrice) {
         chosenHotel.setBasePrice(newPrice);
     }
+    
+    public void addReservation(Room room, float cost, String name, int startDay, int endDay) {
+        Reservation reservation = new Reservation(name, cost, startDay, endDay, room.getName());
+        room.addReservation(reservation);
+        System.out.println("yay we did it!");
+    }
 }
 
 

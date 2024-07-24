@@ -246,4 +246,51 @@ public class MVC_Controller {
         view.revalidate();
         view.repaint();
     }
+    
+    public void switchToReserveSpecificRoomPanel(Hotel hotel, String name) {
+        RoomReservationsPanel roomReservationsPanel = new RoomReservationsPanel(hotel, name);
+        roomReservationsPanel.setController(this);
+        roomReservationsPanel.addBackButtonListener(e -> switchToReservationsPanel());
+        
+        view.getContentPane().removeAll();
+        JScrollPane scrollPane = new JScrollPane(roomReservationsPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        view.add(scrollPane);
+        view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+    
+    public void switchToReserveCalendarStart(Room room, float cost, String name) {
+        ReserveCalendar reserveStart = new ReserveCalendar(room, cost, name);
+        reserveStart.setController(this);
+        
+        view.getContentPane().removeAll();
+        view.add(reserveStart, BorderLayout.CENTER);
+        view.setSize(manageSpecificHotelPanelWidth, manageSpecificHotelPanelHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+    
+    public void switchToReserveEndPanel(Room room, float cost, String name, int startDay) {
+        System.out.println("Start day : " + startDay);
+        
+        ReserveCalendar reserveStart = new ReserveCalendar(room, cost, name, startDay);
+        reserveStart.setController(this);
+        
+        view.getContentPane().removeAll();
+        view.add(reserveStart, BorderLayout.CENTER);
+        view.setSize(manageSpecificHotelPanelWidth, manageSpecificHotelPanelHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+    
+    public void reserveRoomFinal(Room room, float cost, String name, int startDay, int endDay) {
+        model.reserveRoom(room, cost, name, startDay, endDay);
+    }
+    
 }

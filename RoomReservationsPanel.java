@@ -9,33 +9,35 @@ import java.util.ArrayList;
 /*
  * This is the panel for the selection of a hotel to manage
  * */
-public class ReservationsPanel extends JPanel {
-    private ArrayList<Hotel> hotels;
+public class RoomReservationsPanel extends JPanel {
+    private ArrayList<Room> rooms;
     private HotelManager manager;
     private JButton backButton;
     private JPanel panelCenter;
-    private JPanel panelNorth;
-    private JTextField nameEntry;
 
     // Size variables
     private int fullWidth = 680;
     private int backButtonFontSize = 25;
-    private int northHeight = 80;
+    private int northHeight = 40;
     private int rowHeight = 80;
     private int buttonWidth = 120;
     private int buttonHeight = 80;
     private int northLabelFontSize = 20;
+    
+    private String name;
+    private float cost;
 
     private MVC_Controller controller;
 
-    public ReservationsPanel(ArrayList<Hotel> hotels, HotelManager manager) {
-        this.hotels = hotels;
-        this.manager = manager;
-
+    public RoomReservationsPanel(Hotel hotel, String name) {
+        this.rooms = hotel.getAllRooms();
+        this.cost = hotel.getBasePrice();
+        this.name = name;
+        
         setLayout(new BorderLayout());
 
         // Setting north panel
-        panelNorth = new JPanel();
+        JPanel panelNorth = new JPanel();
         panelNorth.setLayout(new BorderLayout());
         panelNorth.setBackground(Color.decode("#063970"));
         panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
@@ -46,17 +48,10 @@ public class ReservationsPanel extends JPanel {
         panelNorth.add(backButton, BorderLayout.WEST);
 
         // North Label
-        JLabel labelManageHotels = new JLabel("Select a Hotel to Reserve", JLabel.CENTER);
+        JLabel labelManageHotels = new JLabel("Select Room to Reserve", JLabel.CENTER);
         labelManageHotels.setForeground(Color.WHITE);
         labelManageHotels.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
         panelNorth.add(labelManageHotels, BorderLayout.CENTER);
-
-        // Create the input panel for name entry
-        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        nameEntry = new JTextField(20);
-        inputPanel.add(new JLabel("Enter your name:"));
-        inputPanel.add(nameEntry);
-        panelNorth.add(inputPanel, BorderLayout.SOUTH);
 
         add(panelNorth, BorderLayout.NORTH);
 
@@ -72,10 +67,7 @@ public class ReservationsPanel extends JPanel {
     }
 
     // For refreshing the hotels every enter
-    public void setHotels(ArrayList<Hotel> hotels) {
-        this.hotels = hotels;
-        initializeRows();
-    }
+
 
     public void setController(MVC_Controller controller) {
         this.controller = controller;
@@ -90,16 +82,16 @@ public class ReservationsPanel extends JPanel {
         // Panel is cleared to it can reset everything
         panelCenter.removeAll();
 
-        int totalHotels = hotels.size();
+        int totalRooms = rooms.size();
         int cols = 5;
         // Rows should be rounded up to make an additional incomplete one
-        int rows = (int) Math.ceil((double) totalHotels / cols);
+        int rows = (int) Math.ceil((double) totalRooms / cols);
 
-        for (int i = 0; i < totalHotels; i++) {
-            hotels.get(i).setIndex(i);
+        for (int i = 0; i < totalRooms; i++) {
+            rooms.get(i).setIndex(i);
         }
 
-        int hotelIndex = 0;
+        int roomIndex = 0;
         for (int i = 0; i < rows; i++) {
             JPanel rowWrapper = new JPanel(new GridLayout(1, cols, 10, 10));
             rowWrapper.setMaximumSize(new Dimension(fullWidth, rowHeight));
@@ -107,20 +99,16 @@ public class ReservationsPanel extends JPanel {
             rowWrapper.setBorder(new EmptyBorder(5, 5, 5, 30));
 
             for (int j = 0; j < cols; j++) {
-                if (hotelIndex < totalHotels) {
-                    Hotel hotel = hotels.get(hotelIndex);
-                    JButton hotelButton = new JButton("<html>" + hotel.getName() + "<br>" + hotel.getTotalRooms() + " rooms" + "<br>" + hotel.getTotalReservationCount() + " reservations</html>");
-                    hotelButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-                    hotelButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-                    hotelButton.addActionListener(e -> {
-                        if (nameEntry.getText().trim().isEmpty()) {
-                            JOptionPane.showMessageDialog(panelCenter, "Enter name before choosing reservation.", "Error", JOptionPane.WARNING_MESSAGE);
-                        } else {
-                            controller.switchToReserveSpecificRoomPanel(hotel, nameEntry.getText().trim());
-                        }
+                if (roomIndex < totalRooms) {
+                    Room room = rooms.get(roomIndex);
+                    JButton roomButton = new JButton("<html>" + room.getName() + "</html>");
+                    roomButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+                    roomButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    roomButton.addActionListener(e -> {
+                        controller.switchToReserveCalendarStart(room, cost, name);
                     });
-                    rowWrapper.add(hotelButton);
-                    hotelIndex++;
+                    rowWrapper.add(roomButton);
+                    roomIndex++;
                 } else {
                     // Put an empty label since the buttons will overgrow if not
                     rowWrapper.add(new JLabel());
