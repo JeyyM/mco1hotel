@@ -116,7 +116,7 @@ public class ReservationsPanel extends JPanel {
                         if (nameEntry.getText().trim().isEmpty()) {
                             JOptionPane.showMessageDialog(panelCenter, "Enter name before choosing reservation.", "Error", JOptionPane.WARNING_MESSAGE);
                         } else {
-                            controller.switchToSpecificHotelPanel(hotel);
+                            controller.switchToReserveSpecificRoomPanel(hotel, nameEntry.getText().trim());
                         }
                     });
                     rowWrapper.add(hotelButton);
