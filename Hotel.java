@@ -46,7 +46,7 @@ public class Hotel {
 
         // Loops to addRooms based on initial total
         for (int i = 0; i < totalRooms; i++) {
-            addRoom();
+            addRoom(1.0f);
         }
     }
 
@@ -158,7 +158,7 @@ public class Hotel {
     /**
     * Adds a new room using the specific naming scheme for this hotel
     */
-    public void addRoom() {
+    public void addRoom(float baseRate) {
         // Limited to 50 rooms
         if (this.totalRooms < 50) {
             // Naming scheme goes from a letter then followed by 01 up to 10
@@ -168,7 +168,7 @@ public class Hotel {
             String roomName = String.format("%c%02d", letterID, roomNumber);
 
             // Adds the rooms to that AL and modifies counters
-            this.rooms.add(new Room(roomName));
+            this.rooms.add(new Room(roomName, baseRate));
             this.totalRooms++;
             this.originalTotalRooms++;
         } else {

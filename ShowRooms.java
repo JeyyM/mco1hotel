@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class ShowRooms extends JPanel {
+    private MVC_Controller controller;
     private Hotel chosenHotel;
     private ArrayList<Room> rooms;
 
@@ -29,9 +30,13 @@ public class ShowRooms extends JPanel {
     private boolean removeMode;
     private ArrayList<String> toDelete = new ArrayList<>();
 
+    public void setController(MVC_Controller controller) {
+        this.controller = controller;
+    }
+
     public ShowRooms(Hotel hotel) {
-        chosenHotel = hotel;
-        rooms = hotel.getAllRooms();
+        this.chosenHotel = hotel;
+        this.rooms = hotel.getAllRooms();
 
         setLayout(new BorderLayout());
 
@@ -184,11 +189,23 @@ public class ShowRooms extends JPanel {
                     JButton roomButton = new JButton("<html>" + room.getName() + "</html>");
                     roomButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
                     roomButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+
+                    float baseRate = room.getBaseRate();
+                    if (baseRate == 1.0f) {
+                        roomButton.setBackground(null);
+                    } else if (baseRate == 1.20f) {
+                        roomButton.setBackground(Color.decode("#fae105"));
+                    } else if (baseRate == 1.35f) {
+                        roomButton.setBackground(Color.decode("#00fff2"));
+                    }
+
                     if (removeMode) {
                         roomButton.addActionListener(e -> insertToDelete(roomButton, room));
                     } else {
                         roomButton.addActionListener(e -> {
-                            // None for now
+                            if (controller != null) {
+                                controller.showEditRateDialog(room);
+                            }
                         });
                     }
 

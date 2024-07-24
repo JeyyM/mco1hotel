@@ -18,6 +18,15 @@ public class Room {
     ArrayList<ArrayList<Integer>> reservationTimeline = new ArrayList<>();
 
     //!!!
+    float baseRate = 1.0f;
+    public float getBaseRate(){
+        return this.baseRate;
+    }
+
+    public void setBaseRate(float baseRate) {
+        this.baseRate = baseRate;
+    }
+
     private int buttonIndex;
     public void setIndex(int index) {
         this.buttonIndex = index;
@@ -31,8 +40,9 @@ public class Room {
     * 
     * @param name   name of the specific room created
     */
-    public Room(String name) {
+    public Room(String name, float baseRate) {
         this.name = name;
+        this.baseRate = baseRate;
     }
 
     // Getters

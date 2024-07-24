@@ -41,8 +41,8 @@ public class MVC_Model {
         manager.changeName2(chosenHotel, newHotelName);
     }
 
-    public void addRooms(Hotel chosenHotel, int newAdds) {
-        manager.addRooms2(chosenHotel, newAdds);
+    public void addRooms(Hotel chosenHotel, int newAdds, float baseRate) {
+        manager.addRooms2(chosenHotel, newAdds, baseRate);
     }
 
     public void modifyBasePrice(Hotel chosenHotel, float basePrice) {

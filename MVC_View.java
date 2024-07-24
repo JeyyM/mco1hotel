@@ -22,9 +22,14 @@ public class MVC_View extends JFrame {
     private JPanel mainPanel;
     private ManageHotelsPanel manageHotelsPanel;
     private ReservationsPanel reservationsPanel;
+    private ViewHotelsPanel viewHotelsPanel;
 
     public void addCreateHotelListener(ActionListener listener) {
         createHotelButton.addActionListener(listener);
+    }
+
+    public void addViewHotelListener(ActionListener listener) {
+        viewHotelButton.addActionListener(listener);
     }
 
     public void addManageHotelListener(ActionListener listener) {
@@ -68,8 +73,16 @@ public class MVC_View extends JFrame {
     }
 
     // Get Panels for Switching
+    public ViewHotelsPanel getViewHotelsPanel(){
+        return viewHotelsPanel;
+    }
+
+    public void setViewHotelsPanel(ViewHotelsPanel viewHotelsPanel) {
+        this.viewHotelsPanel = viewHotelsPanel;
+    }
+
     public ManageHotelsPanel getManageHotelsPanel() {
-        return manageHotelsPanel;
+        return this.manageHotelsPanel;
     }
 
     public void setManageHotelsPanel(ManageHotelsPanel manageHotelsPanel) {
@@ -77,7 +90,7 @@ public class MVC_View extends JFrame {
     }
 
     public ReservationsPanel getReservationsPanel() {
-        return reservationsPanel;
+        return this.reservationsPanel;
     }
 
     public void setReservationsPanel(ReservationsPanel reservationsPanel) {

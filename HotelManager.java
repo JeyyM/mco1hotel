@@ -246,7 +246,7 @@ public class HotelManager {
                     // Adds the room, loops through additions
                     System.out.printf("Successfully added %d rooms\n", additions);
                     for (int i = 0; i < additions; i++) {
-                        chosenHotel.addRoom();
+                        chosenHotel.addRoom(1.0f);
                     }
                     validateAdd = false;
                 }
@@ -917,9 +917,9 @@ public class HotelManager {
         chosenHotel.setName(newHotelName);
     }
 
-    public void addRooms2(Hotel chosenHotel, int newAdds) {
+    public void addRooms2(Hotel chosenHotel, int newAdds, float baseRate) {
         for (int i = 0; i < newAdds; i++) {
-            chosenHotel.addRoom();
+            chosenHotel.addRoom(baseRate);
         }
     }
 

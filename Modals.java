@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class Modals {
     public static void showCreateHotelDialog(JFrame parent, MVC_Model model, Runnable updateHotelCount, Runnable updateHotels) {
-        JDialog modal1 = new JDialog(parent, "Create Hotel", true);
-        modal1.setLayout(new BorderLayout());
+        JDialog modal = new JDialog(parent, "Create Hotel", true);
+        modal.setLayout(new BorderLayout());
 
         JPanel inputArea = new JPanel(new GridLayout(3, 2, 5, 5));
         JTextField nameEntry = new JTextField(20);
@@ -16,7 +16,7 @@ public class Modals {
 
         inputArea.add(new JLabel("Hotel Name:"));
         inputArea.add(nameEntry);
-        inputArea.add(new JLabel("Room Count:"));
+        inputArea.add(new JLabel("Room Count (Set to Base Rate):"));
         inputArea.add(roomCountEntry);
         // put a blank label to keep that area clear
         inputArea.add(new JLabel());
@@ -29,12 +29,12 @@ public class Modals {
 
             // Validations
             if (newName.isEmpty()) {
-                JOptionPane.showMessageDialog(modal1, "Hotel name cannot be empty.", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(modal, "Hotel name cannot be empty.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (model.isNameTaken(newName)) {
-                JOptionPane.showMessageDialog(modal1, "Hotel name has been taken. Please choose another name.", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(modal, "Hotel name has been taken. Please choose another name.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -42,36 +42,36 @@ public class Modals {
             try {
                 roomCount = Integer.parseInt(roomCountText);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(modal1, "Room count must be a valid number.", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(modal, "Room count must be a valid number.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (!model.isValidRoomCount(roomCount)) {
-                JOptionPane.showMessageDialog(modal1, "Invalid room count. Must be between 1 and 50.", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(modal, "Invalid room count. Must be between 1 and 50.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             // Success
             if (model.createHotel(newName, roomCount)) {
                 updateHotelCount.run();
-                modal1.dispose();
+                modal.dispose();
                 JOptionPane.showMessageDialog(parent, "Hotel successfully added.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 // To update the hotels list
                 updateHotels.run();
             } else {
-                JOptionPane.showMessageDialog(modal1, "Failed to create hotel. Please try again.", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(modal, "Failed to create hotel. Please try again.", "Error", JOptionPane.WARNING_MESSAGE);
             }
         });
 
-        modal1.add(inputArea, BorderLayout.CENTER);
-        modal1.pack();
-        modal1.setLocationRelativeTo(parent);
-        modal1.setVisible(true);
+        modal.add(inputArea, BorderLayout.CENTER);
+        modal.pack();
+        modal.setLocationRelativeTo(parent);
+        modal.setVisible(true);
     }
 
     public static void showRenameHotelDialog(JFrame parent, MVC_Model model, Hotel chosenHotel, Runnable updateSpecificHotelPanel, Runnable updateHotels) {
-        JDialog modal1 = new JDialog(parent, "Rename Hotel", true);
-        modal1.setLayout(new BorderLayout());
+        JDialog modal = new JDialog(parent, "Rename Hotel", true);
+        modal.setLayout(new BorderLayout());
 
         JPanel inputArea = new JPanel(new GridLayout(2, 2, 5, 5));
         JTextField nameEntry = new JTextField(20);
@@ -88,18 +88,18 @@ public class Modals {
 
             // Validations
             if (newName.isEmpty()) {
-                JOptionPane.showMessageDialog(modal1, "Hotel name cannot be empty.", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(modal, "Hotel name cannot be empty.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (model.isNameTaken(newName)) {
-                JOptionPane.showMessageDialog(modal1, "Hotel name has been taken. Please choose another name.", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(modal, "Hotel name has been taken. Please choose another name.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             // Success
             model.changeName(chosenHotel, newName);
-            modal1.dispose();
+            modal.dispose();
             JOptionPane.showMessageDialog(parent, "Hotel successfully renamed.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
             // Update previous panels
@@ -107,22 +107,30 @@ public class Modals {
             updateHotels.run();
         });
 
-        modal1.add(inputArea, BorderLayout.CENTER);
-        modal1.pack();
-        modal1.setLocationRelativeTo(parent);
-        modal1.setVisible(true);
+        modal.add(inputArea, BorderLayout.CENTER);
+        modal.pack();
+        modal.setLocationRelativeTo(parent);
+        modal.setVisible(true);
     }
 
     public static void showAddRoomsDialog(JFrame parent, MVC_Model model, Hotel chosenHotel, Runnable updateHotels, Runnable updateRoomsShown) {
-        JDialog modal1 = new JDialog(parent, "Add Rooms", true);
-        modal1.setLayout(new BorderLayout());
+        JDialog modal = new JDialog(parent, "Add Rooms", true);
+        JComboBox<String> basePriceDropdown;
 
-        JPanel inputArea = new JPanel(new GridLayout(2, 2, 5, 5));
+        modal.setLayout(new BorderLayout());
+
+        JPanel inputArea = new JPanel(new GridLayout(3, 2, 5, 5));
         inputArea.add(new JLabel("Room Count:"));
-        inputArea.add(new JLabel());
         JTextField roomCountEntry = new JTextField(20);
-        JButton addButton = new JButton("Finish Adding");
         inputArea.add(roomCountEntry);
+
+        inputArea.add(new JLabel("Room Rate:"));
+        String[] roomTypes = {"Regular", "Deluxe", "Executive"};
+        basePriceDropdown = new JComboBox<>(roomTypes);
+        inputArea.add(basePriceDropdown);
+
+        inputArea.add(new JLabel()); // Placeholder to align the button
+        JButton addButton = new JButton("Finish Adding");
         inputArea.add(addButton);
 
         addButton.addActionListener(e -> {
@@ -133,27 +141,90 @@ public class Modals {
             try {
                 roomCount = Integer.parseInt(roomCountText);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(modal1, "Room count must be a valid number.", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(modal, "Room count must be a valid number.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (!model.isValidRoomCount(roomCount + chosenHotel.getTotalRooms())) {
-                JOptionPane.showMessageDialog(modal1, "Invalid room count. Room count must be between 1 and 50.", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(modal, "Invalid room count. Room count must be between 1 and 50.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Success
-            model.addRooms(chosenHotel, roomCount);
+            // getting dropdown item
+            String selectedType = (String) basePriceDropdown.getSelectedItem();
+
+            float baseRate;
+            switch (selectedType) {
+                case "Deluxe":
+                    baseRate = 1.2f;
+                    break;
+                case "Executive":
+                    baseRate = 1.35f;
+                    break;
+                default:
+                    baseRate = 1.0f;
+                    break;
+            }
+
+            // Success: add rooms with the selected base rate
+            model.addRooms(chosenHotel, roomCount, baseRate);
             updateRoomsShown.run();
-            modal1.dispose();
+            modal.dispose();
             JOptionPane.showMessageDialog(parent, "Rooms successfully added.", "Success", JOptionPane.INFORMATION_MESSAGE);
             updateHotels.run();
         });
 
-        modal1.add(inputArea, BorderLayout.CENTER);
-        modal1.pack();
-        modal1.setLocationRelativeTo(parent);
-        modal1.setVisible(true);
+        modal.add(inputArea, BorderLayout.CENTER);
+        modal.pack();
+        modal.setLocationRelativeTo(parent);
+        modal.setVisible(true);
+    }
+
+    public static void showEditRateDialog(JFrame parent, MVC_Model model, Room room, Runnable updateHotels, Runnable updateRoomsShown) {
+        JDialog modal = new JDialog(parent, "Change Room Type", true);
+        JComboBox<String> basePriceDropdown;
+
+        modal.setLayout(new BorderLayout());
+
+        JPanel inputArea = new JPanel(new GridLayout(2, 2, 5, 5));
+        inputArea.add(new JLabel("Room Rate:"));
+        String[] roomTypes = {"Regular", "Deluxe", "Executive"};
+        basePriceDropdown = new JComboBox<>(roomTypes);
+        inputArea.add(basePriceDropdown);
+
+        inputArea.add(new JLabel()); // Placeholder to align the button
+        JButton addButton = new JButton("Finish Adding");
+        inputArea.add(addButton);
+
+        addButton.addActionListener(e -> {
+            // getting dropdown item
+            String selectedType = (String) basePriceDropdown.getSelectedItem();
+
+            float baseRate;
+            switch (selectedType) {
+                case "Deluxe":
+                    baseRate = 1.2f;
+                    break;
+                case "Executive":
+                    baseRate = 1.35f;
+                    break;
+                default:
+                    baseRate = 1.0f;
+                    break;
+            }
+
+            // Success: add rooms with the selected base rate
+            room.setBaseRate(baseRate);
+            updateRoomsShown.run();
+            modal.dispose();
+            JOptionPane.showMessageDialog(parent, "Base Rate of " + room.getName() + " Successfully Changed", "Success", JOptionPane.INFORMATION_MESSAGE);
+            updateHotels.run();
+        });
+
+        modal.add(inputArea, BorderLayout.CENTER);
+        modal.pack();
+        modal.setLocationRelativeTo(parent);
+        modal.setVisible(true);
     }
 
     public static int showRemoveRoomsDialog(JFrame parent, MVC_Model model, Hotel chosenHotel, ArrayList<String> toDelete, Runnable updateHotels, Runnable updateRoomsShown) {
@@ -175,8 +246,8 @@ public class Modals {
     }
 
     public static void showModifyBasePriceDialog(JFrame parent, MVC_Model model, Hotel chosenHotel, Runnable updateSpecificHotelPanel, Runnable updateHotels) {
-        JDialog modal1 = new JDialog(parent, "Modify Base Price", true);
-        modal1.setLayout(new BorderLayout());
+        JDialog modal = new JDialog(parent, "Modify Base Price", true);
+        modal.setLayout(new BorderLayout());
 
         JPanel inputArea = new JPanel(new GridLayout(2, 2, 5, 5));
         JTextField basePriceEntry = new JTextField(20);
@@ -196,27 +267,27 @@ public class Modals {
             try {
                 basePrice = Integer.parseInt(basePriceText);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(modal1, "Price must be a valid number.", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(modal, "Price must be a valid number.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (basePrice < 100) {
-                JOptionPane.showMessageDialog(modal1, "Invalid price, minimum is 100", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(modal, "Invalid price, minimum is 100", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             // Success
             model.modifyBasePrice(chosenHotel, basePrice);
-            modal1.dispose();
+            modal.dispose();
             JOptionPane.showMessageDialog(parent, "Base price successfully changed.", "Success", JOptionPane.INFORMATION_MESSAGE);
             updateSpecificHotelPanel.run();
             updateHotels.run();
         });
 
-        modal1.add(inputArea, BorderLayout.CENTER);
-        modal1.pack();
-        modal1.setLocationRelativeTo(parent);
-        modal1.setVisible(true);
+        modal.add(inputArea, BorderLayout.CENTER);
+        modal.pack();
+        modal.setLocationRelativeTo(parent);
+        modal.setVisible(true);
     }
 
     public static int showDeleteHotelDialog(JFrame parent, MVC_Model model, ArrayList<Hotel> hotels, Hotel chosenHotel, Runnable updateHotels, Runnable updateRoomsShown) {

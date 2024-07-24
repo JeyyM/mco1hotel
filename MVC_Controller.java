@@ -11,6 +11,9 @@ public class MVC_Controller {
     private int mainPanelWidth= 450;
     private int mainPanelHeight= 500;
 
+    private int viewHotelsPanelWidth = 450;
+    private int viewHotelsPanelHeight = 500;
+
     private int manageHotelsPanelWidth = 680;
     private int manageHotelsPanelHeight = 500;
 
@@ -20,13 +23,17 @@ public class MVC_Controller {
     private ManageSpecificHotelPanel specificHotelPanel;
     private ShowRooms showRooms;
 
-    private String[] toDelete;
-
     public MVC_Controller(MVC_Model model, MVC_View view) {
         this.model = model;
         this.view = view;
 
         view.addCreateHotelListener(e -> showCreateHotelDialog());
+
+        view.addViewHotelListener(e -> {
+            switchToViewHotelsPanel();
+            updateHotels();
+        });
+
         view.addManageHotelListener(e -> {
             switchToManageHotelsPanel();
             updateHotels();
@@ -62,6 +69,11 @@ public class MVC_Controller {
         ReservationsPanel reservationsPanel = view.getReservationsPanel();
         if (reservationsPanel != null) {
             reservationsPanel.setHotels(model.getHotels());
+        }
+
+        ViewHotelsPanel viewHotelsPanel = view.getViewHotelsPanel();
+        if (viewHotelsPanel != null) {
+            viewHotelsPanel.setHotels(model.getHotels());
         }
     }
 
@@ -100,6 +112,10 @@ public class MVC_Controller {
         Modals.showAddRoomsDialog(view, model, chosenHotel, this::updateHotels, this::updateRoomsShown);
     }
 
+    public void showEditRateDialog(Room chosenRoom) {
+        Modals.showEditRateDialog(view, model, chosenRoom, this::updateHotels, this::updateRoomsShown);
+    }
+
     public int showRemoveRoomsDialog(Hotel chosenHotel, ArrayList<String> toDelete) {
         int answer = 1;
         if (toDelete.size() > 0) {
@@ -124,6 +140,25 @@ public class MVC_Controller {
         view.getContentPane().removeAll();
         view.add(view.getMainPanel(), BorderLayout.CENTER);
         view.setSize(mainPanelWidth, mainPanelHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+
+    public void switchToViewHotelsPanel() {
+        view.getContentPane().removeAll();
+        if (view.getViewHotelsPanel() == null) {
+            view.setViewHotelsPanel(new ViewHotelsPanel(model.getHotels(), model.getManager()));
+        }
+        view.getViewHotelsPanel().setController(this);
+        view.getViewHotelsPanel().addBackButtonListener(e -> {
+            switchToMainPanel();
+        });
+        JScrollPane scrollPane = new JScrollPane(view.getViewHotelsPanel());
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        view.add(scrollPane, BorderLayout.CENTER);
+        view.setSize(viewHotelsPanelWidth, viewHotelsPanelHeight);
         view.setResizable(false);
         view.revalidate();
         view.repaint();
@@ -175,8 +210,10 @@ public class MVC_Controller {
 
     public void switchToShowRooms(Hotel hotel) {
         showRooms = new ShowRooms(hotel);
+        showRooms.setController(this);
         showRooms.addBackButtonListener(e -> switchToSpecificHotelPanel(hotel));
         showRooms.addAddButtonListener(e -> showAddRoomsDialog(hotel));
+
         showRooms.addRemoveButtonListener(e -> {
             if (showRemoveRoomsDialog(hotel, showRooms.getToDelete()) == 0){
                 showRooms.resetRemove();
