@@ -17,10 +17,15 @@ public class MVC_Controller {
     private int manageSpecificHotelPanelWidth = 450;
     private int manageSpecificHotelPanelHeight = 500;
 
+    private int reserveCalendarWidth = 680;
+    private int reserveCalendarHeight = 500;
+
     private ManageSpecificHotelPanel specificHotelPanel;
     private ShowRooms showRooms;
 
     private String[] toDelete;
+
+    private Hotel tempHotel;
 
     public MVC_Controller(MVC_Model model, MVC_View view) {
         this.model = model;
@@ -160,6 +165,14 @@ public class MVC_Controller {
                 JOptionPane.showMessageDialog(specificHotelPanel, "There is at least one reservation, cannot change base price.", "Error", JOptionPane.WARNING_MESSAGE);
             }
         });
+        specificHotelPanel.addRemoveReservationsButtonListener(e -> {
+            if (hotel.getTotalReservationCount() == 0) {
+                JOptionPane.showMessageDialog(specificHotelPanel, "There are no reservations in this hotel.", "Error", JOptionPane.WARNING_MESSAGE);
+            }
+            else {
+                switchToViewAllReservedRooms(hotel);
+            }
+        });
         specificHotelPanel.addDeleteHotelButtonListener(e -> {
             ArrayList<Hotel> hotels = model.getHotels();
             showDeleteHotelDialog(hotels, hotel);
@@ -209,12 +222,13 @@ public class MVC_Controller {
         view.revalidate();
         view.repaint();
     }
-    
+
     public void switchToReserveSpecificRoomPanel(Hotel hotel, String name) {
         RoomReservationsPanel roomReservationsPanel = new RoomReservationsPanel(hotel, name);
         roomReservationsPanel.setController(this);
+        tempHotel = hotel;
         roomReservationsPanel.addBackButtonListener(e -> switchToReservationsPanel());
-        
+
         view.getContentPane().removeAll();
         JScrollPane scrollPane = new JScrollPane(roomReservationsPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -225,35 +239,81 @@ public class MVC_Controller {
         view.revalidate();
         view.repaint();
     }
-    
+
     public void switchToReserveCalendarStart(Room room, float cost, String name) {
         ReserveCalendar reserveStart = new ReserveCalendar(room, cost, name);
         reserveStart.setController(this);
-        
+        reserveStart.addBackButtonStartListener(e -> switchToReserveSpecificRoomPanel(tempHotel, name));
+
         view.getContentPane().removeAll();
         view.add(reserveStart, BorderLayout.CENTER);
-        view.setSize(manageSpecificHotelPanelWidth, manageSpecificHotelPanelHeight);
+        view.setSize(reserveCalendarWidth, reserveCalendarHeight);
         view.setResizable(false);
         view.revalidate();
         view.repaint();
     }
-    
+
     public void switchToReserveEndPanel(Room room, float cost, String name, int startDay) {
         System.out.println("Start day : " + startDay);
-        
-        ReserveCalendar reserveStart = new ReserveCalendar(room, cost, name, startDay);
-        reserveStart.setController(this);
+
+        ReserveCalendar reserveEnd = new ReserveCalendar(room, cost, name, startDay);
+        reserveEnd.setController(this);
+        reserveEnd.addBackButtonEndListener(e -> switchToReserveCalendarStart(room, cost, name));
+
+        view.getContentPane().removeAll();
+        view.add(reserveEnd, BorderLayout.CENTER);
+        view.setSize(reserveCalendarWidth, reserveCalendarHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+
+    public void reserveRoomFinal(Room room, float cost, String name, int startDay, int endDay) {
+        int answer = Modals.showReserveRoomDialog(view, model, room, name, cost, startDay, endDay);
+
+        if (answer == JOptionPane.YES_OPTION) {
+            switchToMainPanel();
+        }
+    }
+
+    public void switchToViewAllReservedRooms(Hotel hotel) {
+        ViewAllReservedRoomsPanel reservedRoomsPanel = new ViewAllReservedRoomsPanel(hotel);
+        reservedRoomsPanel.setController(this);
+        tempHotel = hotel;
+        reservedRoomsPanel.addBackButtonListener(e -> switchToSpecificHotelPanel(hotel));
         
         view.getContentPane().removeAll();
-        view.add(reserveStart, BorderLayout.CENTER);
-        view.setSize(manageSpecificHotelPanelWidth, manageSpecificHotelPanelHeight);
+        JScrollPane scrollPane = new JScrollPane(reservedRoomsPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        view.add(scrollPane);
+        view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
         view.setResizable(false);
         view.revalidate();
         view.repaint();
     }
     
-    public void reserveRoomFinal(Room room, float cost, String name, int startDay, int endDay) {
-        model.reserveRoom(room, cost, name, startDay, endDay);
+    public void switchToRemoveReservations(Room room) {
+        RemoveReservationsPanel removeReservationsPanel = new RemoveReservationsPanel(room);
+        removeReservationsPanel.setController(this);
+        removeReservationsPanel.addBackButtonListener(e -> switchToViewAllReservedRooms(tempHotel));
+        
+        view.getContentPane().removeAll();
+        JScrollPane scrollPane = new JScrollPane(removeReservationsPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        view.add(scrollPane);
+        view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
     }
     
+    public void removeReservationFinal(Reservation reservation) {
+        int answer = Modals.showRemoveReservationDialog(view, model, tempHotel, reservation);
+
+        if (answer == JOptionPane.YES_OPTION) {
+            switchToMainPanel();
+        }
+    }
 }

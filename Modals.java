@@ -239,4 +239,32 @@ public class Modals {
 
         return option;
     }
+    
+    public static int showReserveRoomDialog(JFrame parent, MVC_Model model, Room room, String name, float cost, int startDay, int endDay) {
+        // Format the message string
+        String message = String.format("Is the information listed below correct?\nName: %s\nRoom Name: %s\nStart Day: %d\n End Day: %d\n", name, room.getName(), startDay, endDay);
+        int option = JOptionPane.showConfirmDialog(parent, message, "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        
+        if (option == JOptionPane.YES_OPTION) {
+            model.reserveRoom(room, cost, name, startDay, endDay);
+            
+            JOptionPane.showMessageDialog(parent, "Reservation successfully booked.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+        return option;
+    }
+    
+    public static int showRemoveReservationDialog(JFrame parent, MVC_Model model, Hotel hotel, Reservation reservation) {
+        // Format the message string
+        String message = String.format("Are you sure you want to remove the reservation by %s in room %s from %d to %d?", reservation.getCustomerName(), reservation.getRoomName(), reservation.getStartDay(), reservation.getEndDay());
+        int option = JOptionPane.showConfirmDialog(parent, message, "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        
+        if (option == JOptionPane.YES_OPTION) {
+            model.removeReservation(hotel, reservation);
+            
+            JOptionPane.showMessageDialog(parent, "Reservation successfully deleted.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+        return option;
+    }
 }

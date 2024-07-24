@@ -96,4 +96,14 @@ public class Reservation {
     public String getRoomName(){
         return this.roomName;
     }
+    
+    private int buttonIndex;
+    
+    public void setIndex(int index) {
+        this.buttonIndex = index;
+    }
+    
+    public int getIndex() {
+        return buttonIndex;
+    }
 }

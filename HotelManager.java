@@ -932,6 +932,10 @@ public class HotelManager {
         room.addReservation(reservation);
         System.out.println("yay we did it!");
     }
+    
+    public void removeReservation(Hotel chosenHotel, Reservation reservation) {
+        chosenHotel.deleteReservation(reservation.getRoomName(), reservation.getStartDay(), reservation.getEndDay());
+    }
 }
 
 
