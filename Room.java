@@ -245,7 +245,7 @@ public class Room {
         for (ArrayList<Integer> range : reservationTimeline) {
             // Only the head or tail is worth validating if a number is found
             if (range.contains(givenDay)) {
-                if (range.get(range.size() - 1) == givenDay) {
+                if (range.get(range.size() - 1) == givenDay || range.get(0) == givenDay) {
                     return 0;
                 }
                 return -1;

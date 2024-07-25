@@ -104,6 +104,16 @@ public class RoomReservationsPanel extends JPanel {
                     JButton roomButton = new JButton("<html>" + room.getName() + "</html>");
                     roomButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
                     roomButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+
+                    float baseRate = room.getBaseRate();
+                    if (baseRate == 1.0f) {
+                        roomButton.setBackground(null);
+                    } else if (baseRate == 1.20f) {
+                        roomButton.setBackground(Color.decode("#fae105"));
+                    } else if (baseRate == 1.35f) {
+                        roomButton.setBackground(Color.decode("#00fff2"));
+                    }
+
                     roomButton.addActionListener(e -> {
                         controller.switchToReserveCalendarStart(room, cost, name);
                     });
