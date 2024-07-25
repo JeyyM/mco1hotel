@@ -175,8 +175,8 @@ public class ReserveCalendar extends JPanel {
         panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
 
         // Back Button
-        backButtonEnd = new JButton("\u2190");
-        backButtonEnd.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
+        backButtonEnd = new JButton("Undo");
+//        backButtonEnd.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
         panelNorth.add(backButtonEnd, BorderLayout.WEST);
 
         // North Label

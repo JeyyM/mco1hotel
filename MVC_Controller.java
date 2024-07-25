@@ -308,7 +308,7 @@ public class MVC_Controller {
     }
 
     public void reserveRoomFinal(Room room, float cost, String name, int startDay, int endDay) {
-        int answer = Modals.showReserveRoomDialog(view, model, room, name, cost, startDay, endDay);
+        int answer = Modals.showReserveRoomDialog(view, model, tempHotel, room, name, cost, startDay, endDay);
 
         if (answer == JOptionPane.YES_OPTION) {
             switchToMainPanel();

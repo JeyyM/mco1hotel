@@ -31,6 +31,11 @@ public class Hotel {
     public int getIndex() {
         return buttonIndex;
     }
+    private float[] dayMultipliers = new float[31];
+
+    public float[] getDayMultipliers() {
+        return dayMultipliers;
+    }
 
     // Constructor
     /**
@@ -47,6 +52,11 @@ public class Hotel {
         // Loops to addRooms based on initial total
         for (int i = 0; i < totalRooms; i++) {
             addRoom(1.0f);
+        }
+
+        for (int j = 0; j < 31; j++){
+//            dayMultipliers[j] = 1.0f + (0.01f * (j+1));
+            dayMultipliers[j] = 1.0f * (j+1);
         }
     }
 

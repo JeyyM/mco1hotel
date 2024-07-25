@@ -310,20 +310,49 @@ public class Modals {
 
         return option;
     }
-    
-    public static int showReserveRoomDialog(JFrame parent, MVC_Model model, Room room, String name, float cost, int startDay, int endDay) {
+
+    public static int showReserveRoomDialog(JFrame parent, MVC_Model model, Hotel hotel, Room room, String name, float cost, int startDay, int endDay) {
+        float hotelBasePrice = hotel.getBasePrice();
+        float roomTypeMultiplier = room.getBaseRate();
+        float[] dayMultiplier = hotel.getDayMultipliers();
+        float totalPayment = 0.0f;
+
+        ArrayList<Integer> daysBetween = new ArrayList<>();
+
+        for (int i = startDay; i <= endDay; i++) {
+            daysBetween.add(i);
+        }
+
+        StringBuilder messageBuilder = new StringBuilder();
+        messageBuilder.append("Is the information listed below correct?\n");
+        messageBuilder.append(String.format("Name: %s\n", name));
+        messageBuilder.append(String.format("Room Name: %s\n", room.getName()));
+        messageBuilder.append(String.format("Room Type: %s (%.2fx)\n", roomTypeMultiplier == 1.2f ? "Deluxe" : roomTypeMultiplier == 1.35f ? "Executive" : "Regular", roomTypeMultiplier));
+        messageBuilder.append(String.format("Hotel Nightly Rate: %.2f\n\n", hotelBasePrice));
+
+        messageBuilder.append(String.format("Price Breakdown from Day %d to Day %d\n", startDay, endDay));
+        for (int j = 0; j < daysBetween.size(); j++) {
+            messageBuilder.append(String.format("Day %d (%.2fx): %.2f\n", daysBetween.get(j), dayMultiplier[daysBetween.get(j) - 1], hotelBasePrice * dayMultiplier[daysBetween.get(j) - 1]));
+            totalPayment += hotelBasePrice * dayMultiplier[daysBetween.get(j) - 1];
+        }
+
+        messageBuilder.append(String.format("Rate Total: %.2f\n", totalPayment));
+        messageBuilder.append(String.format("Total: %.2f * %.2f = %.2f\n", totalPayment, roomTypeMultiplier, totalPayment * roomTypeMultiplier));
+
+        cost = totalPayment * roomTypeMultiplier;
+
         // Format the message string
-        String message = String.format("Is the information listed below correct?\nName: %s\nRoom Name: %s\nStart Day: %d\n End Day: %d\n", name, room.getName(), startDay, endDay);
+        String message = messageBuilder.toString();
         int option = JOptionPane.showConfirmDialog(parent, message, "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-        
+
         if (option == JOptionPane.YES_OPTION) {
             model.reserveRoom(room, cost, name, startDay, endDay);
-            
             JOptionPane.showMessageDialog(parent, "Reservation successfully booked.", "Success", JOptionPane.INFORMATION_MESSAGE);
         }
-        
+
         return option;
     }
+
     
     public static int showRemoveReservationDialog(JFrame parent, MVC_Model model, Hotel hotel, Reservation reservation) {
         // Format the message string
