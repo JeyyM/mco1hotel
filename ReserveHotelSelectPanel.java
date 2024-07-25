@@ -7,11 +7,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /*
- * This is the panel for the selection of a hotel to manage
+ * This is the panel for the selection of a hotel to reserve
  * */
-public class ReservationsPanel extends JPanel {
+public class ReserveHotelSelectPanel extends JPanel {
     private ArrayList<Hotel> hotels;
     private HotelManager manager;
+    private MVC_Controller controller;
+
+    // Panel components
     private JButton backButton;
     private JPanel panelCenter;
     private JPanel panelNorth;
@@ -26,52 +29,7 @@ public class ReservationsPanel extends JPanel {
     private int buttonHeight = 80;
     private int northLabelFontSize = 20;
 
-    private MVC_Controller controller;
-
-    public ReservationsPanel(ArrayList<Hotel> hotels, HotelManager manager) {
-        this.hotels = hotels;
-        this.manager = manager;
-
-        setLayout(new BorderLayout());
-
-        // Setting north panel
-        panelNorth = new JPanel();
-        panelNorth.setLayout(new BorderLayout());
-        panelNorth.setBackground(Color.decode("#063970"));
-        panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
-
-        // Back Button
-        backButton = new JButton("\u2190");
-        backButton.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
-        panelNorth.add(backButton, BorderLayout.WEST);
-
-        // North Label
-        JLabel labelManageHotels = new JLabel("Select a Hotel to Reserve", JLabel.CENTER);
-        labelManageHotels.setForeground(Color.WHITE);
-        labelManageHotels.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
-        panelNorth.add(labelManageHotels, BorderLayout.CENTER);
-
-        // Create the input panel for name entry
-        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        nameEntry = new JTextField(20);
-        inputPanel.add(new JLabel("Enter your name:"));
-        inputPanel.add(nameEntry);
-        panelNorth.add(inputPanel, BorderLayout.SOUTH);
-
-        add(panelNorth, BorderLayout.NORTH);
-
-        // Create the center panel with vertical BoxLayout so no grid row count needed
-        panelCenter = new JPanel();
-        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
-
-        initializeRows();
-
-        JScrollPane scrollPane = new JScrollPane(panelCenter);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        add(scrollPane, BorderLayout.CENTER);
-    }
-
-    // For refreshing the hotels every enter
+    // Getters and Setters
     public void setHotels(ArrayList<Hotel> hotels) {
         this.hotels = hotels;
         initializeRows();
@@ -81,6 +39,7 @@ public class ReservationsPanel extends JPanel {
         this.controller = controller;
     }
 
+    // Event listeners
     public void addBackButtonListener(ActionListener listener) {
         backButton.addActionListener(listener);
     }
@@ -132,5 +91,48 @@ public class ReservationsPanel extends JPanel {
 
         panelCenter.revalidate();
         panelCenter.repaint();
+    }
+
+    public ReserveHotelSelectPanel(ArrayList<Hotel> hotels, HotelManager manager) {
+        this.hotels = hotels;
+        this.manager = manager;
+
+        setLayout(new BorderLayout());
+
+        // Setting north panel
+        panelNorth = new JPanel();
+        panelNorth.setLayout(new BorderLayout());
+        panelNorth.setBackground(Color.decode("#063970"));
+        panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
+
+        // Back Button
+        backButton = new JButton("\u2190");
+        backButton.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
+        panelNorth.add(backButton, BorderLayout.WEST);
+
+        // North Label
+        JLabel labelManageHotels = new JLabel("Select a Hotel to Reserve", JLabel.CENTER);
+        labelManageHotels.setForeground(Color.WHITE);
+        labelManageHotels.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
+        panelNorth.add(labelManageHotels, BorderLayout.CENTER);
+
+        // Create the input panel for name entry
+        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        nameEntry = new JTextField(20);
+        inputPanel.add(new JLabel("Enter your name:"));
+        inputPanel.add(nameEntry);
+        panelNorth.add(inputPanel, BorderLayout.SOUTH);
+
+        add(panelNorth, BorderLayout.NORTH);
+
+        // Create the center panel with vertical BoxLayout so no grid row count needed
+        panelCenter = new JPanel();
+        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
+
+        initializeRows();
+
+        JScrollPane scrollPane = new JScrollPane(panelCenter);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        add(scrollPane, BorderLayout.CENTER);
     }
 }

@@ -6,8 +6,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class RemoveReservationsPanel extends JPanel {
-    private ArrayList<Reservation> reservations;
+/*
+ * This is the panel for the selection of a room to reserve
+ * */
+public class ReserveRoomSelectPanel extends JPanel {
+    private ArrayList<Room> rooms;
     private HotelManager manager;
     private JButton backButton;
     private JPanel panelCenter;
@@ -20,12 +23,17 @@ public class RemoveReservationsPanel extends JPanel {
     private int buttonWidth = 120;
     private int buttonHeight = 80;
     private int northLabelFontSize = 20;
+    
+    private String name;
+    private float cost;
 
     private MVC_Controller controller;
-    
-    public RemoveReservationsPanel(Room room) {
-        this.reservations = room.getReservations();
 
+    public ReserveRoomSelectPanel(Hotel hotel, String name) {
+        this.rooms = hotel.getAllRooms();
+        this.cost = hotel.getBasePrice();
+        this.name = name;
+        
         setLayout(new BorderLayout());
 
         // Setting north panel
@@ -40,7 +48,7 @@ public class RemoveReservationsPanel extends JPanel {
         panelNorth.add(backButton, BorderLayout.WEST);
 
         // North Label
-        JLabel labelManageHotels = new JLabel("Select Reservation to Remove", JLabel.CENTER);
+        JLabel labelManageHotels = new JLabel("Select Room to Reserve", JLabel.CENTER);
         labelManageHotels.setForeground(Color.WHITE);
         labelManageHotels.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
         panelNorth.add(labelManageHotels, BorderLayout.CENTER);
@@ -57,26 +65,30 @@ public class RemoveReservationsPanel extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
     }
-    
+
+    // For refreshing the hotels every enter
+
+
     public void setController(MVC_Controller controller) {
         this.controller = controller;
     }
-    
+
     public void addBackButtonListener(ActionListener listener) {
         backButton.addActionListener(listener);
     }
-    
+
+    // There are rows that will contain the grid of buttons
     public void initializeRows() {
         // Panel is cleared to it can reset everything
         panelCenter.removeAll();
 
-        int totalReservations = reservations.size();
+        int totalRooms = rooms.size();
         int cols = 5;
         // Rows should be rounded up to make an additional incomplete one
-        int rows = (int) Math.ceil((double) totalReservations / cols);
+        int rows = (int) Math.ceil((double) totalRooms / cols);
 
-        for (int i = 0; i < totalReservations ; i++) {
-            reservations.get(i).setIndex(i);
+        for (int i = 0; i < totalRooms; i++) {
+            rooms.get(i).setIndex(i);
         }
 
         int roomIndex = 0;
@@ -87,15 +99,25 @@ public class RemoveReservationsPanel extends JPanel {
             rowWrapper.setBorder(new EmptyBorder(5, 5, 5, 30));
 
             for (int j = 0; j < cols; j++) {
-                if (roomIndex < totalReservations) {
-                    Reservation reservation = reservations.get(roomIndex);
-                    JButton reservationButton = new JButton("<html>By" + reservation.getCustomerName() + "<br>" + "Days " + reservation.getStartDay() + " to " + reservation.getEndDay() + "<br>Total " + reservation.getCost() + "</html>");
-                    reservationButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-                    reservationButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-                    reservationButton.addActionListener(e -> {
-                        controller.removeReservationFinal(reservation);
+                if (roomIndex < totalRooms) {
+                    Room room = rooms.get(roomIndex);
+                    JButton roomButton = new JButton("<html>" + room.getName() + "</html>");
+                    roomButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+                    roomButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+
+                    float baseRate = room.getBaseRate();
+                    if (baseRate == 1.0f) {
+                        roomButton.setBackground(null);
+                    } else if (baseRate == 1.20f) {
+                        roomButton.setBackground(Color.decode("#fae105"));
+                    } else if (baseRate == 1.35f) {
+                        roomButton.setBackground(Color.decode("#00fff2"));
+                    }
+
+                    roomButton.addActionListener(e -> {
+                        controller.switchToReserveCalendarStart(room, cost, name);
                     });
-                    rowWrapper.add(reservationButton);
+                    rowWrapper.add(roomButton);
                     roomIndex++;
                 } else {
                     // Put an empty label since the buttons will overgrow if not

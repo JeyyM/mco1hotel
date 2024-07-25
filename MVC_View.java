@@ -5,74 +5,53 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/*
+* Main_Menu contains the options to edit the hotels
+ */
 public class MVC_View extends JFrame {
-    private HotelManager manager;
     private ArrayList<Hotel> hotels;
+
+    // Menu sizing
+    private int menuSize = 450;
+    private int menuHeight = 500;
+
+    // Panel Components
+    private JLabel currentHotelsCount;
     private JButton createHotelButton;
     private JButton viewHotelButton;
     private JButton manageHotelButton;
     private JButton reserveHotelButton;
     private JButton exitProgramButton;
 
-    private JLabel currentHotelsCount;
-
-    private int menuSize = 450;
-    private int menuHeight = 500;
-
+    // Panels of other pages
     private JPanel mainPanel;
     private ManageHotelsPanel manageHotelsPanel;
-    private ReservationsPanel reservationsPanel;
+    private ReserveHotelSelectPanel reservationsPanel;
     private ViewHotelsPanel viewHotelsPanel;
 
+    //Event Listeners
     public void addCreateHotelListener(ActionListener listener) {
         createHotelButton.addActionListener(listener);
     }
-
     public void addViewHotelListener(ActionListener listener) {
         viewHotelButton.addActionListener(listener);
     }
-
     public void addManageHotelListener(ActionListener listener) {
         manageHotelButton.addActionListener(listener);
     }
-
     public void addReserveHotelListener(ActionListener listener) {
         reserveHotelButton.addActionListener(listener);
-    }
-
-    public void setManageHotelsPanelController(MVC_Controller controller) {
-        if (manageHotelsPanel != null) {
-            manageHotelsPanel.setController(controller);
-        }
-    }
-
-    MVC_View(ArrayList<Hotel> hotels, HotelManager manager) {
-        super("Hotel Manager");
-        this.manager = manager;
-        this.hotels = hotels;
-
-        setLayout(new BorderLayout());
-
-        mainPanel = new JPanel(new BorderLayout());
-        initializeContent(mainPanel);
-        add(mainPanel, BorderLayout.CENTER);
-
-        setSize(menuSize, menuHeight);
-        setVisible(true);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     // Getters and Setters
     public JLabel getCurrentHotelsCount() {
         return currentHotelsCount;
     }
-
     public JPanel getMainPanel() {
         return mainPanel;
     }
 
-    // Get Panels for Switching
+    // Getters and Setters for other panels
     public ViewHotelsPanel getViewHotelsPanel(){
         return viewHotelsPanel;
     }
@@ -89,15 +68,23 @@ public class MVC_View extends JFrame {
         this.manageHotelsPanel = manageHotelsPanel;
     }
 
-    public ReservationsPanel getReservationsPanel() {
+    public ReserveHotelSelectPanel getReservationsPanel() {
         return this.reservationsPanel;
     }
 
-    public void setReservationsPanel(ReservationsPanel reservationsPanel) {
+    public void setReservationsPanel(ReserveHotelSelectPanel reservationsPanel) {
         this.reservationsPanel = reservationsPanel;
     }
 
-    // To create menu
+    // Controller setters, they are given since menus within as not having it in some cases
+    // can mess with the base switchPanels
+    public void setManageHotelsPanelController(MVC_Controller controller) {
+        if (manageHotelsPanel != null) {
+            manageHotelsPanel.setController(controller);
+        }
+    }
+
+    // Set up the option buttons
     public void initializeContent(JPanel panel) {
         // Create the north label
         JPanel panelNorth = new JPanel();
@@ -112,7 +99,7 @@ public class MVC_View extends JFrame {
         panelNorth.add(labelHotelManager);
         panel.add(panelNorth, BorderLayout.NORTH);
 
-        // FlowLayout has a .CENTER
+        // FlowLayout has a .CENTER to keep content centered
         JPanel panelCenter = new JPanel();
         panelCenter.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
 
@@ -138,5 +125,23 @@ public class MVC_View extends JFrame {
 
         panelCenter.add(buttonPanel);
         panel.add(panelCenter, BorderLayout.CENTER);
+    }
+
+    MVC_View(ArrayList<Hotel> hotels, HotelManager manager) {
+        // Set title
+        super("Hotel Manager");
+        // Set all hotels
+        this.hotels = hotels;
+
+        setLayout(new BorderLayout());
+
+        mainPanel = new JPanel(new BorderLayout());
+        initializeContent(mainPanel);
+        add(mainPanel, BorderLayout.CENTER);
+
+        setSize(menuSize, menuHeight);
+        setVisible(true);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }

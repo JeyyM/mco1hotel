@@ -7,11 +7,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /*
- * This is the panel for the selection of a hotel to manage
+ * This is for showing the list of hotels through view
  * */
 public class ViewHotelsPanel extends JPanel {
     private ArrayList<Hotel> hotels;
     private HotelManager manager;
+    private MVC_Controller controller;
+
+    // Panel components
     private JButton backButton;
     private JPanel panelCenter;
 
@@ -24,7 +27,21 @@ public class ViewHotelsPanel extends JPanel {
     private int buttonHeight = 80;
     private int northLabelFontSize = 20;
 
-    private MVC_Controller controller;
+
+    // Getters and Setters
+    public void setHotels(ArrayList<Hotel> hotels) {
+        this.hotels = hotels;
+        initializeRows();
+    }
+
+    public void setController(MVC_Controller controller) {
+        this.controller = controller;
+    }
+
+    // Event listeners
+    public void addBackButtonListener(ActionListener listener) {
+        backButton.addActionListener(listener);
+    }
 
     public ViewHotelsPanel(ArrayList<Hotel> hotels, HotelManager manager) {
         this.hotels = hotels;
@@ -60,20 +77,6 @@ public class ViewHotelsPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(panelCenter);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
-    }
-
-    // For refreshing the hotels every enter
-    public void setHotels(ArrayList<Hotel> hotels) {
-        this.hotels = hotels;
-        initializeRows();
-    }
-
-    public void setController(MVC_Controller controller) {
-        this.controller = controller;
-    }
-
-    public void addBackButtonListener(ActionListener listener) {
-        backButton.addActionListener(listener);
     }
 
     // There are rows that will contain the grid of buttons

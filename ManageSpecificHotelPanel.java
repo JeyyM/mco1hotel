@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 
 public class ManageSpecificHotelPanel extends JPanel {
     private Hotel hotel;
+
+    // Panel Components
     private JLabel roomCountLabel;
     private JLabel basePriceLabel;
     private JButton renameHotelButton;
@@ -16,14 +18,53 @@ public class ManageSpecificHotelPanel extends JPanel {
     private JButton deleteHotelButton;
     private JButton backButton;
     private JLabel managingLabel;
+    private JPanel panelNorth;
 
-    private JPanel panelNorth = new JPanel();
+    // Size variables
     private int fullWidth = 450;
     private int menuHeight = 500;
     private int backButtonFontSize = 25;
     private JPanel mainPanel;
     private int northHeight = 40;
     private int northLabelFontSize = 20;
+
+    // Event Listeners
+    public void addBackButtonListener(ActionListener listener) {
+        backButton.addActionListener(listener);
+    }
+
+    public void addRenameHotelButtonListener(ActionListener listener) {
+        renameHotelButton.addActionListener(listener);
+    }
+
+    public void addModifyRoomsButtonListener(ActionListener listener) {
+        modifyRoomsButton.addActionListener(listener);
+    }
+
+    public void addModifyBasePriceButtonListener(ActionListener listener) {
+        modifyBasePriceButton.addActionListener(listener);
+    }
+
+    public void addDateMultiplierListener(ActionListener listener) {
+        modifyDateMultiplyButton.addActionListener(listener);
+    }
+
+    public void addRemoveReservationsButtonListener(ActionListener listener) {
+        removeReservationsButton.addActionListener(listener);
+    }
+
+    public void addDeleteHotelButtonListener(ActionListener listener) {
+        deleteHotelButton.addActionListener(listener);
+    }
+
+    // Updaters
+    public void updateHotelInfo() {
+        managingLabel.setText("Managing " + hotel.getName());
+        roomCountLabel.setText(String.format("Number of Rooms: %d", hotel.getTotalRooms()));
+        basePriceLabel.setText(String.format("Base Price: %.2f", hotel.getBasePrice()));
+        revalidate();
+        repaint();
+    }
 
     ManageSpecificHotelPanel(Hotel hotel) {
         this.hotel = hotel;
@@ -48,42 +89,6 @@ public class ManageSpecificHotelPanel extends JPanel {
         mainPanel = new JPanel(new BorderLayout());
         initializeContent(mainPanel);
         add(mainPanel, BorderLayout.CENTER);
-    }
-
-    public void addBackButtonListener(ActionListener listener) {
-        backButton.addActionListener(listener);
-    }
-
-    public void addRenameHotelButtonListener(ActionListener listener) {
-        renameHotelButton.addActionListener(listener);
-    }
-
-    public void addModifyRoomsButtonListener(ActionListener listener) {
-        modifyRoomsButton.addActionListener(listener);
-    }
-
-    public void addModifyBasePriceButtonListener(ActionListener listener) {
-        modifyBasePriceButton.addActionListener(listener);
-    }
-
-    public void addDateMultiplierListener(ActionListener listener) {
-        modifyDateMultiplyButton.addActionListener(listener);
-    }
-    
-    public void addRemoveReservationsButtonListener(ActionListener listener) {
-        removeReservationsButton.addActionListener(listener);
-    }
-
-    public void addDeleteHotelButtonListener(ActionListener listener) {
-        deleteHotelButton.addActionListener(listener);
-    }
-
-    public void updateHotelInfo() {
-        managingLabel.setText("Managing " + hotel.getName());
-        roomCountLabel.setText(String.format("Number of Rooms: %d", hotel.getTotalRooms()));
-        basePriceLabel.setText(String.format("Base Price: %.2f", hotel.getBasePrice()));
-        revalidate();
-        repaint();
     }
 
     public void initializeContent(JPanel panel) {

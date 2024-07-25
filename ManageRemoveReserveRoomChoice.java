@@ -6,7 +6,10 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ViewAllReservedRoomsPanel extends JPanel {
+/*
+* Choosing which room a reservation will be removed from
+* */
+public class ManageRemoveReserveRoomChoice extends JPanel {
     private ArrayList<Room> rooms;
     private HotelManager manager;
     private JButton backButton;
@@ -22,50 +25,17 @@ public class ViewAllReservedRoomsPanel extends JPanel {
     private int northLabelFontSize = 20;
 
     private MVC_Controller controller;
-    
-    public ViewAllReservedRoomsPanel(Hotel hotel) {
-        this.rooms = hotel.getAllReservedRooms();
 
-        setLayout(new BorderLayout());
-
-        // Setting north panel
-        JPanel panelNorth = new JPanel();
-        panelNorth.setLayout(new BorderLayout());
-        panelNorth.setBackground(Color.decode("#063970"));
-        panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
-
-        // Back Button
-        backButton = new JButton("\u2190");
-        backButton.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
-        panelNorth.add(backButton, BorderLayout.WEST);
-
-        // North Label
-        JLabel labelManageHotels = new JLabel("Select Room to View", JLabel.CENTER);
-        labelManageHotels.setForeground(Color.WHITE);
-        labelManageHotels.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
-        panelNorth.add(labelManageHotels, BorderLayout.CENTER);
-
-        add(panelNorth, BorderLayout.NORTH);
-
-        // Create the center panel with vertical BoxLayout so no grid row count needed
-        panelCenter = new JPanel();
-        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
-
-        initializeRows();
-
-        JScrollPane scrollPane = new JScrollPane(panelCenter);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        add(scrollPane, BorderLayout.CENTER);
-    }
-    
+    // Getters and Setters
     public void setController(MVC_Controller controller) {
         this.controller = controller;
     }
-    
+
+    // Event listeners
     public void addBackButtonListener(ActionListener listener) {
         backButton.addActionListener(listener);
     }
-    
+
     public void initializeRows() {
         // Panel is cleared to it can reset everything
         panelCenter.removeAll();
@@ -108,5 +78,40 @@ public class ViewAllReservedRoomsPanel extends JPanel {
 
         panelCenter.revalidate();
         panelCenter.repaint();
+    }
+
+    public ManageRemoveReserveRoomChoice(Hotel hotel) {
+        this.rooms = hotel.getAllReservedRooms();
+
+        setLayout(new BorderLayout());
+
+        // Setting north panel
+        JPanel panelNorth = new JPanel();
+        panelNorth.setLayout(new BorderLayout());
+        panelNorth.setBackground(Color.decode("#063970"));
+        panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
+
+        // Back Button
+        backButton = new JButton("\u2190");
+        backButton.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
+        panelNorth.add(backButton, BorderLayout.WEST);
+
+        // North Label
+        JLabel labelManageHotels = new JLabel("Select Room to Remove a Reservation", JLabel.CENTER);
+        labelManageHotels.setForeground(Color.WHITE);
+        labelManageHotels.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
+        panelNorth.add(labelManageHotels, BorderLayout.CENTER);
+
+        add(panelNorth, BorderLayout.NORTH);
+
+        // Create the center panel with vertical BoxLayout so no grid row count needed
+        panelCenter = new JPanel();
+        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
+
+        initializeRows();
+
+        JScrollPane scrollPane = new JScrollPane(panelCenter);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        add(scrollPane, BorderLayout.CENTER);
     }
 }

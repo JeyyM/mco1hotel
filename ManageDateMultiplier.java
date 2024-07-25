@@ -3,10 +3,17 @@ package mco1;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import javax.swing.border.EmptyBorder;
-
-public class DateMultiplier  extends JPanel {
+/*
+*
+*
+*
+* This meant to copy the calendar but show buttons like
+*  | 25 (1.0x) for each one |
+*
+*
+* */
+public class ManageDateMultiplier  extends JPanel {
     private Room room;
     private JLabel roomCountLabel;
     private JLabel basePriceLabel;
@@ -34,7 +41,7 @@ public class DateMultiplier  extends JPanel {
 
     private MVC_Controller controller;
 
-    public DateMultiplier (Room room, float cost, String name) {
+    public ManageDateMultiplier (Room room, float cost, String name) {
         this.room = room;
         this.name = name;
         this.cost = cost;
@@ -92,7 +99,7 @@ public class DateMultiplier  extends JPanel {
         add(calendarPanel, BorderLayout.CENTER);
     }
 
-    public DateMultiplier (Room room, float cost, String name, int startDay) {
+    public ManageDateMultiplier (Room room, float cost, String name, int startDay) {
         this.room = room;
         this.name = name;
         this.cost = cost;

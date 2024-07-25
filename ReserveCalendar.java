@@ -8,61 +8,78 @@ import javax.swing.border.EmptyBorder;
 
 public class ReserveCalendar extends JPanel {
     private Room room;
-    private JLabel roomCountLabel;
-    private JLabel basePriceLabel;
-    private JButton renameHotelButton;
-    private JButton modifyRoomsButton;
-    private JButton modifyBasePriceButton;
-    private JButton removeReservationsButton;
-    private JButton deleteHotelButton;
     private JButton backButtonStart, backButtonEnd;
-    private JLabel managingLabel;
 
-    private JPanel panelNorth = new JPanel();
+    // Size variables
     private int fullWidth = 1050;
     private int menuHeight = 500;
     private int backButtonFontSize = 25;
-    private JPanel mainPanel;
     private int northHeight = 40;
     private int northLabelFontSize = 20;
 
     private JPanel[] weeks = new JPanel[5];
     private JButton[][] calendar = new JButton[5][7];
-
     private String name;
     private float cost;
 
     private MVC_Controller controller;
 
-//    public ReserveCalendar(int test, Room room, float cost, String name) {
-//        this.room = room;
-//        this.name = name;
-//        this.cost = cost;
-//        setLayout(new GridLayout(6, 1));
-//
-//        JLabel calendarTitle = new JLabel("Select Start of Reservation");
-//
-//        this.add(calendarTitle);
-//
-//        for (int i = 0; i < 5; i++) {
-//            // System.out.println("hi");
-//            weeks[i] = new JPanel(new GridLayout(1, 7, 10, 10));
-//            for (int j = 0; j < 7; j++) {
-//                if (i == 4 && j > 2) {
-//                    JPanel whiteSpace = new JPanel();
-//                    weeks[i].add(whiteSpace);
-//                }
-//                else {
-//                    calendar[i][j] = new JButton("" + (i * 7 + j + 1));
-//                    weeks[i].add(calendar[i][j]);
-//                }
-//            }
-//            this.add(weeks[i]);
-//        }
-//
-//        addCalendarListener(room);
-//    }
+    // Getters and Setters
+    public void setController(MVC_Controller controller) {
+        this.controller = controller;
+    }
 
+    // Event listeners
+    public void addCalendarListener(Room room, int startDay) {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (!(i == 4 && j > 2)) {
+                    final int day = i * 7 + j + 1;
+                    calendar[i][j].addActionListener(e -> {
+                        if (startDay >= day){
+                            JOptionPane.showMessageDialog(this, "The end day must be more than the starting day", "Error", JOptionPane.WARNING_MESSAGE);
+                        } else if (room.checkDayAvailability2(startDay, day) == -1){
+                            JOptionPane.showMessageDialog(this, "There are prior reservations in the range chosen.", "Error", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            controller.reserveRoomFinal(room, cost, name, startDay, day);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    public void addBackButtonStartListener(ActionListener listener) {
+        backButtonStart.addActionListener(listener);
+    }
+
+    public void addBackButtonEndListener(ActionListener listener) {
+        backButtonEnd.addActionListener(listener);
+    }
+
+    public void addCalendarListener(Room room) {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (!(i == 4 && j > 2)) {
+                    final int day = i * 7 + j + 1;
+                    int availabilityStatus = room.checkDayAvailability(day);
+                    calendar[i][j].addActionListener(e -> {
+                        if (day == 31){
+                            JOptionPane.showMessageDialog(this, "Cannot check in at 31st day.", "Error", JOptionPane.WARNING_MESSAGE);
+                        } else if (availabilityStatus == -1) {
+                            JOptionPane.showMessageDialog(this, "Day is occupied, please pick another.", "Error", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            controller.switchToReserveEndPanel(room, cost, name, day);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /*
+    * FOR STARTING DAY
+    * */
     public ReserveCalendar(Room room, float cost, String name) {
         this.room = room;
         this.name = name;
@@ -89,16 +106,9 @@ public class ReserveCalendar extends JPanel {
 
         add(panelNorth, BorderLayout.NORTH);
 
-        // Create the center panel with vertical BoxLayout so no grid row count needed
-        /*
-        JPanel panelCenter = new JPanel();
-        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
-        */
-
         JPanel calendarPanel = new JPanel(new GridLayout(5, 1));
 
         for (int i = 0; i < 5; i++) {
-            // System.out.println("hi");
             weeks[i] = new JPanel(new GridLayout(1, 7));
             for (int j = 0; j < 7; j++) {
                 if (i == 4 && j > 2) {
@@ -127,40 +137,9 @@ public class ReserveCalendar extends JPanel {
         add(calendarPanel, BorderLayout.CENTER);
     }
 
-//    public ReserveCalendar(int test, Room room, float cost, String name, int startDay) {
-//        this.room = room;
-//        this.name = name;
-//        this.cost = cost;
-//        setLayout(new GridLayout(6, 1));
-//
-//        JLabel calendarTitle = new JLabel("Select End of Reservation");
-//
-//        this.add(calendarTitle);
-//
-//        for (int i = 0; i < 5; i++) {
-//            // System.out.println("hi");
-//            weeks[i] = new JPanel(new GridLayout(1, 7));
-//            for (int j = 0; j < 7; j++) {
-//                if (i == 4 && j > 2) {
-//                    JPanel whiteSpace = new JPanel();
-//                    weeks[i].add(whiteSpace);
-//                }
-//                else {
-//                    if ((i * 7 + j + 1) == startDay) {
-//                        calendar[i][j] = new JButton(">" + (i * 7 + j + 1) + "<");
-//                    }
-//                    else {
-//                        calendar[i][j] = new JButton("" + (i * 7 + j + 1));
-//                    }
-//                    weeks[i].add(calendar[i][j]);
-//                }
-//            }
-//            this.add(weeks[i]);
-//        }
-//
-//        addCalendarListener(room, startDay);
-//    }
-//
+    /*
+    * FOR END DAY
+    * */
     public ReserveCalendar(Room room, float cost, String name, int startDay) {
         this.room = room;
         this.name = name;
@@ -176,7 +155,6 @@ public class ReserveCalendar extends JPanel {
 
         // Back Button
         backButtonEnd = new JButton("Undo");
-//        backButtonEnd.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
         panelNorth.add(backButtonEnd, BorderLayout.WEST);
 
         // North Label
@@ -187,16 +165,9 @@ public class ReserveCalendar extends JPanel {
 
         add(panelNorth, BorderLayout.NORTH);
 
-        // Create the center panel with vertical BoxLayout so no grid row count needed
-        /*
-        JPanel panelCenter = new JPanel();
-        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
-        */
-
         JPanel calendarPanel = new JPanel(new GridLayout(5, 1));
 
         for (int i = 0; i < 5; i++) {
-            // System.out.println("hi");
             weeks[i] = new JPanel(new GridLayout(1, 7));
             for (int j = 0; j < 7; j++) {
                 if (i == 4 && j > 2) {
@@ -227,66 +198,5 @@ public class ReserveCalendar extends JPanel {
         addCalendarListener(room, startDay);
 
         add(calendarPanel, BorderLayout.CENTER);
-    }
-
-    //public ReserveSpecificHotelPanel(Hotel hotel, )
-
-    public void setController(MVC_Controller controller) {
-        this.controller = controller;
-    }
-
-    public void addCalendarListener(Room room) {
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                if (!(i == 4 && j > 2)) {
-                    final int day = i * 7 + j + 1;
-                    int availabilityStatus = room.checkDayAvailability(day);
-                    calendar[i][j].addActionListener(e -> {
-                        if (day == 31){
-                            JOptionPane.showMessageDialog(this, "Cannot check in at 31st day.", "Error", JOptionPane.WARNING_MESSAGE);
-                        } else if (availabilityStatus == -1) {
-                            JOptionPane.showMessageDialog(this, "Day is occupied, please pick another.", "Error", JOptionPane.WARNING_MESSAGE);
-                        } else {
-                            controller.switchToReserveEndPanel(room, cost, name, day);
-                        }
-                    });
-                }
-            }
-        }
-
-        /*
-        ArrayList<Reservation> reservations = room.getReservations();
-
-        for (Reservation reservation : reservations) {
-
-        }
-        */
-    }
-
-    public void addCalendarListener(Room room, int startDay) {
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                if (!(i == 4 && j > 2)) {
-                    final int day = i * 7 + j + 1;
-                    calendar[i][j].addActionListener(e -> {
-                        if (startDay >= day){
-                            JOptionPane.showMessageDialog(this, "The end day must be more than the starting day", "Error", JOptionPane.WARNING_MESSAGE);
-                        } else if (room.checkDayAvailability2(startDay, day) == -1){
-                            JOptionPane.showMessageDialog(this, "There are prior reservations in the range chosen.", "Error", JOptionPane.WARNING_MESSAGE);
-                        } else {
-                            controller.reserveRoomFinal(room, cost, name, startDay, day);
-                        }
-                    });
-                }
-            }
-        }
-    }
-
-    public void addBackButtonStartListener(ActionListener listener) {
-        backButtonStart.addActionListener(listener);
-    }
-
-    public void addBackButtonEndListener(ActionListener listener) {
-        backButtonEnd.addActionListener(listener);
     }
 }

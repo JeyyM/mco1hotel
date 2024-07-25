@@ -1,14 +1,15 @@
 package mco1;
 
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class MVC_Controller {
+    // Other MVC
     private MVC_Model model;
     private MVC_View view;
 
+    // Sizes
     private int mainPanelWidth= 450;
     private int mainPanelHeight= 500;
 
@@ -24,57 +25,26 @@ public class MVC_Controller {
     private int reserveCalendarWidth = 680;
     private int reserveCalendarHeight = 500;
 
+    // Other panel's extensions
     private ManageSpecificHotelPanel specificHotelPanel;
-    private ShowRooms showRooms;
-
-    private String[] toDelete;
+    private ManageEditRooms showRooms;
 
     private Hotel tempHotel;
 
-    public MVC_Controller(MVC_Model model, MVC_View view) {
-        this.model = model;
-        this.view = view;
-
-        view.addCreateHotelListener(e -> showCreateHotelDialog());
-
-        view.addViewHotelListener(e -> {
-            switchToViewHotelsPanel();
-            updateHotels();
-        });
-
-        view.addManageHotelListener(e -> {
-            switchToManageHotelsPanel();
-            updateHotels();
-        });
-
-        if (view.getManageHotelsPanel() != null) {
-            view.getManageHotelsPanel().setController(this);
-        }
-
-        view.addReserveHotelListener(e -> {
-            switchToReservationsPanel();
-            updateHotels();
-        });
-        if (view.getReservationsPanel() != null) {
-            view.getReservationsPanel().setController(this);
-        }
-
-    }
-
     // Updaters
-    // To update the shown number
+    // To update the shown number in current hotels
     public void updateHotelCount() {
         view.getCurrentHotelsCount().setText(String.format("Current Hotels: %d", model.getHotelCount()));
     }
 
     // For setting the hotel count in ManageHotelsPanel so MVC
-    public void updateHotels() {
+    public void updateAllPanels() {
         ManageHotelsPanel manageHotelsPanel = view.getManageHotelsPanel();
         if (manageHotelsPanel != null) {
             manageHotelsPanel.setHotels(model.getHotels());
         }
 
-        ReservationsPanel reservationsPanel = view.getReservationsPanel();
+        ReserveHotelSelectPanel reservationsPanel = view.getReservationsPanel();
         if (reservationsPanel != null) {
             reservationsPanel.setHotels(model.getHotels());
         }
@@ -85,7 +55,7 @@ public class MVC_Controller {
         }
     }
 
-    // To update current hotel in panel
+    // To update current hotel in specific hotel
     public void updateSpecificHotelPanel() {
         if (specificHotelPanel != null) {
             specificHotelPanel.updateHotelInfo();
@@ -99,44 +69,44 @@ public class MVC_Controller {
         }
     }
 
-    /*
-    For making warning pop-ups in hotel creation
-    */
+    // Pop-ups
+    // the this:: allows you to pass functions, but it seems parameters cant be added
+
     public void showNoHotels(String action){
         String message = String.format("There are currently no hotels to %s.", action);
         JOptionPane.showMessageDialog(view, message, "Error", JOptionPane.WARNING_MESSAGE);
     }
 
     public void showCreateHotelDialog() {
-        // the this:: allows you to send functions to be ran
-        Modals.showCreateHotelDialog(view, model, this::updateHotelCount, this::updateHotels);
+        Modals.showCreateHotelDialog(view, model, this::updateHotelCount, this::updateAllPanels);
     }
 
     public void showRenameHotelDialog(Hotel chosenHotel) {
-        // the updaters are so it changes on the current panel and the hotel selection list
-        Modals.showRenameHotelDialog(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateHotels);
-    }
-
-    public void showViewOptions(Hotel chosenHotel){
-        Modals.showViewOptions(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateHotels);
+        Modals.showRenameHotelDialog(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateAllPanels);
     }
 
     public void showModifyBasePriceDialog(Hotel chosenHotel) {
-        Modals.showModifyBasePriceDialog(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateHotels);
+        Modals.showModifyBasePriceDialog(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateAllPanels);
     }
 
+    // havent changed the update specific hotel
+    public void showViewOptions(Hotel chosenHotel){
+        Modals.showViewOptions(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateAllPanels);
+    }
+
+
     public void showAddRoomsDialog(Hotel chosenHotel) {
-        Modals.showAddRoomsDialog(view, model, chosenHotel, this::updateHotels, this::updateRoomsShown);
+        Modals.showAddRoomsDialog(view, model, chosenHotel, this::updateAllPanels, this::updateRoomsShown);
     }
 
     public void showEditRateDialog(Room chosenRoom) {
-        Modals.showEditRateDialog(view, model, chosenRoom, this::updateHotels, this::updateRoomsShown);
+        Modals.showEditRateDialog(view, model, chosenRoom, this::updateAllPanels, this::updateRoomsShown);
     }
 
     public int showRemoveRoomsDialog(Hotel chosenHotel, ArrayList<String> toDelete) {
         int answer = 1;
         if (toDelete.size() > 0) {
-            answer = Modals.showRemoveRoomsDialog(view, model, chosenHotel, toDelete, this::updateHotels, this::updateRoomsShown);
+            answer = Modals.showRemoveRoomsDialog(view, model, chosenHotel, toDelete, this::updateAllPanels, this::updateRoomsShown);
         }
         return answer;
     }
@@ -144,7 +114,7 @@ public class MVC_Controller {
     public void showDeleteHotelDialog(ArrayList<Hotel> hotels, Hotel chosenHotel) {
         int answer = 1;
 
-        answer = Modals.showDeleteHotelDialog(view, model, hotels, chosenHotel, this::updateHotels, this::updateHotels);
+        answer = Modals.showDeleteHotelDialog(view, model, hotels, chosenHotel, this::updateAllPanels, this::updateAllPanels);
 
         if (answer == 0) {
             switchToManageHotelsPanel();
@@ -152,7 +122,7 @@ public class MVC_Controller {
         }
     }
 
-    // Switchers
+    // To switch to different panels
     public void switchToMainPanel() {
         view.getContentPane().removeAll();
         view.add(view.getMainPanel(), BorderLayout.CENTER);
@@ -170,13 +140,18 @@ public class MVC_Controller {
             if (view.getViewHotelsPanel() == null) {
                 view.setViewHotelsPanel(new ViewHotelsPanel(model.getHotels(), model.getManager()));
             }
-            view.getViewHotelsPanel().setController(this);
+
+            // Back button
             view.getViewHotelsPanel().addBackButtonListener(e -> {
                 switchToMainPanel();
             });
+
+            view.getViewHotelsPanel().setController(this);
+
             JScrollPane scrollPane = new JScrollPane(view.getViewHotelsPanel());
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
             view.add(scrollPane, BorderLayout.CENTER);
             view.setSize(viewHotelsPanelWidth, viewHotelsPanelHeight);
             view.setResizable(false);
@@ -223,7 +198,6 @@ public class MVC_Controller {
         specificHotelPanel.addDateMultiplierListener(e -> {
 //            switchToDateMultiplier(hotel);
         });
-
         specificHotelPanel.addRemoveReservationsButtonListener(e -> {
             if (hotel.getTotalReservationCount() == 0) {
                 JOptionPane.showMessageDialog(specificHotelPanel, "There are no reservations in this hotel.", "Error", JOptionPane.WARNING_MESSAGE);
@@ -246,7 +220,7 @@ public class MVC_Controller {
     }
 
     public void switchToShowRooms(Hotel hotel) {
-        showRooms = new ShowRooms(hotel);
+        showRooms = new ManageEditRooms(hotel);
         showRooms.setController(this);
         showRooms.addBackButtonListener(e -> switchToSpecificHotelPanel(hotel));
         showRooms.addAddButtonListener(e -> showAddRoomsDialog(hotel));
@@ -271,7 +245,7 @@ public class MVC_Controller {
         } else {
             view.getContentPane().removeAll();
             if (view.getReservationsPanel() == null) {
-                view.setReservationsPanel(new ReservationsPanel(model.getHotels(), model.getManager()));
+                view.setReservationsPanel(new ReserveHotelSelectPanel(model.getHotels(), model.getManager()));
             }
             view.getReservationsPanel().setController(this);
             view.getReservationsPanel().addBackButtonListener(e -> {
@@ -289,7 +263,7 @@ public class MVC_Controller {
     }
 
     public void switchToReserveSpecificRoomPanel(Hotel hotel, String name) {
-        RoomReservationsPanel roomReservationsPanel = new RoomReservationsPanel(hotel, name);
+        ReserveRoomSelectPanel roomReservationsPanel = new ReserveRoomSelectPanel(hotel, name);
         roomReservationsPanel.setController(this);
         tempHotel = hotel;
         roomReservationsPanel.addBackButtonListener(e -> switchToReservationsPanel());
@@ -333,16 +307,8 @@ public class MVC_Controller {
         view.repaint();
     }
 
-    public void reserveRoomFinal(Room room, float cost, String name, int startDay, int endDay) {
-        int answer = Modals.showReserveRoomDialog(view, model, tempHotel, room, name, cost, startDay, endDay);
-
-        if (answer == JOptionPane.YES_OPTION) {
-            switchToMainPanel();
-        }
-    }
-
     public void switchToViewAllReservedRooms(Hotel hotel) {
-        ViewAllReservedRoomsPanel reservedRoomsPanel = new ViewAllReservedRoomsPanel(hotel);
+        ManageRemoveReserveRoomChoice reservedRoomsPanel = new ManageRemoveReserveRoomChoice(hotel);
         reservedRoomsPanel.setController(this);
         tempHotel = hotel;
         reservedRoomsPanel.addBackButtonListener(e -> switchToSpecificHotelPanel(hotel));
@@ -359,7 +325,7 @@ public class MVC_Controller {
     }
     
     public void switchToRemoveReservations(Room room) {
-        RemoveReservationsPanel removeReservationsPanel = new RemoveReservationsPanel(room);
+        ManageRemoveReservationChoice removeReservationsPanel = new ManageRemoveReservationChoice(room);
         removeReservationsPanel.setController(this);
         removeReservationsPanel.addBackButtonListener(e -> switchToViewAllReservedRooms(tempHotel));
         
@@ -373,12 +339,54 @@ public class MVC_Controller {
         view.revalidate();
         view.repaint();
     }
-    
+
+    public void reserveRoomFinal(Room room, float cost, String name, int startDay, int endDay) {
+        int answer = Modals.showReserveRoomDialog(view, model, tempHotel, room, name, cost, startDay, endDay);
+
+        if (answer == JOptionPane.YES_OPTION) {
+            switchToMainPanel();
+        }
+    }
+
+
     public void removeReservationFinal(Reservation reservation) {
         int answer = Modals.showRemoveReservationDialog(view, model, tempHotel, reservation);
 
         if (answer == JOptionPane.YES_OPTION) {
             switchToMainPanel();
         }
+    }
+
+    public MVC_Controller(MVC_Model model, MVC_View view) {
+        // Initialize MVC
+        this.model = model;
+        this.view = view;
+
+        // Setting controllers on panels that need it
+        if (view.getManageHotelsPanel() != null) {
+            view.getManageHotelsPanel().setController(this);
+        }
+
+        if (view.getReservationsPanel() != null) {
+            view.getReservationsPanel().setController(this);
+        }
+
+        // Event listeners
+        view.addCreateHotelListener(e -> showCreateHotelDialog());
+
+        view.addViewHotelListener(e -> {
+            switchToViewHotelsPanel();
+            updateAllPanels();
+        });
+
+        view.addManageHotelListener(e -> {
+            switchToManageHotelsPanel();
+            updateAllPanels();
+        });
+
+        view.addReserveHotelListener(e -> {
+            switchToReservationsPanel();
+            updateAllPanels();
+        });
     }
 }

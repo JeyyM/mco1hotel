@@ -1,0 +1,3 @@
+hotel creation
+
+updateHotels -> updateAllPanels

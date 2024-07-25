@@ -2,6 +2,9 @@ package mco1;
 
 import java.util.ArrayList;
 
+/*
+* From what i know, this will later have to be edited to contain all code from Hotel, HotelManager, etc.
+* */
 public class MVC_Model {
     private ArrayList<Hotel> hotels;
     private HotelManager manager;
