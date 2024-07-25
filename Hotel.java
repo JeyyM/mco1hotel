@@ -37,6 +37,16 @@ public class Hotel {
         return dayMultipliers;
     }
 
+    public float getTotalEarnings(){
+        float totalEarnings = 0.0f;
+        for (Room room : rooms) {
+            totalEarnings += room.getMonthlyEarnings();
+        }
+
+        return totalEarnings;
+    }
+
+
     // Constructor
     /**
     * Constructor for the Hotel class

@@ -1,6 +1,7 @@
 package mco1;
 
 import javax.swing.*;
+import javax.swing.text.View;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -101,6 +102,11 @@ public class MVC_Controller {
     /*
     For making warning pop-ups in hotel creation
     */
+    public void showNoHotels(String action){
+        String message = String.format("There are currently no hotels to %s.", action);
+        JOptionPane.showMessageDialog(view, message, "Error", JOptionPane.WARNING_MESSAGE);
+    }
+
     public void showCreateHotelDialog() {
         // the this:: allows you to send functions to be ran
         Modals.showCreateHotelDialog(view, model, this::updateHotelCount, this::updateHotels);
@@ -109,6 +115,10 @@ public class MVC_Controller {
     public void showRenameHotelDialog(Hotel chosenHotel) {
         // the updaters are so it changes on the current panel and the hotel selection list
         Modals.showRenameHotelDialog(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateHotels);
+    }
+
+    public void showViewOptions(Hotel chosenHotel){
+        Modals.showViewOptions(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateHotels);
     }
 
     public void showModifyBasePriceDialog(Hotel chosenHotel) {
@@ -153,41 +163,49 @@ public class MVC_Controller {
     }
 
     public void switchToViewHotelsPanel() {
-        view.getContentPane().removeAll();
-        if (view.getViewHotelsPanel() == null) {
-            view.setViewHotelsPanel(new ViewHotelsPanel(model.getHotels(), model.getManager()));
+        if (model.getHotels().size() == 0){
+            showNoHotels("View");
+        } else {
+            view.getContentPane().removeAll();
+            if (view.getViewHotelsPanel() == null) {
+                view.setViewHotelsPanel(new ViewHotelsPanel(model.getHotels(), model.getManager()));
+            }
+            view.getViewHotelsPanel().setController(this);
+            view.getViewHotelsPanel().addBackButtonListener(e -> {
+                switchToMainPanel();
+            });
+            JScrollPane scrollPane = new JScrollPane(view.getViewHotelsPanel());
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            view.add(scrollPane, BorderLayout.CENTER);
+            view.setSize(viewHotelsPanelWidth, viewHotelsPanelHeight);
+            view.setResizable(false);
+            view.revalidate();
+            view.repaint();
         }
-        view.getViewHotelsPanel().setController(this);
-        view.getViewHotelsPanel().addBackButtonListener(e -> {
-            switchToMainPanel();
-        });
-        JScrollPane scrollPane = new JScrollPane(view.getViewHotelsPanel());
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        view.add(scrollPane, BorderLayout.CENTER);
-        view.setSize(viewHotelsPanelWidth, viewHotelsPanelHeight);
-        view.setResizable(false);
-        view.revalidate();
-        view.repaint();
     }
 
     public void switchToManageHotelsPanel() {
-        view.getContentPane().removeAll();
-        if (view.getManageHotelsPanel() == null) {
-            view.setManageHotelsPanel(new ManageHotelsPanel(model.getHotels(), model.getManager()));
+        if (model.getHotels().size() == 0){
+            showNoHotels("Manage");
+        } else {
+            view.getContentPane().removeAll();
+            if (view.getManageHotelsPanel() == null) {
+                view.setManageHotelsPanel(new ManageHotelsPanel(model.getHotels(), model.getManager()));
+            }
+            view.getManageHotelsPanel().setController(this);
+            view.getManageHotelsPanel().addBackButtonListener(e -> {
+                switchToMainPanel();
+            });
+            JScrollPane scrollPane = new JScrollPane(view.getManageHotelsPanel());
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            view.add(scrollPane, BorderLayout.CENTER);
+            view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
+            view.setResizable(false);
+            view.revalidate();
+            view.repaint();
         }
-        view.getManageHotelsPanel().setController(this);
-        view.getManageHotelsPanel().addBackButtonListener(e -> {
-            switchToMainPanel();
-        });
-        JScrollPane scrollPane = new JScrollPane(view.getManageHotelsPanel());
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        view.add(scrollPane, BorderLayout.CENTER);
-        view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
-        view.setResizable(false);
-        view.revalidate();
-        view.repaint();
     }
 
     public void switchToSpecificHotelPanel(Hotel hotel) {
@@ -202,6 +220,10 @@ public class MVC_Controller {
                 JOptionPane.showMessageDialog(specificHotelPanel, "There is at least one reservation, cannot change base price.", "Error", JOptionPane.WARNING_MESSAGE);
             }
         });
+        specificHotelPanel.addDateMultiplierListener(e -> {
+//            switchToDateMultiplier(hotel);
+        });
+
         specificHotelPanel.addRemoveReservationsButtonListener(e -> {
             if (hotel.getTotalReservationCount() == 0) {
                 JOptionPane.showMessageDialog(specificHotelPanel, "There are no reservations in this hotel.", "Error", JOptionPane.WARNING_MESSAGE);
@@ -244,22 +266,26 @@ public class MVC_Controller {
     }
 
     public void switchToReservationsPanel() {
-        view.getContentPane().removeAll();
-        if (view.getReservationsPanel() == null) {
-            view.setReservationsPanel(new ReservationsPanel(model.getHotels(), model.getManager()));
+        if (model.getHotels().size() == 0){
+            showNoHotels("Reserve");
+        } else {
+            view.getContentPane().removeAll();
+            if (view.getReservationsPanel() == null) {
+                view.setReservationsPanel(new ReservationsPanel(model.getHotels(), model.getManager()));
+            }
+            view.getReservationsPanel().setController(this);
+            view.getReservationsPanel().addBackButtonListener(e -> {
+                switchToMainPanel();
+            });
+            JScrollPane scrollPane = new JScrollPane(view.getReservationsPanel());
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            view.add(scrollPane, BorderLayout.CENTER);
+            view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
+            view.setResizable(false);
+            view.revalidate();
+            view.repaint();
         }
-        view.getReservationsPanel().setController(this);
-        view.getReservationsPanel().addBackButtonListener(e -> {
-            switchToMainPanel();
-        });
-        JScrollPane scrollPane = new JScrollPane(view.getReservationsPanel());
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        view.add(scrollPane, BorderLayout.CENTER);
-        view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
-        view.setResizable(false);
-        view.revalidate();
-        view.repaint();
     }
 
     public void switchToReserveSpecificRoomPanel(Hotel hotel, String name) {

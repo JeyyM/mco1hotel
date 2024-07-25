@@ -11,6 +11,7 @@ public class ManageSpecificHotelPanel extends JPanel {
     private JButton renameHotelButton;
     private JButton modifyRoomsButton;
     private JButton modifyBasePriceButton;
+    private JButton modifyDateMultiplyButton;
     private JButton removeReservationsButton;
     private JButton deleteHotelButton;
     private JButton backButton;
@@ -64,6 +65,10 @@ public class ManageSpecificHotelPanel extends JPanel {
     public void addModifyBasePriceButtonListener(ActionListener listener) {
         modifyBasePriceButton.addActionListener(listener);
     }
+
+    public void addDateMultiplierListener(ActionListener listener) {
+        modifyDateMultiplyButton.addActionListener(listener);
+    }
     
     public void addRemoveReservationsButtonListener(ActionListener listener) {
         removeReservationsButton.addActionListener(listener);
@@ -86,7 +91,7 @@ public class ManageSpecificHotelPanel extends JPanel {
         panelCenter.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(8, 1, 0, 10));
+        buttonPanel.setLayout(new GridLayout(9, 1, 0, 10));
 
         roomCountLabel = new JLabel(String.format("Number of Rooms: %d", hotel.getTotalRooms()));
         roomCountLabel.setFont(new Font("Verdana", Font.BOLD, 15));
@@ -100,6 +105,7 @@ public class ManageSpecificHotelPanel extends JPanel {
         renameHotelButton = new JButton("Rename Hotel");
         modifyRoomsButton = new JButton("Modify Rooms");
         modifyBasePriceButton = new JButton("Modify Base Price");
+        modifyDateMultiplyButton = new JButton("Modify Date Multiplier");
         removeReservationsButton = new JButton("Remove Reservations");
         deleteHotelButton = new JButton("Delete Hotel");
 

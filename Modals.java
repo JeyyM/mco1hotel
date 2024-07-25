@@ -1,6 +1,7 @@
 package mco1;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -245,6 +246,55 @@ public class Modals {
         return option;
     }
 
+    public static void showViewOptions(JFrame parent, MVC_Model model, Hotel chosenHotel, Runnable updateSpecificHotelPanel, Runnable updateHotels) {
+        JDialog modal = new JDialog(parent, "Viewing Options", true);
+        modal.setLayout(new BorderLayout());
+
+        JPanel inputArea = new JPanel(new GridLayout(3, 1, 5, 5));
+        JButton dateButton = new JButton("Check Availability by Date");
+        JButton roomButton = new JButton("Check Availability by Room");
+        JButton reservationButton = new JButton("View by Reservation");
+
+        dateButton.setPreferredSize(new Dimension(300, 30));
+        roomButton.setPreferredSize(new Dimension(300, 30));
+        reservationButton.setPreferredSize(new Dimension(300, 30));
+
+        ArrayList<Room> availableRooms;
+
+        dateButton.addActionListener(e -> {
+            String input = JOptionPane.showInputDialog(modal, "Enter a Day to Check (1 to 31):", "Enter Date", JOptionPane.PLAIN_MESSAGE);
+            // for clicking cancel
+            if (input != null) {
+                try {
+                    int date = Integer.parseInt(input);
+                    if (date < 1 || date > 31) {
+                        JOptionPane.showMessageDialog(modal, "Please enter a valid date between 1 and 31.", "Error", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(modal, "Checking availability for date: " + date);
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(modal, "Please enter a valid number.", "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            }        });
+
+        roomButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(modal, "Check Availability by Room clicked.");
+        });
+
+        reservationButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(modal, "View by Reservation clicked.");
+        });
+
+        inputArea.add(dateButton);
+        inputArea.add(roomButton);
+        inputArea.add(reservationButton);
+
+        modal.add(inputArea, BorderLayout.CENTER);
+        modal.pack();
+        modal.setLocationRelativeTo(parent);
+        modal.setVisible(true);
+    }
+
     public static void showModifyBasePriceDialog(JFrame parent, MVC_Model model, Hotel chosenHotel, Runnable updateSpecificHotelPanel, Runnable updateHotels) {
         JDialog modal = new JDialog(parent, "Modify Base Price", true);
         modal.setLayout(new BorderLayout());
@@ -260,12 +310,12 @@ public class Modals {
         inputArea.add(createButton);
 
         createButton.addActionListener(e -> {
-            int basePrice;
+            float basePrice;
             String basePriceText = basePriceEntry.getText();
 
             // Valid integer string
             try {
-                basePrice = Integer.parseInt(basePriceText);
+                basePrice = Float.parseFloat(basePriceText);
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(modal, "Price must be a valid number.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
@@ -319,7 +369,7 @@ public class Modals {
 
         ArrayList<Integer> daysBetween = new ArrayList<>();
 
-        for (int i = startDay; i <= endDay; i++) {
+        for (int i = startDay; i < endDay; i++) {
             daysBetween.add(i);
         }
 

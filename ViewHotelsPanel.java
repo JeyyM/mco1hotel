@@ -16,10 +16,10 @@ public class ViewHotelsPanel extends JPanel {
     private JPanel panelCenter;
 
     // Size variables
-    private int fullWidth = 400;
+    private int fullWidth = 450;
     private int backButtonFontSize = 25;
     private int northHeight = 40;
-    private int rowHeight = 80;
+    private int rowHeight = 120;
     private int buttonWidth = 120;
     private int buttonHeight = 80;
     private int northLabelFontSize = 20;
@@ -44,7 +44,7 @@ public class ViewHotelsPanel extends JPanel {
         panelNorth.add(backButton, BorderLayout.WEST);
 
         // North Label
-        JLabel labelManageHotels = new JLabel("View Hotels", JLabel.CENTER);
+        JLabel labelManageHotels = new JLabel("Select Hotel to View", JLabel.CENTER);
         labelManageHotels.setForeground(Color.WHITE);
         labelManageHotels.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
         panelNorth.add(labelManageHotels, BorderLayout.CENTER);
@@ -80,45 +80,47 @@ public class ViewHotelsPanel extends JPanel {
     public void initializeRows() {
         // Panel is cleared to it can reset everything
         panelCenter.removeAll();
-
         int totalHotels = hotels.size();
+        int cols = 2;
+        // Rows should be rounded up to make an additional incomplete one
+        int rows = (int) Math.ceil((double) totalHotels / cols);
 
         for (int i = 0; i < totalHotels; i++) {
             hotels.get(i).setIndex(i);
         }
 
         int hotelIndex = 0;
-        for (int i = 0; i < totalHotels; i++) {
-            Hotel hotel = hotels.get(hotelIndex);
-            ArrayList<Room> bookedRooms = new ArrayList<>();
-
-            for (Room room : hotel.getAllRooms()) {
-                if (room.getReservations().size() > 0) {
-                    bookedRooms.add(room);
-                }
-            }
-
-            JPanel rowWrapper = new JPanel(new BorderLayout());
+        for (int i = 0; i < rows; i++) {
+            JPanel rowWrapper = new JPanel(new GridLayout(rows, cols, 10, 10));
             rowWrapper.setMaximumSize(new Dimension(fullWidth, rowHeight));
             // To create margins
             rowWrapper.setBorder(new EmptyBorder(5, 5, 5, 30));
 
-            JButton hotelButton = new JButton("<html>" + hotel.getName() + "<br>" + (hotel.getTotalRooms() - bookedRooms.size()) + "/" + hotel.getTotalRooms() + " rooms fully available</html>");
-            hotelButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-            hotelButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-            hotelButton.addActionListener(e -> {
-                controller.switchToSpecificHotelPanel(hotel);
-            });
-            rowWrapper.add(hotelButton, BorderLayout.WEST);
+            for (int j = 0; j < cols; j++) {
+                if (hotelIndex < totalHotels) {
+                    Hotel hotel = hotels.get(hotelIndex);
+                    String buttonString = String.format("<html>%s<br>%d rooms<br>%d reservations<br>Monthly Earnings: %.2f</html>",
+                            hotel.getName(),
+                            hotel.getTotalRooms(),
+                            hotel.getTotalReservationCount(),
+                            hotel.getTotalEarnings()
+                    );
 
-            JPanel hotelData = new JPanel(new GridLayout(2, 1, 10, 10));
-            hotelData.add(new JLabel("There are " + hotel.getTotalReservationCount() + " reservations"));
-            hotelData.add(new JLabel("Monthly earnings: "));
-
-            rowWrapper.add(hotelData, BorderLayout.CENTER);
+                    JButton hotelButton = new JButton(buttonString);
+                    hotelButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+                    hotelButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+                    hotelButton.addActionListener(e -> {
+                        controller.showViewOptions(hotel);
+                    });
+                    rowWrapper.add(hotelButton);
+                    hotelIndex++;
+                } else {
+                    // Put an empty label since the buttons will overgrow if not
+                    rowWrapper.add(new JLabel());
+                }
+            }
 
             panelCenter.add(rowWrapper);
-            hotelIndex++;
         }
 
         panelCenter.revalidate();

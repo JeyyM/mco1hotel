@@ -203,8 +203,12 @@ public class ShowRooms extends JPanel {
                         roomButton.addActionListener(e -> insertToDelete(roomButton, room));
                     } else {
                         roomButton.addActionListener(e -> {
-                            if (controller != null) {
-                                controller.showEditRateDialog(room);
+                            if (room.getReservations().size() > 0){
+                                JOptionPane.showMessageDialog(this, "There are reservations for this room, cannot edit.", "Error", JOptionPane.WARNING_MESSAGE);
+                            } else {
+                                if (controller != null) {
+                                    controller.showEditRateDialog(room);
+                                }
                             }
                         });
                     }
