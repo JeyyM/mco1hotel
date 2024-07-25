@@ -64,6 +64,10 @@ public class ManageSpecificHotelPanel extends JPanel {
     public void addModifyBasePriceButtonListener(ActionListener listener) {
         modifyBasePriceButton.addActionListener(listener);
     }
+    
+    public void addRemoveReservationsButtonListener(ActionListener listener) {
+        removeReservationsButton.addActionListener(listener);
+    }
 
     public void addDeleteHotelButtonListener(ActionListener listener) {
         deleteHotelButton.addActionListener(listener);
