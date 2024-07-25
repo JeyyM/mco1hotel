@@ -45,7 +45,7 @@ public class ReserveCalendar extends JPanel {
         
         for (int i = 0; i < 5; i++) {
             // System.out.println("hi");
-            weeks[i] = new JPanel(new GridLayout(1, 7));
+            weeks[i] = new JPanel(new GridLayout(1, 7, 10, 10));
             for (int j = 0; j < 7; j++) {
                 if (i == 4 && j > 2) {
                     JPanel whiteSpace = new JPanel();
