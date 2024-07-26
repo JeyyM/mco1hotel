@@ -166,7 +166,7 @@ public class MVC_Controller {
         } else {
             view.getContentPane().removeAll();
             if (view.getManageHotelsPanel() == null) {
-                view.setManageHotelsPanel(new ManageHotelsPanel(model.getHotels(), model.getManager()));
+                view.setManageHotelsPanel(new ManageHotelsPanel(model.getHotels(), model.getManager(), new JLabel("Select Hotel to Manage")));
             }
             view.getManageHotelsPanel().setController(this);
             view.getManageHotelsPanel().addBackButtonListener(e -> {
