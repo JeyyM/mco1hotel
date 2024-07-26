@@ -27,7 +27,7 @@ public class MVC_Controller {
 
     // Other panel's extensions
     private ManageSpecificHotelPanel specificHotelPanel;
-    private ManageEditRooms showRooms;
+    private ManageModifyRooms showRooms;
 
     private Hotel tempHotel;
 
@@ -166,7 +166,7 @@ public class MVC_Controller {
         } else {
             view.getContentPane().removeAll();
             if (view.getManageHotelsPanel() == null) {
-                view.setManageHotelsPanel(new ManageHotelsPanel(model.getHotels(), model.getManager(), new JLabel("Select Hotel to Manage")));
+                view.setManageHotelsPanel(new ManageHotelsPanel(model.getHotels(), model.getManager()));
             }
             view.getManageHotelsPanel().setController(this);
             view.getManageHotelsPanel().addBackButtonListener(e -> {
@@ -220,7 +220,7 @@ public class MVC_Controller {
     }
 
     public void switchToShowRooms(Hotel hotel) {
-        showRooms = new ManageEditRooms(hotel);
+        showRooms = new ManageModifyRooms(hotel);
         showRooms.setController(this);
         showRooms.addBackButtonListener(e -> switchToSpecificHotelPanel(hotel));
         showRooms.addAddButtonListener(e -> showAddRoomsDialog(hotel));

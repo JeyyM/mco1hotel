@@ -7,14 +7,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /*
- * Base Template for hotel selection panels
+ * Base Template for room selection panels
  * */
-public class ShowHotels extends JPanel {
-    protected ArrayList<Hotel> hotels;
+public class ShowRooms extends JPanel {
+    protected ArrayList<Room> rooms;
     protected HotelManager manager;
     protected JButton backButton;
     protected JPanel panelCenter;
-    JLabel bannerLabel;
+    protected JLabel bannerLabel;
     JPanel panelNorth;
 
     // Size variables
@@ -24,28 +24,24 @@ public class ShowHotels extends JPanel {
     protected int rowHeight = 80;
     protected int buttonWidth = 120;
     protected int buttonHeight = 80;
-    protected int northLabelFontSize = 20;
+    protected int bannerLabelFontSize = 20;
+
+    protected String name;
+    protected float cost;
 
     protected MVC_Controller controller;
-
-    // getters and setters
-    // For refreshing the hotels every enter
-    public void setHotels(ArrayList<Hotel> hotels) {
-        this.hotels = hotels;
-        initializeRows();
-    }
-
     public void setController(MVC_Controller controller) {
         this.controller = controller;
     }
 
-    // Event listeners
-    public void addBackButtonListener(ActionListener listener) {
-        backButton.addActionListener(listener);
+    public void addRoomButtonListener(JButton roomButton, Room room) {
+        roomButton.addActionListener(e -> {
+            controller.switchToReserveCalendarStart(room, cost, name);
+        });
     }
 
-    protected void addHotelButtonListener(JButton hotelButton, Hotel hotel) {
-        hotelButton.addActionListener(e -> controller.switchToSpecificHotelPanel(hotel));
+    public void addBackButtonListener(ActionListener listener) {
+        backButton.addActionListener(listener);
     }
 
     // There are rows that will contain the grid of buttons
@@ -53,16 +49,16 @@ public class ShowHotels extends JPanel {
         // Panel is cleared to it can reset everything
         panelCenter.removeAll();
 
-        int totalHotels = hotels.size();
+        int totalRooms = rooms.size();
         int cols = 5;
         // Rows should be rounded up to make an additional incomplete one
-        int rows = (int) Math.ceil((double) totalHotels / cols);
+        int rows = (int) Math.ceil((double) totalRooms / cols);
 
-        for (int i = 0; i < totalHotels; i++) {
-            hotels.get(i).setIndex(i);
+        for (int i = 0; i < totalRooms; i++) {
+            rooms.get(i).setIndex(i);
         }
 
-        int hotelIndex = 0;
+        int roomIndex = 0;
         for (int i = 0; i < rows; i++) {
             JPanel rowWrapper = new JPanel(new GridLayout(1, cols, 10, 10));
             rowWrapper.setMaximumSize(new Dimension(fullWidth, rowHeight));
@@ -70,14 +66,24 @@ public class ShowHotels extends JPanel {
             rowWrapper.setBorder(new EmptyBorder(5, 5, 5, 30));
 
             for (int j = 0; j < cols; j++) {
-                if (hotelIndex < totalHotels) {
-                    Hotel hotel = hotels.get(hotelIndex);
-                    JButton hotelButton = new JButton("<html>" + hotel.getName() + "<br>" + hotel.getTotalRooms() + " rooms" + "<br>" + hotel.getTotalReservationCount() + " reservations</html>");
-                    hotelButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-                    hotelButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-                    addHotelButtonListener(hotelButton, hotel);
-                    rowWrapper.add(hotelButton);
-                    hotelIndex++;
+                if (roomIndex < totalRooms) {
+                    Room room = rooms.get(roomIndex);
+                    JButton roomButton = new JButton("<html>" + room.getName() + "</html>");
+                    roomButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+                    roomButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+
+                    float baseRate = room.getBaseRate();
+                    if (baseRate == 1.0f) {
+                        roomButton.setBackground(null);
+                    } else if (baseRate == 1.20f) {
+                        roomButton.setBackground(Color.decode("#fae105"));
+                    } else if (baseRate == 1.35f) {
+                        roomButton.setBackground(Color.decode("#00fff2"));
+                    }
+
+                    addRoomButtonListener(roomButton, room);
+                    rowWrapper.add(roomButton);
+                    roomIndex++;
                 } else {
                     // Put an empty label since the buttons will overgrow if not
                     rowWrapper.add(new JLabel());
@@ -91,9 +97,10 @@ public class ShowHotels extends JPanel {
         panelCenter.repaint();
     }
 
-    public ShowHotels(ArrayList<Hotel> hotels, HotelManager manager, JLabel newBannerLabel) {
-        this.hotels = hotels;
-        this.manager = manager;
+    public ShowRooms(Hotel hotel, String name, JLabel newBannerLabel) {
+        this.rooms = hotel.getAllRooms();
+        this.cost = hotel.getBasePrice();
+        this.name = name;
         this.bannerLabel = newBannerLabel;
 
         setLayout(new BorderLayout());
@@ -111,7 +118,7 @@ public class ShowHotels extends JPanel {
 
         // North Label
         bannerLabel.setForeground(Color.WHITE);
-        bannerLabel.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
+        bannerLabel.setFont(new Font("Verdana", Font.BOLD, bannerLabelFontSize));
         panelNorth.add(bannerLabel, BorderLayout.CENTER);
 
         add(panelNorth, BorderLayout.NORTH);
@@ -124,6 +131,7 @@ public class ShowHotels extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(panelCenter);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         add(scrollPane, BorderLayout.CENTER);
     }
 }
