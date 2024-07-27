@@ -28,6 +28,7 @@ public class MVC_Controller {
     // Other panel's extensions
     private ManageSpecificHotelPanel specificHotelPanel;
     private ManageModifyRooms showRooms;
+    private ManageDateMultiplier manageDateMultiplier;
 
     private Hotel tempHotel;
 
@@ -67,6 +68,12 @@ public class MVC_Controller {
         if (showRooms != null) {
             showRooms.updateShowRoomInfo();
         }
+    }
+    
+    public void updateDateMultiplierCalendar(Hotel hotel) {
+        manageDateMultiplier.recolorDays(hotel);
+        manageDateMultiplier.revalidate();
+        manageDateMultiplier.repaint();
     }
 
     // Pop-ups
@@ -182,7 +189,7 @@ public class MVC_Controller {
             view.repaint();
         }
     }
-
+    
     public void switchToSpecificHotelPanel(Hotel hotel) {
         specificHotelPanel = new ManageSpecificHotelPanel(hotel);
         specificHotelPanel.addBackButtonListener(e -> switchToManageHotelsPanel());
@@ -196,7 +203,7 @@ public class MVC_Controller {
             }
         });
         specificHotelPanel.addDateMultiplierListener(e -> {
-//            switchToDateMultiplier(hotel);
+            switchToDateMultiplierPanel(hotel);
         });
         specificHotelPanel.addRemoveReservationsButtonListener(e -> {
             if (hotel.getTotalReservationCount() == 0) {
@@ -219,6 +226,25 @@ public class MVC_Controller {
         view.repaint();
     }
 
+    public void switchToDateMultiplierPanel(Hotel hotel) {
+        manageDateMultiplier = new ManageDateMultiplier(hotel);
+        manageDateMultiplier.setController(this);
+        manageDateMultiplier.addBackButtonListener(e -> switchToSpecificHotelPanel(hotel));
+        
+        view.getContentPane().removeAll();
+        view.add(manageDateMultiplier, BorderLayout.CENTER);
+        view.setSize(reserveCalendarWidth, reserveCalendarHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+    
+    public void changeDayMultiplier(Hotel hotel, int day) {
+        Modals.showChangeDayMultiplierDialog(view, model, hotel, day);
+        updateDateMultiplierCalendar(hotel);
+        System.out.printf("Hotel %s day %d has multiplier %.2f\n", hotel.getName(), day + 1, hotel.getDayMultipliers()[day]);
+    }
+    
     public void switchToShowRooms(Hotel hotel) {
         showRooms = new ManageModifyRooms(hotel);
         showRooms.setController(this);
@@ -339,9 +365,13 @@ public class MVC_Controller {
         view.revalidate();
         view.repaint();
     }
+    
+    public void getDiscountCode(ReserveCalendar discountCodeStorage) {
+        Modals.showDiscountDialog(view, discountCodeStorage);
+    }
 
-    public void reserveRoomFinal(Room room, float cost, String name, int startDay, int endDay) {
-        int answer = Modals.showReserveRoomDialog(view, model, tempHotel, room, name, cost, startDay, endDay);
+    public void reserveRoomFinal(Room room, float cost, String name, int startDay, int endDay, String discountCode) {
+        int answer = Modals.showReserveRoomDialog(view, model, tempHotel, room, name, cost, startDay, endDay, discountCode);
 
         if (answer == JOptionPane.YES_OPTION) {
             switchToMainPanel();

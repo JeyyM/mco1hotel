@@ -46,6 +46,9 @@ public class Hotel {
         return totalEarnings;
     }
 
+    public void setDayMultiplier(int day, float multiplier) {
+        dayMultipliers[day] = multiplier;
+    }
 
     // Constructor
     /**
@@ -66,7 +69,8 @@ public class Hotel {
 
         for (int j = 0; j < 31; j++){
 //            dayMultipliers[j] = 1.0f + (0.01f * (j+1));
-            dayMultipliers[j] = 1.0f * (j+1);
+            //dayMultipliers[j] = 1.0f * (j+1);
+            dayMultipliers[j] = 1.0f;
         }
     }
 

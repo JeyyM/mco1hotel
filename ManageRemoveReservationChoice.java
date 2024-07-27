@@ -55,7 +55,7 @@ public class ManageRemoveReservationChoice extends JPanel {
             for (int j = 0; j < cols; j++) {
                 if (roomIndex < totalReservations) {
                     Reservation reservation = reservations.get(roomIndex);
-                    JButton reservationButton = new JButton("<html>By" + reservation.getCustomerName() + "<br>" + "Days " + reservation.getStartDay() + " to " + reservation.getEndDay() + "<br>Total " + reservation.getCost() + "</html>");
+                    JButton reservationButton = new JButton("<html>By " + reservation.getCustomerName() + "<br>" + "Days " + reservation.getStartDay() + " to " + reservation.getEndDay() + "<br>Total " + reservation.getCost() + "</html>");
                     reservationButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
                     reservationButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
                     reservationButton.addActionListener(e -> {

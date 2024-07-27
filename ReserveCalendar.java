@@ -19,7 +19,7 @@ public class ReserveCalendar extends JPanel {
 
     private JPanel[] weeks = new JPanel[5];
     private JButton[][] calendar = new JButton[5][7];
-    private String name;
+    private String name, discountCode;
     private float cost;
 
     private MVC_Controller controller;
@@ -41,7 +41,9 @@ public class ReserveCalendar extends JPanel {
                         } else if (room.checkDayAvailability2(startDay, day) == -1){
                             JOptionPane.showMessageDialog(this, "There are prior reservations in the range chosen.", "Error", JOptionPane.WARNING_MESSAGE);
                         } else {
-                            controller.reserveRoomFinal(room, cost, name, startDay, day);
+                            controller.getDiscountCode(this);
+                            System.out.println("ReserveCalendar\n");
+                            controller.reserveRoomFinal(room, cost, name, startDay, day, discountCode);
                         }
                     });
                 }
@@ -75,6 +77,10 @@ public class ReserveCalendar extends JPanel {
                 }
             }
         }
+    }
+    
+    public void setDiscountCode(String discountCode) {
+        this.discountCode = discountCode;
     }
 
     /*

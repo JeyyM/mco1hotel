@@ -927,6 +927,10 @@ public class HotelManager {
         chosenHotel.setBasePrice(newPrice);
     }
     
+    public void modifyDayMultiplier(Hotel chosenHotel, float multiplier, int day) {
+        chosenHotel.setDayMultiplier(day, multiplier);
+    }
+    
     public void addReservation(Room room, float cost, String name, int startDay, int endDay) {
         Reservation reservation = new Reservation(name, cost, startDay, endDay, room.getName());
         room.addReservation(reservation);

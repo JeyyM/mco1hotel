@@ -339,6 +339,50 @@ public class Modals {
         modal.setLocationRelativeTo(parent);
         modal.setVisible(true);
     }
+    
+    public static void showChangeDayMultiplierDialog(JFrame parent, MVC_Model model, Hotel chosenHotel, int day) {
+        String title = String.format("Modify Multiplier for day %d", day + 1);
+        JDialog modal = new JDialog(parent, title, true);
+        modal.setLayout(new BorderLayout());
+
+        JPanel inputArea = new JPanel(new GridLayout(2, 2, 5, 5));
+        JTextField basePriceEntry = new JTextField(20);
+        JButton createButton = new JButton("Confirm Change");
+
+        inputArea.add(new JLabel("New Day Multiplier:"));
+        inputArea.add(basePriceEntry);
+        // put a blank label to keep that area clear
+        inputArea.add(new JLabel());
+        inputArea.add(createButton);
+        
+        createButton.addActionListener(e -> {
+            float basePrice;
+            String basePriceText = basePriceEntry.getText();
+
+            // Valid integer string
+            try {
+                basePrice = Float.parseFloat(basePriceText);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(modal, "Multiplier must be a valid real number.", "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (basePrice < 0) {
+                JOptionPane.showMessageDialog(modal, "Invalid multiplier, minimum is 0", "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Success
+            model.modifyDayMultiplier(chosenHotel, basePrice, day);
+            modal.dispose();
+            JOptionPane.showMessageDialog(parent, "Multiplier successfully changed.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        });
+        
+        modal.add(inputArea, BorderLayout.CENTER);
+        modal.pack();
+        modal.setLocationRelativeTo(parent);
+        modal.setVisible(true);
+    }
 
     public static int showDeleteHotelDialog(JFrame parent, MVC_Model model, ArrayList<Hotel> hotels, Hotel chosenHotel, Runnable updateHotels, Runnable updateRoomsShown) {
         // Format the message string
@@ -361,11 +405,40 @@ public class Modals {
         return option;
     }
 
-    public static int showReserveRoomDialog(JFrame parent, MVC_Model model, Hotel hotel, Room room, String name, float cost, int startDay, int endDay) {
+    public static void showDiscountDialog(JFrame parent, ReserveCalendar discountCodeStorage) {
+        JDialog modal = new JDialog(parent, "Enter Discount Code", true);
+        modal.setLayout(new BorderLayout());
+
+        JPanel inputArea = new JPanel(new GridLayout(2, 2, 5, 5));
+        JTextField basePriceEntry = new JTextField(20);
+        JButton submitButton = new JButton("Submit Discount");
+
+        inputArea.add(new JLabel("Discount Code:"));
+        inputArea.add(basePriceEntry);
+        // put a blank label to keep that area clear
+        inputArea.add(new JLabel());
+        inputArea.add(submitButton);
+        
+        submitButton.addActionListener(e -> {
+            String discountCode = basePriceEntry.getText();
+            discountCodeStorage.setDiscountCode(discountCode);
+            modal.dispose();
+        });
+        
+        
+        modal.add(inputArea, BorderLayout.CENTER);
+        modal.pack();
+        modal.setLocationRelativeTo(parent);
+        modal.setVisible(true);
+    }
+    
+    public static int showReserveRoomDialog(JFrame parent, MVC_Model model, Hotel hotel, Room room, String name, float cost, int startDay, int endDay, String discountCode) {
         float hotelBasePrice = hotel.getBasePrice();
         float roomTypeMultiplier = room.getBaseRate();
+        float discountMultiplier = 1.0f;
         float[] dayMultiplier = hotel.getDayMultipliers();
         float totalPayment = 0.0f;
+        int daysFree = 0;
 
         ArrayList<Integer> daysBetween = new ArrayList<>();
 
@@ -378,16 +451,33 @@ public class Modals {
         messageBuilder.append(String.format("Name: %s\n", name));
         messageBuilder.append(String.format("Room Name: %s\n", room.getName()));
         messageBuilder.append(String.format("Room Type: %s (%.2fx)\n", roomTypeMultiplier == 1.2f ? "Deluxe" : roomTypeMultiplier == 1.35f ? "Executive" : "Regular", roomTypeMultiplier));
+        
+        if (discountCode.equals("I_WORK_HERE")) {
+            messageBuilder.append(String.format("Discount code: %s (0.90x)\n", discountCode));
+            discountMultiplier = 0.9f;
+        }
+        else if (discountCode.equals("STAY4_GET1") && endDay - startDay >= 5) {
+            messageBuilder.append(String.format("Discount code: %s (Day %d is free)\n", discountCode, startDay));
+            daysFree = 1;
+        }
+        else if (discountCode.equals("PAYDAY") && ((startDay <= 15 && endDay > 15) || (startDay <= 30 && endDay > 30))) {
+            messageBuilder.append(String.format("Discount code: %s (0.93x)\n", discountCode));
+            discountMultiplier = 0.9f;
+        }
+        else {
+            messageBuilder.append("Discount code: No valid discount code provided\n");
+        }
+        
         messageBuilder.append(String.format("Hotel Nightly Rate: %.2f\n\n", hotelBasePrice));
 
         messageBuilder.append(String.format("Price Breakdown from Day %d to Day %d\n", startDay, endDay));
-        for (int j = 0; j < daysBetween.size(); j++) {
+        for (int j = daysFree; j < daysBetween.size(); j++) {
             messageBuilder.append(String.format("Day %d (%.2fx): %.2f\n", daysBetween.get(j), dayMultiplier[daysBetween.get(j) - 1], hotelBasePrice * dayMultiplier[daysBetween.get(j) - 1]));
             totalPayment += hotelBasePrice * dayMultiplier[daysBetween.get(j) - 1];
         }
 
         messageBuilder.append(String.format("Rate Total: %.2f\n", totalPayment));
-        messageBuilder.append(String.format("Total: %.2f * %.2f = %.2f\n", totalPayment, roomTypeMultiplier, totalPayment * roomTypeMultiplier));
+        messageBuilder.append(String.format("Total: %.2f * %.2f * %.2f = %.2f\n", totalPayment, roomTypeMultiplier, discountMultiplier, totalPayment * roomTypeMultiplier * discountMultiplier));
 
         cost = totalPayment * roomTypeMultiplier;
 

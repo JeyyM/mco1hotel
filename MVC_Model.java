@@ -52,6 +52,10 @@ public class MVC_Model {
         manager.modifyBasePrice2(chosenHotel, basePrice);
     }
     
+    public void modifyDayMultiplier(Hotel chosenHotel, float multiplier, int day) {
+        manager.modifyDayMultiplier(chosenHotel, multiplier, day);
+    }
+    
     // Reservations
     public void reserveRoom(Room room, float cost, String name, int startDay, int endDay) {
         manager.addReservation(room, cost, name, startDay, endDay);

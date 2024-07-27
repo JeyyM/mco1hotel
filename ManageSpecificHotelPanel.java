@@ -117,6 +117,7 @@ public class ManageSpecificHotelPanel extends JPanel {
         buttonPanel.add(renameHotelButton);
         buttonPanel.add(modifyRoomsButton);
         buttonPanel.add(modifyBasePriceButton);
+        buttonPanel.add(modifyDateMultiplyButton);
         buttonPanel.add(removeReservationsButton);
         buttonPanel.add(deleteHotelButton);
 
