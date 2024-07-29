@@ -11,6 +11,6 @@ import java.util.ArrayList;
  * */
 public class ReserveRoomSelectPanel extends ShowRooms {
     public ReserveRoomSelectPanel(Hotel hotel, String name) {
-        super(hotel, name, new JLabel("Select Hotel to Manage", JLabel.CENTER));
+        super(hotel, name, new JLabel("Select Room to Reserve", JLabel.CENTER));
     }
 }

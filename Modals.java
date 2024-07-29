@@ -246,7 +246,7 @@ public class Modals {
         return option;
     }
 
-    public static void showViewOptions(JFrame parent, MVC_Model model, Hotel chosenHotel, Runnable updateSpecificHotelPanel, Runnable updateHotels) {
+    public static void showViewOptions(JFrame parent, MVC_Model model, MVC_Controller controller, Hotel chosenHotel, Runnable updateSpecificHotelPanel, Runnable updateHotels) {
         JDialog modal = new JDialog(parent, "Viewing Options", true);
         modal.setLayout(new BorderLayout());
 
@@ -262,6 +262,9 @@ public class Modals {
         ArrayList<Room> availableRooms;
 
         dateButton.addActionListener(e -> {
+            controller.switchToViewRoomsByDate(chosenHotel);
+            modal.dispose();
+            /*
             String input = JOptionPane.showInputDialog(modal, "Enter a Day to Check (1 to 31):", "Enter Date", JOptionPane.PLAIN_MESSAGE);
             // for clicking cancel
             if (input != null) {
@@ -275,7 +278,9 @@ public class Modals {
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(modal, "Please enter a valid number.", "Error", JOptionPane.WARNING_MESSAGE);
                 }
-            }        });
+            }
+            */
+        });
 
         roomButton.addActionListener(e -> {
             JOptionPane.showMessageDialog(modal, "Check Availability by Room clicked.");
@@ -293,6 +298,24 @@ public class Modals {
         modal.pack();
         modal.setLocationRelativeTo(parent);
         modal.setVisible(true);
+    }
+    
+    public static void showReservedRoomsByDate(JFrame parent, Hotel chosenHotel, int day) {
+        StringBuilder title = new StringBuilder("Reserved Rooms on Day " + day);
+        ArrayList<Room> rooms = chosenHotel.getReservedRoomsByDay(day);
+        StringBuilder message;
+        
+        if (rooms.size() == 0) {
+            message = new StringBuilder("There are no rooms reserved on day " + day + ".\n");
+        }
+        else {
+            message = new StringBuilder("These rooms are reserved on day " + day + ".\n");
+            for (Room room : rooms) {
+                message.append(room.getName()).append(" ");
+            }
+        }
+        
+        JOptionPane.showMessageDialog(parent, message.toString(), title.toString(), JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void showModifyBasePriceDialog(JFrame parent, MVC_Model model, Hotel chosenHotel, Runnable updateSpecificHotelPanel, Runnable updateHotels) {

@@ -13,7 +13,7 @@ import javax.swing.border.EmptyBorder;
 *
 *
 * */
-public class ManageDateMultiplier extends JPanel {
+public class ViewRoomByDateCalendar extends JPanel {
     private Room room;
     private JLabel roomCountLabel;
     private JLabel basePriceLabel;
@@ -42,7 +42,7 @@ public class ManageDateMultiplier extends JPanel {
 
     private MVC_Controller controller;
 
-    public ManageDateMultiplier (Hotel hotel) {
+    public ViewRoomByDateCalendar (Hotel hotel) {
         setLayout(new BorderLayout());
 
         // Setting north panel
@@ -75,12 +75,12 @@ public class ManageDateMultiplier extends JPanel {
                     weeks[i].add(whiteSpace);
                 }
                 else {
-                    float priceMultiplier = hotel.getDayMultipliers()[i * 7 + j];
-                    String buttonName = String.format("%d (%.1f)", (i * 7 + j + 1), priceMultiplier);
-                    calendar[i][j] = new JButton(buttonName);
+                    int roomsReserved = hotel.getReservedRoomsByDay(i * 7 + j + 1).size();
+                    calendar[i][j] = new JButton("<html>" + (i * 7 + j + 1) + "<br>(" + (hotel.getAllRooms().size() - roomsReserved) + " Rooms<br>" +  "Available)</html>");
+                    calendar[i][j].setFont(new Font(new JButton().getFont().getFamily(), Font.PLAIN, 10));
 
-                    if (priceMultiplier != 1.0f) {
-                        calendar[i][j].setBackground(Color.decode("#AFDDED"));
+                    if (roomsReserved != 0) {
+                        calendar[i][j].setBackground(Color.decode("#9DF69C"));
                     }
 
                     weeks[i].add(calendar[i][j]);
@@ -125,9 +125,9 @@ public class ManageDateMultiplier extends JPanel {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
                 if (!(i == 4 && j > 2)) {
-                    final int day = i * 7 + j;
+                    final int day = i * 7 + j + 1;
                     calendar[i][j].addActionListener(e -> {
-                        controller.changeDayMultiplier(hotel, day);
+                        controller.viewReservedRoomsByDate(hotel, day);
                     });
                 }
             }

@@ -98,7 +98,32 @@ public class MVC_Controller {
 
     // havent changed the update specific hotel
     public void showViewOptions(Hotel chosenHotel){
-        Modals.showViewOptions(view, model, chosenHotel, this::updateSpecificHotelPanel, this::updateAllPanels);
+        Modals.showViewOptions(view, model, this, chosenHotel, this::updateSpecificHotelPanel, this::updateAllPanels);
+    }
+    
+    public void switchToViewRoomsByDate(Hotel chosenHotel) {
+        ViewRoomByDateCalendar viewRoomByDateCalendar = new ViewRoomByDateCalendar(chosenHotel);
+        viewRoomByDateCalendar.setController(this);
+        viewRoomByDateCalendar.addBackButtonListener(e -> switchToViewHotelsPanel());
+        
+        view.getContentPane().removeAll();
+        view.add(viewRoomByDateCalendar, BorderLayout.CENTER);
+        view.setSize(reserveCalendarWidth, reserveCalendarHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+    
+    public void viewReservedRoomsByDate(Hotel chosenHotel, int day) {
+        Modals.showReservedRoomsByDate(view, chosenHotel, day);
+    }
+    
+    public void switchToViewCalendarFromRoom(Room room) {
+        
+    }
+    
+    public void showReservationsByRoomAndDate(Room room, int day) {
+        
     }
 
 

@@ -42,7 +42,6 @@ public class ReserveCalendar extends JPanel {
                             JOptionPane.showMessageDialog(this, "There are prior reservations in the range chosen.", "Error", JOptionPane.WARNING_MESSAGE);
                         } else {
                             controller.getDiscountCode(this);
-                            System.out.println("ReserveCalendar\n");
                             controller.reserveRoomFinal(room, cost, name, startDay, day, discountCode);
                         }
                     });
