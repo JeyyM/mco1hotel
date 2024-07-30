@@ -193,8 +193,13 @@ public class MVC_Controller {
         answer = Modals.showDeleteHotelDialog(view, model, hotels, chosenHotel, this::updateAllPanels, this::updateAllPanels);
 
         if (answer == 0) {
-            switchToManageHotelsPanel();
             updateHotelCount();
+
+            if (hotels.size() > 0){
+                switchToManageHotelsPanel();
+            } else {
+                switchToMainPanel();
+            }
         }
     }
 
