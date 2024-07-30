@@ -15,6 +15,7 @@ public class ManageSpecificHotelPanel extends JPanel {
     private JButton modifyBasePriceButton;
     private JButton modifyDateMultiplyButton;
     private JButton removeReservationsButton;
+    private JButton modifyFeaturesButton;
     private JButton deleteHotelButton;
     private JButton backButton;
     private JLabel managingLabel;
@@ -53,6 +54,9 @@ public class ManageSpecificHotelPanel extends JPanel {
         removeReservationsButton.addActionListener(listener);
     }
 
+    public void addModifyFeaturesButtonListener(ActionListener listener) {
+        modifyFeaturesButton.addActionListener(listener);
+    }
     public void addDeleteHotelButtonListener(ActionListener listener) {
         deleteHotelButton.addActionListener(listener);
     }
@@ -96,7 +100,7 @@ public class ManageSpecificHotelPanel extends JPanel {
         panelCenter.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(9, 1, 0, 10));
+        buttonPanel.setLayout(new GridLayout(10, 1, 0, 10));
 
         roomCountLabel = new JLabel(String.format("Number of Rooms: %d", hotel.getTotalRooms()));
         roomCountLabel.setFont(new Font("Verdana", Font.BOLD, 15));
@@ -112,6 +116,7 @@ public class ManageSpecificHotelPanel extends JPanel {
         modifyBasePriceButton = new JButton("Modify Base Price");
         modifyDateMultiplyButton = new JButton("Modify Date Multiplier");
         removeReservationsButton = new JButton("Remove Reservations");
+        modifyFeaturesButton = new JButton("Manage Hotel Features");
         deleteHotelButton = new JButton("Delete Hotel");
 
         buttonPanel.add(renameHotelButton);
@@ -119,6 +124,7 @@ public class ManageSpecificHotelPanel extends JPanel {
         buttonPanel.add(modifyBasePriceButton);
         buttonPanel.add(modifyDateMultiplyButton);
         buttonPanel.add(removeReservationsButton);
+        buttonPanel.add(modifyFeaturesButton);
         buttonPanel.add(deleteHotelButton);
 
         panelCenter.add(buttonPanel);

@@ -25,6 +25,9 @@ public class MVC_Controller {
     private int reserveCalendarWidth = 680;
     private int reserveCalendarHeight = 500;
 
+    private int manageFeaturesPanelWidth = 680;
+    private int manageFeaturesPanelHeight = 500;
+
     // Other panel's extensions
     private ManageSpecificHotelPanel specificHotelPanel;
     private ManageModifyRooms showRooms;
@@ -99,6 +102,10 @@ public class MVC_Controller {
     // havent changed the update specific hotel
     public void showViewOptions(Hotel chosenHotel){
         Modals.showViewOptions(view, model, this, chosenHotel, this::updateSpecificHotelPanel, this::updateAllPanels);
+    }
+
+    public void showFeatureDialog() {
+        Modals.showFeatureDialog(view, model, this::updateHotelCount, this::updateAllPanels);
     }
     
     public void switchToViewRoomsByDate(Hotel chosenHotel) {
@@ -287,6 +294,11 @@ public class MVC_Controller {
                 switchToViewAllReservedRooms(hotel);
             }
         });
+
+        specificHotelPanel.addModifyFeaturesButtonListener(e -> {
+            switchToFeaturesPanel(hotel);
+        });
+
         specificHotelPanel.addDeleteHotelButtonListener(e -> {
             ArrayList<Hotel> hotels = model.getHotels();
             showDeleteHotelDialog(hotels, hotel);
@@ -361,6 +373,26 @@ public class MVC_Controller {
             view.repaint();
         }
     }
+
+    public void switchToFeaturesPanel(Hotel hotel) {
+        ManageFeatures manageFeaturesPanel = new ManageFeatures(hotel);
+        manageFeaturesPanel.setController(this);
+        tempHotel = hotel;
+        manageFeaturesPanel.addBackButtonListener(e -> switchToSpecificHotelPanel(hotel));
+        manageFeaturesPanel.addFeatureEventListener(e -> showFeatureDialog());
+
+        view.getContentPane().removeAll();
+        JScrollPane scrollPane = new JScrollPane(manageFeaturesPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        view.add(scrollPane);
+        view.setSize(manageFeaturesPanelWidth, manageFeaturesPanelHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+
+
 
     public void switchToReserveSpecificRoomPanel(Hotel hotel, String name) {
         ReserveRoomSelectPanel roomReservationsPanel = new ReserveRoomSelectPanel(hotel, name);

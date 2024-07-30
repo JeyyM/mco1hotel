@@ -34,6 +34,26 @@ public class Hotel {
         return images;
     }
 
+    private ArrayList<Feature> hotelFeatures;
+
+    public ArrayList<Feature> getFeatures() {
+        if (hotelFeatures == null) {
+            hotelFeatures = new ArrayList<>();
+        }
+        return hotelFeatures;
+    }
+
+    public void addFeature(Feature feature) {
+        if (hotelFeatures == null) {
+            hotelFeatures = new ArrayList<>();
+        }
+        hotelFeatures.add(feature);
+    }
+
+    public void setFeatures(ArrayList<Feature> features) {
+        hotelFeatures = features;
+    }
+
     private int buttonIndex;
     public void setIndex(int index) {
         this.buttonIndex = index;
@@ -67,10 +87,14 @@ public class Hotel {
     * @param basePrice      base price of the hotel
     * @param totalRooms     max number of rooms of the hotel
     */
-    public Hotel(String name, float basePrice, int totalRooms) {
+    public Hotel(String name, float basePrice, int totalRooms, ArrayList<ImageIcon> hotelImages) {
         this.name = name;
         this.basePrice = basePrice;
         this.totalRooms = 0;
+        this.images = hotelImages;
+
+        // Ensure the features list is initialized
+        this.hotelFeatures = new ArrayList<>();
 
         // Loops to addRooms based on initial total
         for (int i = 0; i < totalRooms; i++) {
@@ -78,11 +102,10 @@ public class Hotel {
         }
 
         for (int j = 0; j < 31; j++){
-//            dayMultipliers[j] = 1.0f + (0.01f * (j+1));
-            //dayMultipliers[j] = 1.0f * (j+1);
             dayMultipliers[j] = 1.0f;
         }
     }
+
 
     // Getters and Setters
     /**

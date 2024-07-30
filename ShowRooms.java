@@ -14,7 +14,7 @@ public class ShowRooms extends JPanel {
     protected JButton backButton;
     protected JPanel panelCenter;
     protected JLabel bannerLabel;
-    JPanel panelNorth;
+    protected JPanel panelNorth;
 
     // Size variables
     protected int fullWidth = 680;

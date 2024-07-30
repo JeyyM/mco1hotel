@@ -30,28 +30,30 @@ public class Modals {
         // Panel for image gallery
         JPanel imageGallery = new JPanel(new GridLayout(0, 2, 5, 5));
         JScrollPane imageScrollPane = new JScrollPane(imageGallery);
-        imageScrollPane.setPreferredSize(new Dimension(100, 750));
+        imageScrollPane.setPreferredSize(new Dimension(200, 170));
 
         ArrayList<ImageIcon> images = new ArrayList<>();
 
         addImageButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            int returnValue = fileChooser.showOpenDialog(modal);
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image files", "jpg", "jpeg", "png"));
+            int returnValue = fileChooser.showOpenDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                ImageIcon originalImage = new ImageIcon(selectedFile.getAbsolutePath());
-                Image scaledImage = originalImage.getImage().getScaledInstance(200, 100, Image.SCALE_SMOOTH);
-                ImageIcon scaledIcon = new ImageIcon(scaledImage);
-                images.add(scaledIcon);
+                String fileName = selectedFile.getName().toLowerCase();
+                // to avoid file type issues
+                if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png")) {
+                    ImageIcon originalImage = new ImageIcon(selectedFile.getAbsolutePath());
+                    Image scaledImage = originalImage.getImage().getScaledInstance(170, 160, Image.SCALE_SMOOTH);
+                    ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                    images.add(scaledIcon);
 
-                imageGallery.removeAll();
-                for (ImageIcon image : images) {
-                    imageGallery.add(new JLabel(image));
+                    // Update image gallery
+                    refreshImageGallery(imageGallery, images);
+                    JOptionPane.showMessageDialog(modal, "Image added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(modal, "Invalid file type. Please select a JPG, JPEG, or PNG file.", "Error", JOptionPane.WARNING_MESSAGE);
                 }
-                imageGallery.revalidate();
-                imageGallery.repaint();
-
-                JOptionPane.showMessageDialog(modal, "Image added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -84,7 +86,12 @@ public class Modals {
                 return;
             }
 
-            model.createHotel(newName, roomCount);
+            if (images.isEmpty()) {
+                JOptionPane.showMessageDialog(modal, "Please add at least one image for the hotel.", "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            model.createHotel(newName, roomCount, images);
             updateHotelCount.run();
             modal.dispose();
             JOptionPane.showMessageDialog(parent, "Hotel successfully added.", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -98,6 +105,18 @@ public class Modals {
         modal.setVisible(true);
     }
 
+    private static void refreshImageGallery(JPanel imageGallery, ArrayList<ImageIcon> images) {
+        imageGallery.removeAll();
+        for (ImageIcon image : images) {
+            ImageX imageX = new ImageX(image, e -> {
+                images.remove(image);
+                refreshImageGallery(imageGallery, images);
+            });
+            imageGallery.add(imageX);
+        }
+        imageGallery.revalidate();
+        imageGallery.repaint();
+    }
 
     public static void showRenameHotelDialog(JFrame parent, MVC_Model model, Hotel chosenHotel, Runnable updateSpecificHotelPanel, Runnable updateHotels) {
         JDialog modal = new JDialog(parent, "Rename Hotel", true);
@@ -600,5 +619,55 @@ public class Modals {
         }
         
         return option;
+    }
+
+    public static void showFeatureDialog(JFrame parent, MVC_Model model, Runnable updateHotelCount, Runnable updateHotels) {
+        JDialog modal = new JDialog(parent, "Manage Features", true);
+        modal.setLayout(new BorderLayout());
+
+        // Panel for input fields
+        JPanel inputArea = new JPanel(new GridLayout(1, 3, 5, 5));
+        JTextField featureNameEntry = new JTextField(20);
+        JButton addImageButton = new JButton("Add Image");
+
+        inputArea.add(new JLabel("Feature Name:"));
+        inputArea.add(featureNameEntry);
+        inputArea.add(addImageButton);
+
+        // Panel for image gallery
+        JPanel imageGallery = new JPanel(new GridLayout(0, 2, 5, 5));
+        JScrollPane imageScrollPane = new JScrollPane(imageGallery);
+        imageScrollPane.setPreferredSize(new Dimension(200, 170));
+
+        ArrayList<ImageIcon> images = new ArrayList<>();
+
+        addImageButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image files", "jpg", "jpeg", "png"));
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                String fileName = selectedFile.getName().toLowerCase();
+                // to avoid file type issues
+                if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png")) {
+                    ImageIcon originalImage = new ImageIcon(selectedFile.getAbsolutePath());
+                    Image scaledImage = originalImage.getImage().getScaledInstance(170, 160, Image.SCALE_SMOOTH);
+                    ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                    images.add(scaledIcon);
+
+                    // Update image gallery
+                    refreshImageGallery(imageGallery, images);
+                    JOptionPane.showMessageDialog(modal, "Image added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(modal, "Invalid file type. Please select a JPG, JPEG, or PNG file.", "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
+
+        modal.add(inputArea, BorderLayout.CENTER);
+        modal.add(imageScrollPane, BorderLayout.SOUTH);
+        modal.pack();
+        modal.setLocationRelativeTo(parent);
+        modal.setVisible(true);
     }
 }

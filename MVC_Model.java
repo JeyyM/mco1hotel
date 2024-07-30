@@ -1,5 +1,6 @@
 package mco1;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class MVC_Model {
@@ -53,9 +54,10 @@ public class MVC_Model {
      * @param roomCount     Number to validate
      * @return                   Error code
      */
-    public boolean createHotel(String name, int roomCount) {
+    public boolean createHotel(String name, int roomCount, ArrayList<ImageIcon> hotelImages) {
         if (checkName(name) && checkRoomCount(roomCount) == 1) {
-            hotels.add(new Hotel(name, 1299.0f, roomCount));
+            Hotel newHotel = new Hotel(name, 1299.0f, roomCount, hotelImages);
+            hotels.add(newHotel);
             return true;
         }
         return false;

@@ -28,6 +28,7 @@ public class MVC_View extends JFrame {
     private ManageHotelsPanel manageHotelsPanel;
     private ReserveHotelSelectPanel reservationsPanel;
     private ViewHotelsPanel viewHotelsPanel;
+    private ManageFeatures manageFeatures;
 
     //Event Listeners
     public void addCreateHotelListener(ActionListener listener) {
@@ -66,6 +67,14 @@ public class MVC_View extends JFrame {
 
     public void setManageHotelsPanel(ManageHotelsPanel manageHotelsPanel) {
         this.manageHotelsPanel = manageHotelsPanel;
+    }
+
+    public ManageFeatures getManageFeatures() {
+        return this.manageFeatures;
+    }
+
+    public void setManageFeatures(ManageFeatures manageFeatures) {
+        this.manageFeatures = manageFeatures;
     }
 
     public ReserveHotelSelectPanel getReservationsPanel() {
