@@ -105,7 +105,7 @@ public class ViewReservationCalendarByRoom extends JPanel {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
                 if (!(i == 4 && j > 2)) {
-                    final int day = i * 7 + j;
+                    final int day = i * 7 + j + 1;
                     calendar[i][j].addActionListener(e -> {
                         controller.showReservationsByRoomAndDate(room, day);
                     });

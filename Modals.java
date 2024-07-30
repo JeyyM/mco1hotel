@@ -283,11 +283,13 @@ public class Modals {
         });
 
         roomButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(modal, "Check Availability by Room clicked.");
+            controller.selectRoomByAvailability(chosenHotel);
+            modal.dispose();
         });
 
         reservationButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(modal, "View by Reservation clicked.");
+            controller.switchToViewReservations(chosenHotel);
+            modal.dispose();
         });
 
         inputArea.add(dateButton);
@@ -314,6 +316,46 @@ public class Modals {
                 message.append(room.getName()).append(" ");
             }
         }
+        
+        JOptionPane.showMessageDialog(parent, message.toString(), title.toString(), JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public static void showReservedRoomsByRoom(JFrame parent, Room room, int day) {
+        StringBuilder title = new StringBuilder("Reservations on Day " + day);
+        StringBuilder message = new StringBuilder();
+        boolean isReserved = false;
+        
+        ArrayList<Reservation> reservations = room.getReservations();
+        
+        for (Reservation reservation : reservations) {
+            if (reservation.getDayRange().contains(day)) {
+                message = new StringBuilder("" + reservation.getCustomerName() + " reserved " + room.getName() + " on day " + day + ".\n");
+                isReserved = true;
+            }
+        }
+        
+        if (!isReserved) {
+            message = new StringBuilder("There are no reservations on day " + day + ".\n");
+        }
+        
+        JOptionPane.showMessageDialog(parent, message.toString(), title.toString(), JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public static void showReservationDetails(JFrame parent, Reservation reservation, float roomMultiplier) {
+        StringBuilder title = new StringBuilder("Reservation by " + reservation.getCustomerName());
+        String roomType;
+        
+        if (roomMultiplier == 1.2f) {
+            roomType = "Deluxe";
+        }
+        else if (roomMultiplier == 1.35f) {
+            roomType = "Executive";
+        }
+        else {
+            roomType = "Regular";
+        }
+        
+        String message = String.format("Reservation by: %s\nRoom Reserved: %s\nRoom Type %s\nCheck In Day: %d\nCheck Out Day: %d\nCost: %.2f", reservation.getCustomerName(), reservation.getRoomName(), roomType, reservation.getStartDay(), reservation.getEndDay(), reservation.getCost());
         
         JOptionPane.showMessageDialog(parent, message.toString(), title.toString(), JOptionPane.INFORMATION_MESSAGE);
     }
@@ -485,7 +527,7 @@ public class Modals {
         }
         else if (discountCode.equals("PAYDAY") && ((startDay <= 15 && endDay > 15) || (startDay <= 30 && endDay > 30))) {
             messageBuilder.append(String.format("Discount code: %s (0.93x)\n", discountCode));
-            discountMultiplier = 0.9f;
+            discountMultiplier = 0.93f;
         }
         else {
             messageBuilder.append("Discount code: No valid discount code provided\n");
@@ -493,7 +535,7 @@ public class Modals {
         
         messageBuilder.append(String.format("Hotel Nightly Rate: %.2f\n\n", hotelBasePrice));
 
-        messageBuilder.append(String.format("Price Breakdown from Day %d to Day %d\n", startDay, endDay));
+        messageBuilder.append(String.format("Price Breakdown from Day %d to Day %d\n", startDay, endDay - 1));
         for (int j = daysFree; j < daysBetween.size(); j++) {
             messageBuilder.append(String.format("Day %d (%.2fx): %.2f\n", daysBetween.get(j), dayMultiplier[daysBetween.get(j) - 1], hotelBasePrice * dayMultiplier[daysBetween.get(j) - 1]));
             totalPayment += hotelBasePrice * dayMultiplier[daysBetween.get(j) - 1];
@@ -502,7 +544,7 @@ public class Modals {
         messageBuilder.append(String.format("Rate Total: %.2f\n", totalPayment));
         messageBuilder.append(String.format("Total: %.2f * %.2f * %.2f = %.2f\n", totalPayment, roomTypeMultiplier, discountMultiplier, totalPayment * roomTypeMultiplier * discountMultiplier));
 
-        cost = totalPayment * roomTypeMultiplier;
+        cost = totalPayment * roomTypeMultiplier * discountMultiplier;
 
         // Format the message string
         String message = messageBuilder.toString();

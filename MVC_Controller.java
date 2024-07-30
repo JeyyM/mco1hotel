@@ -118,12 +118,56 @@ public class MVC_Controller {
         Modals.showReservedRoomsByDate(view, chosenHotel, day);
     }
     
+    public void selectRoomByAvailability(Hotel hotel) {
+        CheckAvailabilityByRoomPanel showRooms = new CheckAvailabilityByRoomPanel(hotel);
+        tempHotel = hotel;
+        showRooms.setController(this);
+        showRooms.addBackButtonListener(e -> switchToViewHotelsPanel());
+
+        view.getContentPane().removeAll();
+        view.add(showRooms, BorderLayout.CENTER);
+        view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+    
     public void switchToViewCalendarFromRoom(Room room) {
+        ViewReservationCalendarByRoom mainPanel = new ViewReservationCalendarByRoom(room);
+        mainPanel.setController(this);
+        mainPanel.addBackButtonListener(e -> selectRoomByAvailability(tempHotel));
         
+        view.getContentPane().removeAll();
+        view.add(mainPanel, BorderLayout.CENTER);
+        view.setSize(reserveCalendarWidth, reserveCalendarHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
     }
     
     public void showReservationsByRoomAndDate(Room room, int day) {
-        
+        Modals.showReservedRoomsByRoom(view, room, day);
+    }
+    
+    public void switchToViewReservations(Hotel hotel) {
+        ViewReservations selectReservationsPanel = new ViewReservations(hotel);
+        selectReservationsPanel.setController(this);
+        tempHotel = hotel;
+        selectReservationsPanel.addBackButtonListener(e -> switchToViewHotelsPanel());
+
+        view.getContentPane().removeAll();
+        JScrollPane scrollPane = new JScrollPane(selectReservationsPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        view.add(scrollPane);
+        view.setSize(manageHotelsPanelWidth, manageHotelsPanelHeight);
+        view.setResizable(false);
+        view.revalidate();
+        view.repaint();
+    }
+    
+    public void switchToViewSelectedReservation(Reservation reservation, float roomType) {
+        Modals.showReservationDetails(view, reservation, roomType);
     }
 
 
