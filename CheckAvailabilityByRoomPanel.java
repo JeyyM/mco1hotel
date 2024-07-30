@@ -6,11 +6,27 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * GUI Panel for showing all the rooms of a hotel
+ * and shows the number of reservations per room.
+ * When a room button is clicked, shows the calendar
+ * for the reservations of the room.
+ */
 public class CheckAvailabilityByRoomPanel extends ShowRooms {
+    /**
+     * Constructor for the panel, inherits the ShowRooms class
+     * @param hotel     hotel that will have its rooms shown
+     */
     public CheckAvailabilityByRoomPanel(Hotel hotel) {
         super(hotel, hotel.getName(), new JLabel("Select Room to Check Availability", JLabel.CENTER));
     }
     
+    /**
+     * Overridden method because this function leads to
+     * a viewing calendar instead of a reservation calendar
+     * @param roomButton    button class that can be clicked
+     * @param room          room that is selected to show calendar
+     */
     @Override
     public void addRoomButtonListener(JButton roomButton, Room room) {
         roomButton.addActionListener(e -> {
@@ -18,6 +34,10 @@ public class CheckAvailabilityByRoomPanel extends ShowRooms {
         });
     }
     
+    /**
+     * Overridden method to change the text of the JButtons
+     * to include the number of reservations each room has
+     */
     @Override
     public void initializeRows() {
         // Panel is cleared to it can reset everything

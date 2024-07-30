@@ -6,14 +6,30 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * GUI Panel that shows all the rooms with reservations
+ * from a selected hotel. Leads to the deletion of a
+ * reservation from a selected room. Inherits the ShowRooms
+ * class as this panel also shows all the rooms of a hotel.
+ */
 public class ManageRemoveReserveRoomChoice extends ShowRooms {
-    @Override
-    public void addRoomButtonListener(JButton roomButton, Room room) {
-        roomButton.addActionListener(e -> {
-            controller.switchToRemoveReservations(room);
-        });
+    /**
+     * Constructor for the panel and uses the constructor for
+     * the ShowRooms class but changes the list of rooms to only
+     * the rooms with reservations in it
+     * @param hotel 
+     */
+    public ManageRemoveReserveRoomChoice(Hotel hotel) {
+        super(hotel, hotel.getName(), new JLabel("Select Room to Remove a Reservation", JLabel.CENTER));
+        this.rooms = hotel.getAllReservedRooms();
+        initializeRows();
     }
 
+    /**
+     * Overridden method to initialize the row of buttons of rooms
+     * that have reservations in them but with the added text in the
+     * buttons that shows the number of reservations per room.
+     */
     @Override
     public void initializeRows() {
         // Panel is cleared to it can reset everything
@@ -58,10 +74,18 @@ public class ManageRemoveReserveRoomChoice extends ShowRooms {
         panelCenter.revalidate();
         panelCenter.repaint();
     }
-
-    public ManageRemoveReserveRoomChoice(Hotel hotel) {
-        super(hotel, hotel.getName(), new JLabel("Select Room to Remove a Reservation", JLabel.CENTER));
-        this.rooms = hotel.getAllReservedRooms();
-        initializeRows();
+    
+    /**
+     * Overridden method because this function leads to
+     * a panel that shows the reservations of the room selected
+     * instead of a reservation calendar
+     * @param roomButton    button class that can be clicked
+     * @param room          room that is selected to show calendar
+     */
+    @Override
+    public void addRoomButtonListener(JButton roomButton, Room room) {
+        roomButton.addActionListener(e -> {
+            controller.switchToRemoveReservations(room);
+        });
     }
 }

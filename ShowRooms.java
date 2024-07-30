@@ -6,9 +6,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-/*
- * Base Template for room selection panels
- * */
+/**
+ * GUI Panel that shows the rooms of a chosen hotel
+ * and is also used as a basis for other panels that
+ * need to show the rooms of a hotel.
+ */
 public class ShowRooms extends JPanel {
     protected ArrayList<Room> rooms;
     protected JButton backButton;
@@ -27,23 +29,62 @@ public class ShowRooms extends JPanel {
 
     protected String name;
     protected float cost;
-
+    
     protected MVC_Controller controller;
-    public void setController(MVC_Controller controller) {
-        this.controller = controller;
-    }
 
-    public void addRoomButtonListener(JButton roomButton, Room room) {
-        roomButton.addActionListener(e -> {
-            controller.switchToReserveCalendarStart(room, cost, name);
-        });
-    }
+    /**
+     * Constructor for the GUI panel that shows all the rooms
+     * of a chosen hotel as buttons and shows the hotel name.
+     * Uses a different function to create the row of buttons.
+     * at the top. Used for selecting a room to reserve.
+     * @param hotel             hotel chosen to have its rooms displayed
+     * @param name              name of the hotel
+     * @param newBannerLabel    JLabel that has the hotel's name
+     */
+    public ShowRooms(Hotel hotel, String name, JLabel newBannerLabel) {
+        this.rooms = hotel.getAllRooms();
+        this.cost = hotel.getBasePrice();
+        this.name = name;
+        this.bannerLabel = newBannerLabel;
 
-    public void addBackButtonListener(ActionListener listener) {
-        backButton.addActionListener(listener);
-    }
+        setLayout(new BorderLayout());
 
+        // Setting north panel
+        panelNorth = new JPanel();
+        panelNorth.setLayout(new BorderLayout());
+        panelNorth.setBackground(Color.decode("#063970"));
+        panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
+
+        // Back Button
+        backButton = new JButton("\u2190");
+        backButton.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
+        panelNorth.add(backButton, BorderLayout.WEST);
+
+        // North Label
+        bannerLabel.setForeground(Color.WHITE);
+        bannerLabel.setFont(new Font("Verdana", Font.BOLD, bannerLabelFontSize));
+        panelNorth.add(bannerLabel, BorderLayout.CENTER);
+
+        add(panelNorth, BorderLayout.NORTH);
+
+        // Create the center panel with vertical BoxLayout so no grid row count needed
+        panelCenter = new JPanel();
+        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
+
+        initializeRows();
+
+        JScrollPane scrollPane = new JScrollPane(panelCenter);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        add(scrollPane, BorderLayout.CENTER);
+    }
+    
     // There are rows that will contain the grid of buttons
+    /**
+     * Method that creates the row of buttons which are linked
+     * to each room that a hotel has. Uses a different function
+     * to add a listener to each button.
+     */
     public void initializeRows() {
         // Panel is cleared to it can reset everything
         panelCenter.removeAll();
@@ -95,42 +136,34 @@ public class ShowRooms extends JPanel {
         panelCenter.revalidate();
         panelCenter.repaint();
     }
+    
+    /**
+     * Sets the controller that the panel can call functions to
+     * @param controller    the main controller of the program
+     */
+    public void setController(MVC_Controller controller) {
+        this.controller = controller;
+    }
 
-    public ShowRooms(Hotel hotel, String name, JLabel newBannerLabel) {
-        this.rooms = hotel.getAllRooms();
-        this.cost = hotel.getBasePrice();
-        this.name = name;
-        this.bannerLabel = newBannerLabel;
+    /**
+     * Adds a listener to the room buttons that commands the
+     * controller to switch to the reservation calendar panel
+     * of the selected room.
+     * @param roomButton    button of the room selected to be reserved
+     * @param room          room that corresponds to the button clicked and is from the list of rooms in the hotel
+     */
+    public void addRoomButtonListener(JButton roomButton, Room room) {
+        roomButton.addActionListener(e -> {
+            controller.switchToReserveCalendarStart(room, cost, name);
+        });
+    }
 
-        setLayout(new BorderLayout());
-
-        // Setting north panel
-        panelNorth = new JPanel();
-        panelNorth.setLayout(new BorderLayout());
-        panelNorth.setBackground(Color.decode("#063970"));
-        panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
-
-        // Back Button
-        backButton = new JButton("\u2190");
-        backButton.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
-        panelNorth.add(backButton, BorderLayout.WEST);
-
-        // North Label
-        bannerLabel.setForeground(Color.WHITE);
-        bannerLabel.setFont(new Font("Verdana", Font.BOLD, bannerLabelFontSize));
-        panelNorth.add(bannerLabel, BorderLayout.CENTER);
-
-        add(panelNorth, BorderLayout.NORTH);
-
-        // Create the center panel with vertical BoxLayout so no grid row count needed
-        panelCenter = new JPanel();
-        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
-
-        initializeRows();
-
-        JScrollPane scrollPane = new JScrollPane(panelCenter);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        add(scrollPane, BorderLayout.CENTER);
+    /**
+     * Adds an event listener for the back button
+     * at the top left of the GUI
+     * @param listener      action that will happen when the back button is clicked
+     */
+    public void addBackButtonListener(ActionListener listener) {
+        backButton.addActionListener(listener);
     }
 }

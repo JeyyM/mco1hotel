@@ -6,9 +6,10 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-/*
- * Base Template for hotel selection panels
- * */
+/**
+ * GUI Panel that is the basis for panels that
+ * displays all the hotels created.
+ */
 public class ShowHotels extends JPanel {
     protected ArrayList<Hotel> hotels;
     protected JButton backButton;
@@ -27,27 +28,54 @@ public class ShowHotels extends JPanel {
 
     protected MVC_Controller controller;
 
-    // getters and setters
-    // For refreshing the hotels every enter
-    public void setHotels(ArrayList<Hotel> hotels) {
+    /**
+     * Constructor for the base GUI Panel that shows all the hotels.
+     * Uses a different function to create and display the buttons
+     * for each hotel.
+     * @param hotels            the list of hotels created
+     * @param newBannerLabel    the banner label at the top of the panel
+     */
+    public ShowHotels(ArrayList<Hotel> hotels, JLabel newBannerLabel) {
         this.hotels = hotels;
+        this.bannerLabel = newBannerLabel;
+
+        setLayout(new BorderLayout());
+
+        // Setting north panel
+        panelNorth = new JPanel();
+        panelNorth.setLayout(new BorderLayout());
+        panelNorth.setBackground(Color.decode("#063970"));
+        panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
+
+        // Back Button
+        backButton = new JButton("\u2190");
+        backButton.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
+        panelNorth.add(backButton, BorderLayout.WEST);
+
+        // North Label
+        bannerLabel.setForeground(Color.WHITE);
+        bannerLabel.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
+        panelNorth.add(bannerLabel, BorderLayout.CENTER);
+
+        add(panelNorth, BorderLayout.NORTH);
+
+        // Create the center panel with vertical BoxLayout so no grid row count needed
+        panelCenter = new JPanel();
+        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
+
         initializeRows();
-    }
 
-    public void setController(MVC_Controller controller) {
-        this.controller = controller;
+        JScrollPane scrollPane = new JScrollPane(panelCenter);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        add(scrollPane, BorderLayout.CENTER);
     }
-
-    // Event listeners
-    public void addBackButtonListener(ActionListener listener) {
-        backButton.addActionListener(listener);
-    }
-
-    protected void addHotelButtonListener(JButton hotelButton, Hotel hotel) {
-        hotelButton.addActionListener(e -> controller.switchToSpecificHotelPanel(hotel));
-    }
-
+    
     // There are rows that will contain the grid of buttons
+    /**
+     * Creates the rows of the hotel buttons that will be displayed
+     * in the main GUI. Uses a different function to add a listener
+     * for each hotel button.
+     */
     public void initializeRows() {
         // Panel is cleared to it can reset everything
         panelCenter.removeAll();
@@ -89,39 +117,43 @@ public class ShowHotels extends JPanel {
         panelCenter.revalidate();
         panelCenter.repaint();
     }
-
-    public ShowHotels(ArrayList<Hotel> hotels, JLabel newBannerLabel) {
+    
+    // getters and setters
+    // For refreshing the hotels every enter
+    /**
+     * Refreshes the list of hotels in the class and refreshes the buttons
+     * @param hotels    the list of hotels created, could have more or less hotels depending if a new one is added or one is removed
+     */
+    public void setHotels(ArrayList<Hotel> hotels) {
         this.hotels = hotels;
-        this.bannerLabel = newBannerLabel;
-
-        setLayout(new BorderLayout());
-
-        // Setting north panel
-        panelNorth = new JPanel();
-        panelNorth.setLayout(new BorderLayout());
-        panelNorth.setBackground(Color.decode("#063970"));
-        panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
-
-        // Back Button
-        backButton = new JButton("\u2190");
-        backButton.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
-        panelNorth.add(backButton, BorderLayout.WEST);
-
-        // North Label
-        bannerLabel.setForeground(Color.WHITE);
-        bannerLabel.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
-        panelNorth.add(bannerLabel, BorderLayout.CENTER);
-
-        add(panelNorth, BorderLayout.NORTH);
-
-        // Create the center panel with vertical BoxLayout so no grid row count needed
-        panelCenter = new JPanel();
-        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
-
         initializeRows();
+    }
 
-        JScrollPane scrollPane = new JScrollPane(panelCenter);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        add(scrollPane, BorderLayout.CENTER);
+    /**
+     * Sets the controller that the panel can call functions to
+     * @param controller    the main controller of the program
+     */
+    public void setController(MVC_Controller controller) {
+        this.controller = controller;
+    }
+
+    // Event listeners
+    /**
+     * Adds an event listener for the back button
+     * at the top left of the GUI
+     * @param listener      action that will happen when the back button is clicked
+     */
+    public void addBackButtonListener(ActionListener listener) {
+        backButton.addActionListener(listener);
+    }
+
+    /**
+     * Changes the button of a specific hotel to be able to
+     * manage the chosen one.
+     * @param hotelButton    button of the hotel selected
+     * @param hoetl          the instance of the hotel from the list of hotels
+     */
+    protected void addHotelButtonListener(JButton hotelButton, Hotel hotel) {
+        hotelButton.addActionListener(e -> controller.switchToSpecificHotelPanel(hotel));
     }
 }

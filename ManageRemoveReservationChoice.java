@@ -6,9 +6,13 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-/*
-* For choosing which reservation you will delete
-* */
+/**
+ * GUI Panel that shows all the reservations
+ * and the information for each reservation
+ * from a specific room. Clicking these
+ * reservations would lead to the deletion
+ * of the selected reservation.
+ */
 public class ManageRemoveReservationChoice extends JPanel {
     private ArrayList<Reservation> reservations;
     private MVC_Controller controller;
@@ -26,11 +30,61 @@ public class ManageRemoveReservationChoice extends JPanel {
     private int buttonHeight = 80;
     private int northLabelFontSize = 20;
 
+    /**
+     * Constructor for the panel that shows the different
+     * reservations for a chosen room in order to delete
+     * a selected reservation.
+     * @param room      room chosen to delete the reservations for
+     */
+    public ManageRemoveReservationChoice(Room room) {
+        this.reservations = room.getReservations();
+
+        setLayout(new BorderLayout());
+
+        // Setting north panel
+        JPanel panelNorth = new JPanel();
+        panelNorth.setLayout(new BorderLayout());
+        panelNorth.setBackground(Color.decode("#063970"));
+        panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
+
+        // Back Button
+        backButton = new JButton("\u2190");
+        backButton.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
+        panelNorth.add(backButton, BorderLayout.WEST);
+
+        // North Label
+        JLabel labelManageHotels = new JLabel("Select Reservation to Remove", JLabel.CENTER);
+        labelManageHotels.setForeground(Color.WHITE);
+        labelManageHotels.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
+        panelNorth.add(labelManageHotels, BorderLayout.CENTER);
+
+        add(panelNorth, BorderLayout.NORTH);
+
+        // Create the center panel with vertical BoxLayout so no grid row count needed
+        panelCenter = new JPanel();
+        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
+
+        initializeRows();
+
+        JScrollPane scrollPane = new JScrollPane(panelCenter);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        add(scrollPane, BorderLayout.CENTER);
+    }
+    
     // Getters and Setters
+    /**
+     * Sets the controller that the panel can call functions to
+     * @param controller    the main controller of the program
+     */
     public void setController(MVC_Controller controller) {
         this.controller = controller;
     }
 
+    /**
+     * Sets the rows of the panel to be buttons, with each button
+     * having a corresponding reservation that can be clicked
+     * to be deleted.
+     */
     public void initializeRows() {
         // Panel is cleared to it can reset everything
         panelCenter.removeAll();
@@ -74,42 +128,12 @@ public class ManageRemoveReservationChoice extends JPanel {
         panelCenter.revalidate();
         panelCenter.repaint();
     }
-
-    public ManageRemoveReservationChoice(Room room) {
-        this.reservations = room.getReservations();
-
-        setLayout(new BorderLayout());
-
-        // Setting north panel
-        JPanel panelNorth = new JPanel();
-        panelNorth.setLayout(new BorderLayout());
-        panelNorth.setBackground(Color.decode("#063970"));
-        panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
-
-        // Back Button
-        backButton = new JButton("\u2190");
-        backButton.setFont(new Font(UIManager.getFont("Button.font").getName(), Font.PLAIN, backButtonFontSize));
-        panelNorth.add(backButton, BorderLayout.WEST);
-
-        // North Label
-        JLabel labelManageHotels = new JLabel("Select Reservation to Remove", JLabel.CENTER);
-        labelManageHotels.setForeground(Color.WHITE);
-        labelManageHotels.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
-        panelNorth.add(labelManageHotels, BorderLayout.CENTER);
-
-        add(panelNorth, BorderLayout.NORTH);
-
-        // Create the center panel with vertical BoxLayout so no grid row count needed
-        panelCenter = new JPanel();
-        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
-
-        initializeRows();
-
-        JScrollPane scrollPane = new JScrollPane(panelCenter);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        add(scrollPane, BorderLayout.CENTER);
-    }
     
+    /**
+     * Adds an event listener for the back button
+     * at the top left of the GUI
+     * @param listener      action that will happen when the back button is clicked
+     */
     public void addBackButtonListener(ActionListener listener) {
         backButton.addActionListener(listener);
     }

@@ -6,6 +6,13 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * GUI Panel that is used to show all the reservations
+ * of a hotel without sorting using by room or by date.
+ * Can show all the specific information of a reservation
+ * such as the customer name, room name, check-in day, and
+ * check-out day
+ */
 public class ViewReservations extends JPanel {
     private JButton backButton;
     private JPanel panelCenter;
@@ -24,6 +31,12 @@ public class ViewReservations extends JPanel {
     
     private MVC_Controller controller;
     
+    /**
+     * Constructor for the panel and shows the all the different
+     * reservations for a chosen hotel. Uses a different function
+     * to create the rows of buttons for each reservation.
+     * @param hotel     hotel chosen to be viewed
+     */
     public ViewReservations(Hotel hotel) {
         this.reservedRooms = hotel.getAllReservedRooms();
         this.bannerLabel = new JLabel("Select Reservation to View", JLabel.CENTER);
@@ -60,16 +73,13 @@ public class ViewReservations extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
     
-    public void setController(MVC_Controller controller) {
-        this.controller = controller;
-    }
-    
-    public void addReservationButtonListener(JButton button, Reservation reservation, float roomType) {
-        button.addActionListener(e -> {
-            controller.switchToViewSelectedReservation(reservation, roomType);
-        });
-    }
-    
+    /**
+     * Function that creates the rows of buttons corresponding to
+     * the all the reservations of the hotel. The buttons also show
+     * specific information about the reservation in order to better
+     * identify which reservation is which. Uses a different function
+     * to add listeners to each reservation button.
+     */
     public void initializeRows() {
         // Panel is cleared to it can reset everything
         panelCenter.removeAll();
@@ -121,6 +131,32 @@ public class ViewReservations extends JPanel {
         panelCenter.repaint();
     }
     
+    /**
+     * Sets the controller that the panel can call functions to
+     * @param controller    the main controller of the program
+     */
+    public void setController(MVC_Controller controller) {
+        this.controller = controller;
+    }
+    
+    /**
+     * Adds a listener to the reservation buttons that commands the
+     * controller to view the specific reservation selected
+     * @param button            button of the reservation selected to be viewed
+     * @param reservation       reservation that corresponds to the button clicked and is from the list of reservations in the hotel
+     * @param roomType          the room multiplier of the room that can be used to determine the room type
+     */
+    public void addReservationButtonListener(JButton button, Reservation reservation, float roomType) {
+        button.addActionListener(e -> {
+            controller.switchToViewSelectedReservation(reservation, roomType);
+        });
+    }
+    
+    /**
+     * Adds an event listener for the back button
+     * at the top left of the GUI
+     * @param listener      action that will happen when the back button is clicked
+     */
     public void addBackButtonListener(ActionListener listener) {
         backButton.addActionListener(listener);
     }

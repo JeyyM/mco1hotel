@@ -6,6 +6,14 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * GUI Panel that shows all the rooms of a
+ * chosen hotel to be modified. It also has
+ * buttons for creating new rooms and deleting
+ * previously existing rooms. This inherits
+ * the ShowRooms class but modifies and overrides
+ * certain functions.
+ */
 public class ManageModifyRooms extends ShowRooms {
     private boolean removeMode;
     private ArrayList<String> toDelete = new ArrayList<>();
@@ -15,7 +23,43 @@ public class ManageModifyRooms extends ShowRooms {
     private JButton removeButton = new JButton("Remove Rooms");
     private Hotel hotel;
 
+    /**
+     * Constructor for the ManageModifyRooms GUI panel
+     * that uses the constructor for the class ShowRooms
+     * but adds an extra panel of 2 buttons for adding
+     * and removing rooms
+     * @param hotel     specific hotel that will have its rooms modified or have rooms added and removed
+     */
+    public ManageModifyRooms(Hotel hotel) {
+        super(hotel, hotel.getName(), new JLabel("Modify Rooms (" + hotel.getTotalRooms() + ")", JLabel.CENTER));
+        this.rooms = hotel.getAllRooms();
+        this.hotel = hotel;
+
+        // Edit rooms button
+        modifyButtons = new JPanel();
+        modifyButtons.setLayout(new FlowLayout(FlowLayout.CENTER));
+        modifyButtons.setBackground(Color.decode("#063970"));
+        modifyButtons.add(addButton);
+        modifyButtons.add(removeButton);
+        panelNorth.add(modifyButtons, BorderLayout.EAST);
+
+        removeButton.addActionListener(e -> {
+            if (toDelete.size() == 0) {
+                setRemoveMode();
+            }
+        });
+
+        add(panelNorth, BorderLayout.NORTH);
+
+        initializeRows();
+    }
+    
     // Updaters
+    /**
+     * Changes the banner label to match the number
+     * of total rooms the hotel would currently have
+     * after adding or removing rooms.
+     */
     public void updateShowRoomInfo() {
         bannerLabel.setText("Modify Rooms (" + hotel.getTotalRooms() + ")");
         initializeRows();
@@ -23,6 +67,10 @@ public class ManageModifyRooms extends ShowRooms {
         repaint();
     }
 
+    /**
+     * Changes the text of the remove button depending
+     * on if there are rooms selected to be deleted.
+     */
     public void updateRemoveButtonText() {
         if (toDelete.size() > 0) {
             removeButton.setText("Complete Deletion");
@@ -32,6 +80,12 @@ public class ManageModifyRooms extends ShowRooms {
     }
 
     // Remove mode Functions
+    /**
+     * Toggles the remove mode when the remove button
+     * is clicked. Changes the banner label and the
+     * remove button text depending on the state
+     * of the remove mode.
+     */
     public void setRemoveMode() {
         removeMode = !removeMode;
         if (removeMode) {
@@ -54,6 +108,13 @@ public class ManageModifyRooms extends ShowRooms {
         repaint();
     }
 
+    /**
+     * Changes the button of a specific room depending
+     * on whether this room is selected to be deleted
+     * or unselected.
+     * @param roomButton    button of the room selected or unselected to be deleted
+     * @param room          room that is selected and to be checked whether it is to be deleted
+     */
     public void editToDelete(JButton roomButton, Room room) {
         String roomName = room.getName();
         if (toDelete.contains(roomName)) {
@@ -66,25 +127,48 @@ public class ManageModifyRooms extends ShowRooms {
         updateRemoveButtonText();
     }
 
+    /**
+     * Getter for the list of the names of rooms to be deleted
+     * @return      the ArrayList of the names of rooms to be deleted
+     */
     public ArrayList<String> getToDelete() {
         return toDelete;
     }
 
     // for when the person did delete
+    /**
+     * Clears the names of rooms in the toDelete ArrayList
+     * after the rooms are deleted and toggles the remove
+     * mode off
+     */
     public void resetRemove() {
         toDelete.clear();
         setRemoveMode();
     }
 
+    /**
+     * Adds a listener for the add room button
+     * @param listener      action that will happen when the add room button is clicked
+     */
     public void addAddButtonListener(ActionListener listener) {
         addButton.addActionListener(listener);
     }
 
+    /**
+     * Adds a listener for the remove room button
+     * @param listener      action that will happen when the remove room button is clicked
+     */
     public void addRemoveButtonListener(ActionListener listener) {
         removeButton.addActionListener(listener);
     }
 
     // have to override since there are many different functionalities
+    /**
+     * Overridden method from the ShowRooms class created
+     * to change the functionality of the room buttons shown
+     * in this panel as each button has a significantly
+     * different purpose.
+     */
     @Override
     public void initializeRows() {
         // Panel is cleared to it can reset everything
@@ -151,29 +235,5 @@ public class ManageModifyRooms extends ShowRooms {
 
         panelCenter.revalidate();
         panelCenter.repaint();
-    }
-
-    public ManageModifyRooms(Hotel hotel) {
-        super(hotel, hotel.getName(), new JLabel("Modify Rooms (" + hotel.getTotalRooms() + ")", JLabel.CENTER));
-        this.rooms = hotel.getAllRooms();
-        this.hotel = hotel;
-
-        // Edit rooms button
-        modifyButtons = new JPanel();
-        modifyButtons.setLayout(new FlowLayout(FlowLayout.CENTER));
-        modifyButtons.setBackground(Color.decode("#063970"));
-        modifyButtons.add(addButton);
-        modifyButtons.add(removeButton);
-        panelNorth.add(modifyButtons, BorderLayout.EAST);
-
-        removeButton.addActionListener(e -> {
-            if (toDelete.size() == 0) {
-                setRemoveMode();
-            }
-        });
-
-        add(panelNorth, BorderLayout.NORTH);
-
-        initializeRows();
     }
 }

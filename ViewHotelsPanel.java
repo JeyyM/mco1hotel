@@ -6,9 +6,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-/*
- * This is for showing the list of hotels through view
- * */
+/**
+ * GUI panel for the selection of a hotel to be viewed.
+ */
 public class ViewHotelsPanel extends JPanel {
     private ArrayList<Hotel> hotels;
     private MVC_Controller controller;
@@ -26,22 +26,12 @@ public class ViewHotelsPanel extends JPanel {
     private int buttonHeight = 80;
     private int northLabelFontSize = 20;
 
-
-    // Getters and Setters
-    public void setHotels(ArrayList<Hotel> hotels) {
-        this.hotels = hotels;
-        initializeRows();
-    }
-
-    public void setController(MVC_Controller controller) {
-        this.controller = controller;
-    }
-
-    // Event listeners
-    public void addBackButtonListener(ActionListener listener) {
-        backButton.addActionListener(listener);
-    }
-
+    /**
+     * Constructor for the panel that shows the list of hotels
+     * that can be viewed. The rows of hotel buttons are created
+     * by a different function.
+     * @param hotels    the list of hotels in the system
+     */
     public ViewHotelsPanel(ArrayList<Hotel> hotels) {
         this.hotels = hotels;
 
@@ -76,8 +66,14 @@ public class ViewHotelsPanel extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
     }
-
+    
     // There are rows that will contain the grid of buttons
+    /**
+     * Creates the rows of buttons corresponding to each
+     * hotel that was created. Shows each hotel's number of
+     * rooms, reservations, and the monthly earnings.
+     * Also adds the listeners for each hotel button.
+     */
     public void initializeRows() {
         // Panel is cleared to it can reset everything
         panelCenter.removeAll();
@@ -126,5 +122,33 @@ public class ViewHotelsPanel extends JPanel {
 
         panelCenter.revalidate();
         panelCenter.repaint();
+    }
+
+    // Getters and Setters
+    /**
+     * Refreshes the list of hotels in the instance
+     * @param hotels    list of hotels in the controller
+     */
+    public void setHotels(ArrayList<Hotel> hotels) {
+        this.hotels = hotels;
+        initializeRows();
+    }
+
+    /**
+     * Sets the controller that the panel can call functions to
+     * @param controller    the main controller of the program
+     */
+    public void setController(MVC_Controller controller) {
+        this.controller = controller;
+    }
+
+    // Event listeners
+    /**
+     * Adds an event listener for the back button
+     * at the top left of the GUI
+     * @param listener      action that will happen when the back button is clicked
+     */
+    public void addBackButtonListener(ActionListener listener) {
+        backButton.addActionListener(listener);
     }
 }

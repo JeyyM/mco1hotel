@@ -1,7 +1,6 @@
 package mco1;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -527,7 +526,7 @@ public class Modals {
     }
     
     public static int showReserveRoomDialog(JFrame parent, MVC_Model model, Hotel hotel, Room room, String name, float cost, int startDay, int endDay, String discountCode) {
-        float hotelBasePrice = hotel.getBasePrice();
+        float hotelBasePrice = cost;
         float roomTypeMultiplier = room.getBaseRate();
         float discountMultiplier = 1.0f;
         float[] dayMultiplier = hotel.getDayMultipliers();

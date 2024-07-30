@@ -4,44 +4,32 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.border.EmptyBorder;
-/*
-*
-*
-*
-* This meant to copy the calendar but show buttons like
-*  | 25 (1.0x) for each one |
-*
-*
-* */
+
+/**
+ * GUI Panel that shows a calendar of days displaying
+ * how many rooms are available on each specific day.
+ */
 public class ViewRoomByDateCalendar extends JPanel {
-    private Room room;
-    private JLabel roomCountLabel;
-    private JLabel basePriceLabel;
-    private JButton renameHotelButton;
-    private JButton modifyRoomsButton;
-    private JButton modifyBasePriceButton;
-    private JButton removeReservationsButton;
-    private JButton deleteHotelButton;
     private JButton backButton;
-    private JLabel managingLabel;
 
     private JPanel panelNorth = new JPanel();
     private int fullWidth = 1050;
     private int menuHeight = 500;
     private int backButtonFontSize = 25;
-    private JPanel mainPanel;
     private int northHeight = 40;
     private int northLabelFontSize = 20;
 
     private JPanel[] weeks = new JPanel[5];
     private JButton[][] calendar = new JButton[5][7];
 
-    private String name, discountCode;
-    private float cost;
-    private Hotel hotel;
-
     private MVC_Controller controller;
 
+    /**
+     * Constructor for the panel that shows how many available rooms
+     * there are in a specific hotel per day. Uses a different function
+     * to add listeners to each day button.
+     * @param hotel     the hotel chosen to have the number of rooms available shown per day
+     */
     public ViewRoomByDateCalendar (Hotel hotel) {
         setLayout(new BorderLayout());
 
@@ -57,7 +45,7 @@ public class ViewRoomByDateCalendar extends JPanel {
         panelNorth.add(backButton, BorderLayout.WEST);
 
         // North Label
-        JLabel labelManageHotels = new JLabel("Select Day to Modify Multiplier", JLabel.CENTER);
+        JLabel labelManageHotels = new JLabel("Select Day to View Reserved Rooms", JLabel.CENTER);
         labelManageHotels.setForeground(Color.WHITE);
         labelManageHotels.setFont(new Font("Verdana", Font.BOLD, northLabelFontSize));
         panelNorth.add(labelManageHotels, BorderLayout.CENTER);
@@ -95,32 +83,11 @@ public class ViewRoomByDateCalendar extends JPanel {
         add(calendarPanel, BorderLayout.CENTER);
     }
 
-    //public ReserveSpecificHotelPanel(Hotel hotel, )
-
-    public void setController(MVC_Controller controller) {
-        this.controller = controller;
-    }
-    
-    public void recolorDays(Hotel hotel) {
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                if (!(i == 4 && j > 2)) {
-                    if (hotel.getDayMultipliers()[i * 7 + j] != 1.0f) {
-                        calendar[i][j].setBackground(Color.decode("#AFDDED"));
-                    }
-                    else {
-                        calendar[i][j].setBackground(new JButton().getBackground());
-                    }
-                    String buttonName = String.format("%d (%.1f)", (i * 7 + j + 1), hotel.getDayMultipliers()[i * 7 + j]);
-                    calendar[i][j].setText(buttonName);
-                }
-            }
-        }
-        
-        this.revalidate();
-        this.repaint();
-    }
-    
+    /**
+     * Adds a listener to each day button to command the controller
+     * to show the rooms reserved on a specific day in a hotel's calendar.
+     * @param hotel     hotel chosen to be viewed
+     */
     public void addCalendarListener(Hotel hotel) {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
@@ -134,6 +101,19 @@ public class ViewRoomByDateCalendar extends JPanel {
         }
     }
 
+    /**
+     * Sets the controller that the panel can call functions to
+     * @param controller    the main controller of the program
+     */
+    public void setController(MVC_Controller controller) {
+        this.controller = controller;
+    }
+
+    /**
+     * Adds an event listener for the back button
+     * at the top left of the GUI
+     * @param listener      action that will happen when the back button is clicked
+     */
     public void addBackButtonListener(ActionListener listener) {
         backButton.addActionListener(listener);
     }

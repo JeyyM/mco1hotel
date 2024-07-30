@@ -4,44 +4,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.border.EmptyBorder;
-/*
-*
-*
-*
-* This meant to copy the calendar but show buttons like
-*  | 25 (1.0x) for each one |
-*
-*
-* */
+
+/**
+ * GUI Panel that shows the reservation calendar of
+ * a chosen room when the room is selected to be viewed.
+ */
 public class ViewReservationCalendarByRoom extends JPanel {
-    private Room room;
-    private JLabel roomCountLabel;
-    private JLabel basePriceLabel;
-    private JButton renameHotelButton;
-    private JButton modifyRoomsButton;
-    private JButton modifyBasePriceButton;
-    private JButton removeReservationsButton;
-    private JButton deleteHotelButton;
     private JButton backButton;
-    private JLabel managingLabel;
 
     private JPanel panelNorth = new JPanel();
     private int fullWidth = 1050;
     private int menuHeight = 500;
     private int backButtonFontSize = 25;
-    private JPanel mainPanel;
     private int northHeight = 40;
     private int northLabelFontSize = 20;
 
     private JPanel[] weeks = new JPanel[5];
     private JButton[][] calendar = new JButton[5][7];
 
-    private String name, discountCode;
-    private float cost;
-    private Hotel hotel;
-
     private MVC_Controller controller;
 
+    /**
+     * Constructor that creates a calendar-like format of
+     * buttons for each day. Colors the buttons where a check-in
+     * or a check-out happens in orange, while colors the days where
+     * there are customers reserving the room in red.
+     * @param room      the selected room to be viewed
+     */
     public ViewReservationCalendarByRoom (Room room) {
         setLayout(new BorderLayout());
 
@@ -95,12 +84,19 @@ public class ViewReservationCalendarByRoom extends JPanel {
         add(calendarPanel, BorderLayout.CENTER);
     }
 
-    //public ReserveSpecificHotelPanel(Hotel hotel, )
-
+    /**
+     * Sets the controller that the panel can call functions to
+     * @param controller    the main controller of the program
+     */
     public void setController(MVC_Controller controller) {
         this.controller = controller;
     }
     
+    /**
+     * Adds a listener for each day button by sending the information
+     * back to the controller with both the room instance and the specific day
+     * @param room      the room chosen to be viewed
+     */
     public void addCalendarListener(Room room) {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
@@ -114,6 +110,11 @@ public class ViewReservationCalendarByRoom extends JPanel {
         }
     }
 
+    /**
+     * Adds an event listener for the back button
+     * at the top left of the GUI
+     * @param listener      action that will happen when the back button is clicked
+     */
     public void addBackButtonListener(ActionListener listener) {
         backButton.addActionListener(listener);
     }

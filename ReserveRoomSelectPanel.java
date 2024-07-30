@@ -1,15 +1,17 @@
 package mco1;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-/*
- * This is the panel for the selection of a room to reserve
- * */
+/**
+ * GUI Panel for reserving a specific room in a hotel
+ * that inherits the ShowRooms class and shares the same functionality.
+ */
 public class ReserveRoomSelectPanel extends ShowRooms {
+    /**
+     * Constructor for the panel for selecting a room to be reserved
+     * @param hotel     hotel chosen that will have its rooms displayed
+     * @param name      name of the hotel chosen
+     */
     public ReserveRoomSelectPanel(Hotel hotel, String name) {
         super(hotel, name, new JLabel("Select Room to Reserve", JLabel.CENTER));
     }

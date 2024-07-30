@@ -4,44 +4,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.border.EmptyBorder;
-/*
-*
-*
-*
-* This meant to copy the calendar but show buttons like
-*  | 25 (1.0x) for each one |
-*
-*
-* */
-public class ManageDateMultiplier extends JPanel {
-    private Room room;
-    private JLabel roomCountLabel;
-    private JLabel basePriceLabel;
-    private JButton renameHotelButton;
-    private JButton modifyRoomsButton;
-    private JButton modifyBasePriceButton;
-    private JButton removeReservationsButton;
-    private JButton deleteHotelButton;
-    private JButton backButton;
-    private JLabel managingLabel;
 
+/**
+ * GUI Panel that shows a calendar-like list
+ * of buttons that can be clicked to change the
+ * multiplier of a certain day
+ */
+public class ManageDateMultiplier extends JPanel {
+    private JButton backButton;
+    
     private JPanel panelNorth = new JPanel();
     private int fullWidth = 1050;
     private int menuHeight = 500;
     private int backButtonFontSize = 25;
-    private JPanel mainPanel;
     private int northHeight = 40;
     private int northLabelFontSize = 20;
 
     private JPanel[] weeks = new JPanel[5];
     private JButton[][] calendar = new JButton[5][7];
 
-    private String name, discountCode;
-    private float cost;
-    private Hotel hotel;
-
     private MVC_Controller controller;
 
+    /**
+     * Constructor for the panel.
+     * Buttons are days and have the multiplier
+     * for said day shown inside parentheses.
+     * @param hotel     hotel that will have its day multipliers changed
+     */
     public ManageDateMultiplier (Hotel hotel) {
         setLayout(new BorderLayout());
 
@@ -95,12 +84,20 @@ public class ManageDateMultiplier extends JPanel {
         add(calendarPanel, BorderLayout.CENTER);
     }
 
-    //public ReserveSpecificHotelPanel(Hotel hotel, )
-
+    /**
+     * Sets the controller that the panel can call functions to
+     * @param controller    the main controller of the program
+     */
     public void setController(MVC_Controller controller) {
         this.controller = controller;
     }
     
+    /**
+     * Recolors the buttons of the calendar to a different color
+     * if the multiplier is not the default.
+     * Called after a multiplier is changed.
+     * @param hotel     hotel that had its day multipliers changed
+     */
     public void recolorDays(Hotel hotel) {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
@@ -121,6 +118,12 @@ public class ManageDateMultiplier extends JPanel {
         this.repaint();
     }
     
+    /**
+     * Adds an event listener for each day button to call
+     * a controller function to change the multiplier
+     * for the selected day
+     * @param hotel     hotel that will have its day multipliers changed
+     */
     public void addCalendarListener(Hotel hotel) {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
@@ -134,6 +137,11 @@ public class ManageDateMultiplier extends JPanel {
         }
     }
 
+    /**
+     * Adds an event listener for the back button
+     * at the top left of the GUI
+     * @param listener      action that will happen when the back button is clicked
+     */
     public void addBackButtonListener(ActionListener listener) {
         backButton.addActionListener(listener);
     }
