@@ -11,7 +11,6 @@ import java.util.ArrayList;
  * */
 public class ViewHotelsPanel extends JPanel {
     private ArrayList<Hotel> hotels;
-    private HotelManager manager;
     private MVC_Controller controller;
 
     // Panel components
@@ -43,9 +42,8 @@ public class ViewHotelsPanel extends JPanel {
         backButton.addActionListener(listener);
     }
 
-    public ViewHotelsPanel(ArrayList<Hotel> hotels, HotelManager manager) {
+    public ViewHotelsPanel(ArrayList<Hotel> hotels) {
         this.hotels = hotels;
-        this.manager = manager;
 
         setLayout(new BorderLayout());
 

@@ -127,7 +127,7 @@ public class MVC_View extends JFrame {
         panel.add(panelCenter, BorderLayout.CENTER);
     }
 
-    MVC_View(ArrayList<Hotel> hotels, HotelManager manager) {
+    MVC_View(ArrayList<Hotel> hotels) {
         // Set title
         super("Hotel Manager");
         // Set all hotels

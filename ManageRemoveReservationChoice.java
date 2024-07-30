@@ -11,7 +11,6 @@ import java.util.ArrayList;
 * */
 public class ManageRemoveReservationChoice extends JPanel {
     private ArrayList<Reservation> reservations;
-    private HotelManager manager;
     private MVC_Controller controller;
 
     // Panel components

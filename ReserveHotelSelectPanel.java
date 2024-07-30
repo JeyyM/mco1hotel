@@ -25,8 +25,8 @@ public class ReserveHotelSelectPanel extends ShowHotels {
         });
     }
 
-    public ReserveHotelSelectPanel(ArrayList<Hotel> hotels, HotelManager manager) {
-        super(hotels, manager, new JLabel("Select a Hotel to Reserve", JLabel.CENTER));
+    public ReserveHotelSelectPanel(ArrayList<Hotel> hotels) {
+        super(hotels, new JLabel("Select a Hotel to Reserve", JLabel.CENTER));
         panelNorth.setPreferredSize(new Dimension(fullWidth, northHeight));
 
         // Create the input panel for name entry

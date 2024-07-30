@@ -2,17 +2,12 @@ package mco1;
 
 import java.util.ArrayList;
 
-/*
-* From what i know, this will later have to be edited to contain all code from Hotel, HotelManager, etc.
-* */
 public class MVC_Model {
     private ArrayList<Hotel> hotels;
-    private HotelManager manager;
 
-    public MVC_Model(ArrayList<Hotel> hotels, HotelManager manager) {
-        this.hotels = hotels;
-        this.manager = manager;
-    }
+    public MVC_Model(ArrayList<Hotel> hotels) {
+        this.hotels = hotels;}
+
 
     // Getters and Setters
     public int getHotelCount() {
@@ -23,45 +18,82 @@ public class MVC_Model {
         return hotels;
     }
 
-    public HotelManager getManager() {
-        return manager;
+    /**
+     * For checking if a name already exists
+     * @param givenName  Name to be checked from the list
+     * @return           True or False depending on if a name was found
+     */
+    public boolean checkName(String givenName) {
+        int hotelCount = hotels.size();
+        for (int i = 0; i < hotelCount; i++) {
+            if (hotels.get(i).getName().equals(givenName)) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    // Hotel Creation
+    /**
+     * For limiting to a Hotel to 50 rooms, returns different integers for different errors, used for hotel creation
+     * @param givenRoomCount     Number to validate
+     * @return                   Error code
+     */
+    public int checkRoomCount(int givenRoomCount) {
+        if (givenRoomCount < 1) {
+            return -1;
+        } else if (givenRoomCount > 50) {
+            return 0;
+        }
+        return 1;
+    }
+
+    /**
+     * For limiting to a Hotel to 50 rooms, returns different integers for different errors, used for hotel creation
+     * @param name          Name of new hotel
+     * @param roomCount     Number to validate
+     * @return                   Error code
+     */
     public boolean createHotel(String name, int roomCount) {
-        return manager.createHotel2(name, roomCount);
+        if (checkName(name) && checkRoomCount(roomCount) == 1) {
+            hotels.add(new Hotel(name, 1299.0f, roomCount));
+            return true;
+        }
+        return false;
     }
 
     public boolean isNameTaken(String name) {
-        return !manager.checkName(name);
+        return !checkName(name);
     }
 
     public boolean isValidRoomCount(int roomCount) {
-        return manager.checkRoomCount(roomCount) == 1;
+        return checkRoomCount(roomCount) == 1;
     }
 
     public void changeName(Hotel chosenHotel, String newHotelName) {
-        manager.changeName2(chosenHotel, newHotelName);
+        chosenHotel.setName(newHotelName);
     }
 
     public void addRooms(Hotel chosenHotel, int newAdds, float baseRate) {
-        manager.addRooms2(chosenHotel, newAdds, baseRate);
+        for (int i = 0; i < newAdds; i++) {
+            chosenHotel.addRoom(baseRate);
+        }
     }
 
     public void modifyBasePrice(Hotel chosenHotel, float basePrice) {
-        manager.modifyBasePrice2(chosenHotel, basePrice);
+        chosenHotel.setBasePrice(basePrice);
     }
     
     public void modifyDayMultiplier(Hotel chosenHotel, float multiplier, int day) {
-        manager.modifyDayMultiplier(chosenHotel, multiplier, day);
+        chosenHotel.setDayMultiplier(day, multiplier);
     }
     
     // Reservations
     public void reserveRoom(Room room, float cost, String name, int startDay, int endDay) {
-        manager.addReservation(room, cost, name, startDay, endDay);
+        Reservation reservation = new Reservation(name, cost, startDay, endDay, room.getName());
+        room.addReservation(reservation);
     }
     
     public void removeReservation(Hotel hotel, Reservation reservation) {
-        manager.removeReservation(hotel, reservation);
+        hotel.deleteReservation(reservation.getRoomName(), reservation.getStartDay(), reservation.getEndDay());
     }
 }

@@ -219,7 +219,7 @@ public class MVC_Controller {
         } else {
             view.getContentPane().removeAll();
             if (view.getViewHotelsPanel() == null) {
-                view.setViewHotelsPanel(new ViewHotelsPanel(model.getHotels(), model.getManager()));
+                view.setViewHotelsPanel(new ViewHotelsPanel(model.getHotels()));
             }
 
             // Back button
@@ -247,7 +247,7 @@ public class MVC_Controller {
         } else {
             view.getContentPane().removeAll();
             if (view.getManageHotelsPanel() == null) {
-                view.setManageHotelsPanel(new ManageHotelsPanel(model.getHotels(), model.getManager()));
+                view.setManageHotelsPanel(new ManageHotelsPanel(model.getHotels()));
             }
             view.getManageHotelsPanel().setController(this);
             view.getManageHotelsPanel().addBackButtonListener(e -> {
@@ -345,7 +345,7 @@ public class MVC_Controller {
         } else {
             view.getContentPane().removeAll();
             if (view.getReservationsPanel() == null) {
-                view.setReservationsPanel(new ReserveHotelSelectPanel(model.getHotels(), model.getManager()));
+                view.setReservationsPanel(new ReserveHotelSelectPanel(model.getHotels()));
             }
             view.getReservationsPanel().setController(this);
             view.getReservationsPanel().addBackButtonListener(e -> {

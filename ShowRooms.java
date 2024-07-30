@@ -11,7 +11,6 @@ import java.util.ArrayList;
  * */
 public class ShowRooms extends JPanel {
     protected ArrayList<Room> rooms;
-    protected HotelManager manager;
     protected JButton backButton;
     protected JPanel panelCenter;
     protected JLabel bannerLabel;

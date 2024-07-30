@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * */
 public class ManageHotelsPanel extends ShowHotels {
 
-    public ManageHotelsPanel(ArrayList<Hotel> hotels, HotelManager manager) {
-        super(hotels, manager, new JLabel("Select Hotel to Manage", JLabel.CENTER));
+    public ManageHotelsPanel(ArrayList<Hotel> hotels) {
+        super(hotels, new JLabel("Select Hotel to Manage", JLabel.CENTER));
     }
 }

@@ -11,11 +11,10 @@ import java.util.ArrayList;
  * */
 public class ShowHotels extends JPanel {
     protected ArrayList<Hotel> hotels;
-    protected HotelManager manager;
     protected JButton backButton;
     protected JPanel panelCenter;
-    JLabel bannerLabel;
-    JPanel panelNorth;
+    protected JLabel bannerLabel;
+    protected JPanel panelNorth;
 
     // Size variables
     protected int fullWidth = 680;
@@ -91,9 +90,8 @@ public class ShowHotels extends JPanel {
         panelCenter.repaint();
     }
 
-    public ShowHotels(ArrayList<Hotel> hotels, HotelManager manager, JLabel newBannerLabel) {
+    public ShowHotels(ArrayList<Hotel> hotels, JLabel newBannerLabel) {
         this.hotels = hotels;
-        this.manager = manager;
         this.bannerLabel = newBannerLabel;
 
         setLayout(new BorderLayout());
