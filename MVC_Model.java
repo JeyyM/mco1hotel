@@ -61,10 +61,6 @@ public class MVC_Model {
         return false;
     }
 
-    public boolean isNameTaken(String name) {
-        return !checkName(name);
-    }
-
     public boolean isValidRoomCount(int roomCount) {
         return checkRoomCount(roomCount) == 1;
     }

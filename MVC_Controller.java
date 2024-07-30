@@ -452,7 +452,6 @@ public class MVC_Controller {
         }
     }
 
-
     public void removeReservationFinal(Reservation reservation) {
         int answer = Modals.showRemoveReservationDialog(view, model, tempHotel, reservation);
 

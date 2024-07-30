@@ -11,48 +11,17 @@ public class Modals {
         modal.setLayout(new BorderLayout());
 
         // Panel for input fields
-        JPanel inputArea = new JPanel(new GridLayout(4, 2, 5, 5));
+        JPanel inputArea = new JPanel(new GridLayout(3, 2, 5, 5));
         JTextField nameEntry = new JTextField(20);
         JTextField roomCountEntry = new JTextField(20);
         JButton createButton = new JButton("Finish Creation");
-        JButton addImageButton = new JButton("Add Image");
 
         inputArea.add(new JLabel("Hotel Name:"));
         inputArea.add(nameEntry);
         inputArea.add(new JLabel("Room Count (Set to Base Rate):"));
         inputArea.add(roomCountEntry);
-        inputArea.add(new JLabel("Add Hotel Image:"));
-        inputArea.add(addImageButton);
         inputArea.add(new JLabel());
         inputArea.add(createButton);
-
-        // Panel for image gallery
-        JPanel imageGallery = new JPanel(new GridLayout(0, 2, 5, 5));
-        JScrollPane imageScrollPane = new JScrollPane(imageGallery);
-        imageScrollPane.setPreferredSize(new Dimension(100, 750));
-
-        ArrayList<ImageIcon> images = new ArrayList<>();
-
-        addImageButton.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            int returnValue = fileChooser.showOpenDialog(modal);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                ImageIcon originalImage = new ImageIcon(selectedFile.getAbsolutePath());
-                Image scaledImage = originalImage.getImage().getScaledInstance(200, 100, Image.SCALE_SMOOTH);
-                ImageIcon scaledIcon = new ImageIcon(scaledImage);
-                images.add(scaledIcon);
-
-                imageGallery.removeAll();
-                for (ImageIcon image : images) {
-                    imageGallery.add(new JLabel(image));
-                }
-                imageGallery.revalidate();
-                imageGallery.repaint();
-
-                JOptionPane.showMessageDialog(modal, "Image added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
 
         createButton.addActionListener(e -> {
             int roomCount;
@@ -65,7 +34,7 @@ public class Modals {
                 return;
             }
 
-            if (model.isNameTaken(newName)) {
+            if (!model.checkName(newName)) {
                 JOptionPane.showMessageDialog(modal, "Hotel name has been taken. Please choose another name.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -91,7 +60,6 @@ public class Modals {
         });
 
         modal.add(inputArea, BorderLayout.CENTER);
-        modal.add(imageScrollPane, BorderLayout.SOUTH);
         modal.pack();
         modal.setLocationRelativeTo(parent);
         modal.setVisible(true);
@@ -121,7 +89,7 @@ public class Modals {
                 return;
             }
 
-            if (model.isNameTaken(newName)) {
+            if (!model.checkName(newName)) {
                 JOptionPane.showMessageDialog(modal, "Hotel name has been taken. Please choose another name.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -174,7 +142,7 @@ public class Modals {
                 return;
             }
 
-            if (!model.isValidRoomCount(roomCount + chosenHotel.getTotalRooms())) {
+            if (!model.isValidRoomCount(roomCount + chosenHotel.getTotalRooms()) || roomCount < 1) {
                 JOptionPane.showMessageDialog(modal, "Invalid room count. Room count must be between 1 and 50.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -287,27 +255,9 @@ public class Modals {
         roomButton.setPreferredSize(new Dimension(300, 30));
         reservationButton.setPreferredSize(new Dimension(300, 30));
 
-        ArrayList<Room> availableRooms;
-
         dateButton.addActionListener(e -> {
             controller.switchToViewRoomsByDate(chosenHotel);
             modal.dispose();
-            /*
-            String input = JOptionPane.showInputDialog(modal, "Enter a Day to Check (1 to 31):", "Enter Date", JOptionPane.PLAIN_MESSAGE);
-            // for clicking cancel
-            if (input != null) {
-                try {
-                    int date = Integer.parseInt(input);
-                    if (date < 1 || date > 31) {
-                        JOptionPane.showMessageDialog(modal, "Please enter a valid date between 1 and 31.", "Error", JOptionPane.WARNING_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(modal, "Checking availability for date: " + date);
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(modal, "Please enter a valid number.", "Error", JOptionPane.WARNING_MESSAGE);
-                }
-            }
-            */
         });
 
         roomButton.addActionListener(e -> {

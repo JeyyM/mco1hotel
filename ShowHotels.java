@@ -151,7 +151,7 @@ public class ShowHotels extends JPanel {
      * Changes the button of a specific hotel to be able to
      * manage the chosen one.
      * @param hotelButton    button of the hotel selected
-     * @param hoetl          the instance of the hotel from the list of hotels
+     * @param hotel          the instance of the hotel from the list of hotels
      */
     protected void addHotelButtonListener(JButton hotelButton, Hotel hotel) {
         hotelButton.addActionListener(e -> controller.switchToSpecificHotelPanel(hotel));
