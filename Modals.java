@@ -3,6 +3,7 @@ package mco1;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 
 public class Modals {
@@ -10,18 +11,49 @@ public class Modals {
         JDialog modal = new JDialog(parent, "Create Hotel", true);
         modal.setLayout(new BorderLayout());
 
-        JPanel inputArea = new JPanel(new GridLayout(3, 2, 5, 5));
+        // Panel for input fields
+        JPanel inputArea = new JPanel(new GridLayout(4, 2, 5, 5));
         JTextField nameEntry = new JTextField(20);
         JTextField roomCountEntry = new JTextField(20);
         JButton createButton = new JButton("Finish Creation");
+        JButton addImageButton = new JButton("Add Image");
 
         inputArea.add(new JLabel("Hotel Name:"));
         inputArea.add(nameEntry);
         inputArea.add(new JLabel("Room Count (Set to Base Rate):"));
         inputArea.add(roomCountEntry);
-        // put a blank label to keep that area clear
+        inputArea.add(new JLabel("Add Hotel Image:"));
+        inputArea.add(addImageButton);
         inputArea.add(new JLabel());
         inputArea.add(createButton);
+
+        // Panel for image gallery
+        JPanel imageGallery = new JPanel(new GridLayout(0, 2, 5, 5));
+        JScrollPane imageScrollPane = new JScrollPane(imageGallery);
+        imageScrollPane.setPreferredSize(new Dimension(100, 750));
+
+        ArrayList<ImageIcon> images = new ArrayList<>();
+
+        addImageButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int returnValue = fileChooser.showOpenDialog(modal);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                ImageIcon originalImage = new ImageIcon(selectedFile.getAbsolutePath());
+                Image scaledImage = originalImage.getImage().getScaledInstance(200, 100, Image.SCALE_SMOOTH);
+                ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                images.add(scaledIcon);
+
+                imageGallery.removeAll();
+                for (ImageIcon image : images) {
+                    imageGallery.add(new JLabel(image));
+                }
+                imageGallery.revalidate();
+                imageGallery.repaint();
+
+                JOptionPane.showMessageDialog(modal, "Image added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
 
         createButton.addActionListener(e -> {
             int roomCount;
@@ -52,23 +84,20 @@ public class Modals {
                 return;
             }
 
-            // Success
-            if (model.createHotel(newName, roomCount)) {
-                updateHotelCount.run();
-                modal.dispose();
-                JOptionPane.showMessageDialog(parent, "Hotel successfully added.", "Success", JOptionPane.INFORMATION_MESSAGE);
-                // To update the hotels list
-                updateHotels.run();
-            } else {
-                JOptionPane.showMessageDialog(modal, "Failed to create hotel. Please try again.", "Error", JOptionPane.WARNING_MESSAGE);
-            }
+            model.createHotel(newName, roomCount);
+            updateHotelCount.run();
+            modal.dispose();
+            JOptionPane.showMessageDialog(parent, "Hotel successfully added.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            updateHotels.run();
         });
 
         modal.add(inputArea, BorderLayout.CENTER);
+        modal.add(imageScrollPane, BorderLayout.SOUTH);
         modal.pack();
         modal.setLocationRelativeTo(parent);
         modal.setVisible(true);
     }
+
 
     public static void showRenameHotelDialog(JFrame parent, MVC_Model model, Hotel chosenHotel, Runnable updateSpecificHotelPanel, Runnable updateHotels) {
         JDialog modal = new JDialog(parent, "Rename Hotel", true);

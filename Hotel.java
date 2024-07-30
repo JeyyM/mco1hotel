@@ -5,6 +5,7 @@
  */
 package mco1;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +25,15 @@ public class Hotel {
     private int originalTotalRooms = 0;
 
     //!!!
+    private ArrayList<ImageIcon> images = new ArrayList<>();
+    public void addImage(ImageIcon image) {
+        images.add(image);
+    }
+
+    public ArrayList<ImageIcon> getImages() {
+        return images;
+    }
+
     private int buttonIndex;
     public void setIndex(int index) {
         this.buttonIndex = index;
