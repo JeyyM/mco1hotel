@@ -9,6 +9,7 @@ public class Driver {
     public static void main(String[] args) {
         ArrayList<Hotel> hotels = new ArrayList<>();
 
+        // hi
         MVC_View gui = new MVC_View(hotels);
         MVC_Model model = new MVC_Model(hotels);
         MVC_Controller controller = new MVC_Controller(model, gui);
