@@ -24,41 +24,9 @@ public class Hotel {
     private int totalRooms = 0;
     private int originalTotalRooms = 0;
 
-    //!!!
-    private ArrayList<ImageIcon> images = new ArrayList<>();
-    public void addImage(ImageIcon image) {
-        images.add(image);
-    }
-
-    public ArrayList<ImageIcon> getImages() {
-        return images;
-    }
-
     private int buttonIndex;
-    public void setIndex(int index) {
-        this.buttonIndex = index;
-    }
-    public int getIndex() {
-        return buttonIndex;
-    }
+    
     private float[] dayMultipliers = new float[31];
-
-    public float[] getDayMultipliers() {
-        return dayMultipliers;
-    }
-
-    public float getTotalEarnings(){
-        float totalEarnings = 0.0f;
-        for (Room room : rooms) {
-            totalEarnings += room.getMonthlyEarnings();
-        }
-
-        return totalEarnings;
-    }
-
-    public void setDayMultiplier(int day, float multiplier) {
-        dayMultipliers[day] = multiplier;
-    }
 
     // Constructor
     /**
@@ -78,8 +46,6 @@ public class Hotel {
         }
 
         for (int j = 0; j < 31; j++){
-//            dayMultipliers[j] = 1.0f + (0.01f * (j+1));
-            //dayMultipliers[j] = 1.0f * (j+1);
             dayMultipliers[j] = 1.0f;
         }
     }
@@ -190,8 +156,10 @@ public class Hotel {
     }
     
     /**
-    * Adds a new room using the specific naming scheme for this hotel
-    */
+     * Adds a new room using the specific naming scheme for this hotel.
+     * Also creates the rooms with a certain type depending on the parameter received.
+     * @param baseRate  the type of the room to be created
+     */
     public void addRoom(float baseRate) {
         // Limited to 50 rooms
         if (this.totalRooms < 50) {
@@ -208,22 +176,6 @@ public class Hotel {
         } else {
             // More than 50 rooms
             System.out.printf("%s is full. Unable to add more rooms.\n", this.name);
-        }
-    }
-    
-    /**
-    * Prints the rooms of this hotel in a grid format with the rooms index
-    */
-    public void displayRooms() {
-        for (int i = 0; i < this.totalRooms; i++) {
-            System.out.printf("| [%02d] %s", i + 1, rooms.get(i).getName());
-            if ((i + 1) % 5 == 0) {
-                System.out.printf("| \n");
-            }
-        }
-
-        if (totalRooms % 5 != 0) {
-            System.out.printf("|\n");
         }
     }
     
@@ -313,5 +265,54 @@ public class Hotel {
         }
 
         return success;
+    }
+    
+    /**
+     * Setter for the index of the hotel button needed for adding
+     * a listener corresponding to it in the GUI panels
+     * @param index     the designated index of the hotel
+     */
+    public void setIndex(int index) {
+        this.buttonIndex = index;
+    }
+    
+    /**
+     * Getter for the index of the hotel button used when linking
+     * the hotel to its designated button
+     * @return  the designated index of the hotel
+     */
+    public int getIndex() {
+        return buttonIndex;
+    }
+    
+    /**
+     * Getter for the day multipliers for the 31 days of the hotel
+     * @return  the array of the day multipliers of the hotel
+     */
+    public float[] getDayMultipliers() {
+        return dayMultipliers;
+    }
+
+    /**
+     * Getter for the total earnings of the hotel from all the reservations
+     * @return  the total earnings of the hotel
+     */
+    public float getTotalEarnings(){
+        float totalEarnings = 0.0f;
+        for (Room room : rooms) {
+            totalEarnings += room.getMonthlyEarnings();
+        }
+
+        return totalEarnings;
+    }
+
+    /**
+     * Setter for the day multiplier of a
+     * chosen day in the hotel
+     * @param day           day chosen to be modified
+     * @param multiplier    valid multiplier
+     */
+    public void setDayMultiplier(int day, float multiplier) {
+        dayMultipliers[day] = multiplier;
     }
 }

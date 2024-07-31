@@ -16,29 +16,13 @@ public class Room {
     private ArrayList<Reservation> reservations = new ArrayList<>();
     // Sorted list of Reservation AL to keep a linear timeline
     ArrayList<ArrayList<Integer>> reservationTimeline = new ArrayList<>();
-
-    //!!!
     float baseRate = 1.0f;
-    public float getBaseRate(){
-        return this.baseRate;
-    }
-
-    public void setBaseRate(float baseRate) {
-        this.baseRate = baseRate;
-    }
-
     private int buttonIndex;
-    public void setIndex(int index) {
-        this.buttonIndex = index;
-    }
-    public int getIndex() {
-        return buttonIndex;
-    }
     
     /**
     * Constructor for Room
-    * 
-    * @param name   name of the specific room created
+    * @param name       name of the specific room created
+    * @param baseRate   the multiplier of the room, depending on its type
     */
     public Room(String name, float baseRate) {
         this.name = name;
@@ -90,111 +74,41 @@ public class Room {
 
         return total;
     }
-
+    
     /**
-    * Prints --------------------------
-    */
-    public void printCalendarLine() {
-        System.out.printf("------------------------------------\n");
+     * Getter for the base rate of the room, used to determine 
+     * the type of the room from Regular, Deluxe, or Executive
+     * @return  the multiplier of the cost depending on the room's type
+     */
+    public float getBaseRate(){
+        return this.baseRate;
     }
 
     /**
-    * Prints a 31-day calendar with markers on availability
-    */
-    public void displayCalendar() {
-        printCalendarLine();
-
-        for (int i = 1; i <= 31; i++) {
-            boolean found = false;
-            // Checks the items within the reservationTimeline
-            for (ArrayList<Integer> range : reservationTimeline) {
-                if (range.contains(i)) {
-                    // The day is a head or tail of a reservation
-                    if (range.get(0) == i || range.get(range.size()-1) == i) {
-                        System.out.printf("|{%02d}", i);
-                    } else {
-                        // Fully taken days in between head and tail
-                        System.out.printf("|*%02d*", i);
-                    }
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                // Day is free
-                System.out.printf("| %02d ", i);
-            }
-            // To set up 7-day rows
-            if (i % 7 == 0) {
-                System.out.printf("|\n");
-                printCalendarLine();
-            }
-        }
-        System.out.printf("|\n");
-        printCalendarLine();
+     * Setter for the multiplier of the room, used for changing
+     * the room's type when managing the rooms of a hotel
+     * @param baseRate  the new multiplier and type of the room
+     */
+    public void setBaseRate(float baseRate) {
+        this.baseRate = baseRate;
     }
 
     /**
-    * Same as displayCalendar but will include a preview of the dates picked
-    * @param checkInDay     Tail of day range
-    * @param checkOutDay    Head of day range
-    */
-    public void displayCalendar2(int checkInDay, int checkOutDay) {
-        // Array of days between check-in and check-out
-        ArrayList<Integer> daysCovered = new ArrayList<>();
-        for (int i = checkInDay; i <= checkOutDay; i++) {
-            daysCovered.add(i);
-        }
-
-        printCalendarLine();
-
-        // Print calendar with reservations and preview markers
-        for (int i = 1; i <= 31; i++) {
-            boolean found = false;
-
-            // Priority check for the preview markers
-            if (daysCovered.contains(i)) {
-                if (checkInDay == checkOutDay && checkInDay == i) {
-                    // If just a one-day reservation
-                    System.out.printf("|<%02d>", i);
-                } else if (i == checkInDay) {
-                    System.out.printf("|<%02d>", i);
-                } else if (i == checkOutDay) {
-                    System.out.printf("|>%02d<", i);
-                } else {
-                    System.out.printf("|=%02d=", i);
-                }
-                found = true;
-            }
-
-            // Prior reservations
-            if (!found) {
-                for (ArrayList<Integer> range : reservationTimeline) {
-                    if (range.contains(i)) {
-                        if (range.get(0) == i || range.get(range.size() - 1) == i) {
-                            System.out.printf("|{%02d}", i);
-                        } else {
-                            System.out.printf("|*%02d*", i);
-                        }
-                        found = true;
-                        // To stop checking after finding a reservation
-                        break;
-                    }
-                }
-            }
-
-            // If no reservation or preview marker, print day number
-            if (!found) {
-                System.out.printf("| %02d ", i);
-            }
-
-            if (i % 7 == 0) {
-                System.out.printf("|\n");
-                printCalendarLine();
-            }
-        }
-        System.out.printf("|\n");
-        printCalendarLine();
+     * Setter for the index of the room button needed for adding
+     * a listener corresponding to it in the GUI panels
+     * @param index     the designated index of the room
+     */
+    public void setIndex(int index) {
+        this.buttonIndex = index;
+    }
+    
+    /**
+     * Getter for the index of the room button used when linking
+     * the room to its designated button
+     * @return  the designated index of the reservation
+     */
+    public int getIndex() {
+        return buttonIndex;
     }
     
     /**
@@ -295,84 +209,4 @@ public class Room {
 
         return 0;
     }
-    
-    /**
-    * Displays the reservation details of a room
-    */
-    public void displayReservations() {
-        for (Reservation reservation : reservations) {
-            System.out.printf("By: %s\n", reservation.getCustomerName());
-            System.out.printf("     From Day %d to Day %d\n", reservation.getStartDay(), reservation.getEndDay());
-            System.out.printf("     Total cost: %.2f\n\n", reservation.getCost());
-        }
-    }
-
-    //MIGHT BE RETURNED FOR MCO2
-    /* displayOccupiedHours - loops through a reserved head or tail to show taken ranges
-                              since many reservations can be done as long as it is a head/tail
-       @param int day - Day to check
-       @return none - only prints invalid slots
-       Precondition: none
-    */
-//    public void displayOccupiedHours(int day) {
-//        ArrayList<String> occupiedHrs = new ArrayList<>();
-//
-//        // Puts all outputs in a String array
-//        for (Reservation reservation : reservations) {
-//            if (reservation.getDayRange().contains(day)) {
-//                int startHour = reservation.getStartHour();
-//                int endHour = reservation.getEndHour();
-//
-//                // If a reservation has the same start and end day, it is a one-day reservation
-//                if (reservation.getStartDay() == day && reservation.getEndDay() == day) {
-//                    // print limited range
-//                    occupiedHrs.add(startHour + " to " + endHour);
-//                    //The rest are for showing that it is part of a continuum
-//                } else if (reservation.getStartDay() == day) {
-//                    occupiedHrs.add(startHour + " to next day");
-//                } else if (reservation.getEndDay() == day) {
-//                    occupiedHrs.add("previous day to " + endHour);
-//                }
-//            }
-//        }
-//
-//        // Will print out taken strings
-//        for (String taken : occupiedHrs) {
-//            System.out.printf("%s\n", taken);
-//        }
-//    }
-
-    //MIGHT BE RETURNED FOR MCO2
-    /* checkHourAvailability - Checks for a head/tail day's hour inputs
-       @param int day - Day to check
-       @param int hour - Hour to check
-       @return boolean - If the timeslot is valid
-       Precondition: none
-    */
-//    public boolean checkHourAvailability(int day, int hour) {
-//        for (Reservation reservation : reservations) {
-//            // Checks the list of reservations timelines
-//            if (reservation.getDayRange().contains(day)) {
-//                int startHour = reservation.getStartHour();
-//                int endHour = reservation.getEndHour();
-//
-//                // The remaining checks are for in between days
-//                // One-days
-//                if (startHour == day && endHour == day) {
-//                    if (hour >= startHour && hour <= endHour) {
-//                        return false;
-//                    }
-//                    // Continuum ends
-//                } else if (reservation.getStartDay() == day) {
-//                    if (hour >= startHour && hour <= 24) {
-//                        return false;
-//                    }
-//                } else if (reservation.getEndDay() == day) {
-//                    if (hour <= endHour && hour >= 0) {
-//                        return false;
-//                    }                   }
-//            }
-//        }
-//        return true;
-//    }
 }

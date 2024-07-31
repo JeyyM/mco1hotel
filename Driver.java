@@ -1,6 +1,9 @@
 package mco1;
 import java.util.ArrayList;
 
+/**
+ * The driver of the program
+ */
 public class Driver {
 
     /**

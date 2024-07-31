@@ -9,12 +9,11 @@ import java.util.ArrayList;
 public class Reservation {
     private String customerName;
     private int startDay;
-//    private int startHour;
     private int endDay;
-//    private int endHour;
     private float cost = 0.0f;
     private ArrayList<Integer> dayRange = new ArrayList<>();
     private String roomName;
+    private int buttonIndex;
 
     /**
     * Constructor for the Reservation class
@@ -53,12 +52,6 @@ public class Reservation {
         return this.startDay;
     }
     
-    /*
-    public int getStartHour() {
-        return this.startHour;
-    }
-    */
-    
     /**
     * Getter for the check out day
     * @return   the day of the month the user will check out of the room
@@ -66,12 +59,6 @@ public class Reservation {
     public int getEndDay() {
         return this.endDay;
     }
-    
-    /*
-    public int getEndHour() {
-        return this.endHour;
-    }
-    */
     
     /**
     * Getter for the base cost of the room
@@ -97,12 +84,20 @@ public class Reservation {
         return this.roomName;
     }
     
-    private int buttonIndex;
-    
+    /**
+     * Setter for the index of the reservation button needed for adding
+     * a listener corresponding to it in the GUI panels
+     * @param index     the designated index of the reservation
+     */
     public void setIndex(int index) {
         this.buttonIndex = index;
     }
     
+    /**
+     * Getter for the index of the reservation button used when linking
+     * the reservation to its designated button
+     * @return  the designated index of the reservation
+     */
     public int getIndex() {
         return buttonIndex;
     }

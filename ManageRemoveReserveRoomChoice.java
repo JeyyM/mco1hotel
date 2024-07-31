@@ -17,7 +17,7 @@ public class ManageRemoveReserveRoomChoice extends ShowRooms {
      * Constructor for the panel and uses the constructor for
      * the ShowRooms class but changes the list of rooms to only
      * the rooms with reservations in it
-     * @param hotel 
+     * @param hotel     the hotel that will have its reservations removed
      */
     public ManageRemoveReserveRoomChoice(Hotel hotel) {
         super(hotel, hotel.getName(), new JLabel("Select Room to Remove a Reservation", JLabel.CENTER));
