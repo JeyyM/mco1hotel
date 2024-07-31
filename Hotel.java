@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package mco1;
+package mco2;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -173,9 +168,6 @@ public class Hotel {
             this.rooms.add(new Room(roomName, baseRate));
             this.totalRooms++;
             this.originalTotalRooms++;
-        } else {
-            // More than 50 rooms
-            System.out.printf("%s is full. Unable to add more rooms.\n", this.name);
         }
     }
     
@@ -192,30 +184,20 @@ public class Hotel {
         // Will loop through all deleteIds
         // Then loops through whole rooms array
         for (int j = 0; j < deleteIds.size(); j++) {
-            // Will set if a deletion was successful or not
-            boolean found = false;
             for (int i = 0; i < this.rooms.size(); i++) {
                 if (this.rooms.get(i).getName().equals(deleteIds.get(j))) {
 
                     // Room has a reservation, can't delete
                     if (this.rooms.get(i).getReservations().size() > 0) {
-                        System.out.printf("Room with ID %s was found with at least 1 reservation, cancelling...\n", deleteIds.get(j));
-                        found = true;
                         break;
                     }
 
                     // Deletes the item, will print that it successfully found a name
-                    System.out.printf("Room with ID %s was found, now deleting...\n", deleteIds.get(j));
                     this.rooms.remove(i);
                     counter++;
-                    found = true;
                     // upon finding a match, break will terminate the loop to save time
                     break;
                 }
-            }
-            // Name was not found
-            if (!found) {
-                System.out.printf("Room with ID %s not found.\n", deleteIds.get(j));
             }
         }
 

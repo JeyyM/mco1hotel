@@ -1,4 +1,4 @@
-package mco1;
+package mco2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +56,6 @@ public class ManageDateMultiplier extends JPanel {
         JPanel calendarPanel = new JPanel(new GridLayout(5, 1));
 
         for (int i = 0; i < 5; i++) {
-            // System.out.println("hi");
             weeks[i] = new JPanel(new GridLayout(1, 7));
             for (int j = 0; j < 7; j++) {
                 if (i == 4 && j > 2) {

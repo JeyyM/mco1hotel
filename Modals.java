@@ -1,4 +1,4 @@
-package mco1;
+package mco2;
 
 import javax.swing.*;
 import java.awt.*;

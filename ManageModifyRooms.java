@@ -1,4 +1,4 @@
-package mco1;
+package mco2;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -117,14 +117,19 @@ public class ManageModifyRooms extends ShowRooms {
      */
     public void editToDelete(JButton roomButton, Room room) {
         String roomName = room.getName();
-        if (toDelete.contains(roomName)) {
-            toDelete.remove(roomName);
-            roomButton.setBackground(null);
+
+        if (room.getReservations().size() > 0) {
+            JOptionPane.showMessageDialog(this, "Room has a reservation. Cannot choose to delete.", "Error", JOptionPane.WARNING_MESSAGE);
         } else {
-            toDelete.add(roomName);
-            roomButton.setBackground(Color.RED);
+            if (toDelete.contains(roomName)) {
+                toDelete.remove(roomName);
+                roomButton.setBackground(null);
+            } else {
+                toDelete.add(roomName);
+                roomButton.setBackground(Color.RED);
+            }
+            updateRemoveButtonText();
         }
-        updateRemoveButtonText();
     }
 
     /**

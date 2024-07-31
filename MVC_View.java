@@ -1,4 +1,4 @@
-package mco1;
+package mco2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,6 +49,7 @@ public class MVC_View extends JFrame {
         mainPanel = new JPanel(new BorderLayout());
         initializeContent(mainPanel);
         add(mainPanel, BorderLayout.CENTER);
+        addExitProgramListener();
 
         setSize(menuSize, menuHeight);
         setVisible(true);
@@ -134,6 +135,13 @@ public class MVC_View extends JFrame {
      */
     public void addReserveHotelListener(ActionListener listener) {
         reserveHotelButton.addActionListener(listener);
+    }
+    
+    /**
+     * Adds an event listener for the exit program button to exit the program
+     */
+    public void addExitProgramListener() {
+        exitProgramButton.addActionListener(e -> System.exit(0));
     }
 
     // Getters and Setters

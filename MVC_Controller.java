@@ -1,4 +1,4 @@
-package mco1;
+package mco2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -585,8 +585,6 @@ public class MVC_Controller {
      * @param startDay  check-in day of the customer
      */
     public void switchToReserveEndPanel(Room room, float cost, String name, int startDay) {
-        System.out.println("Start day : " + startDay);
-
         ReserveCalendar reserveEnd = new ReserveCalendar(room, cost, name, startDay);
         reserveEnd.setController(this);
         reserveEnd.addBackButtonEndListener(e -> switchToReserveCalendarStart(room, cost, name));
