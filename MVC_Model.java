@@ -151,14 +151,15 @@ public class MVC_Model {
     // Reservations
     /**
      * Function used to create the instance of a reservation
-     * @param room      the room being reserved
-     * @param cost      the final cost of the reservation
-     * @param name      the customer name
-     * @param startDay  the check-in day of the reservation
-     * @param endDay    the check-out day of the reservation
+     * @param room          the room being reserved
+     * @param cost          the final cost of the reservation
+     * @param name          the customer name
+     * @param startDay      the check-in day of the reservation
+     * @param endDay        the check-out day of the reservation
+     * @param discountCode  the discount code used for the reservation
      */
-    public void reserveRoom(Room room, float cost, String name, int startDay, int endDay) {
-        Reservation reservation = new Reservation(name, cost, startDay, endDay, room.getName());
+    public void reserveRoom(Room room, float cost, String name, int startDay, int endDay, String discountCode) {
+        Reservation reservation = new Reservation(name, cost, startDay, endDay, room.getName(), discountCode);
         room.addReservation(reservation);
     }
     

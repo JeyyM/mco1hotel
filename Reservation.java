@@ -14,6 +14,7 @@ public class Reservation {
     private ArrayList<Integer> dayRange = new ArrayList<>();
     private String roomName;
     private int buttonIndex;
+    private String discountCode;
 
     /**
     * Constructor for the Reservation class
@@ -22,13 +23,15 @@ public class Reservation {
     * @param startDay       day of the month when the customer checks in
     * @param endDay         day of the month when the customer checks out
     * @param roomName       name of the room that is being reserved
+    * @param discountCode   the valid discount code provided
     */
-    public Reservation(String customerName, float cost, int startDay, int endDay, String roomName) {
+    public Reservation(String customerName, float cost, int startDay, int endDay, String roomName, String discountCode) {
         this.customerName = customerName;
         this.cost = cost;
         this.startDay = startDay;
         this.endDay = endDay;
         this.roomName = roomName;
+        this.discountCode = discountCode;
         // Adds the occupied ranges for each reservation
         for (int i = startDay; i <= endDay; i++) {
             this.dayRange.add(i);
@@ -82,6 +85,14 @@ public class Reservation {
     */
     public String getRoomName(){
         return this.roomName;
+    }
+    
+    /**
+     * Getter for the discount code
+     * @return  the valid discount code provided
+     */
+    public String getDiscountCode() {
+        return this.discountCode;
     }
     
     /**

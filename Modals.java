@@ -185,12 +185,18 @@ public class Modals {
      * the hotel. Shows all the information about the reservation
      * and the room being reserved.
      * @param parent            JFrame where the dialog will be shown on
+     * @param hotel             hotel where the reservation happened to get the day multiplier for the per day breakdown
      * @param reservation       the actual reservation containing all the details to be shown
      * @param roomMultiplier    the multiplier for the rate of the room used to determine the type of the room
      */
-    public static void showReservationDetails(JFrame parent, Reservation reservation, float roomMultiplier) {
+    public static void showReservationDetails(JFrame parent, Hotel hotel, Reservation reservation, float roomMultiplier) {
         String title = "Reservation by " + reservation.getCustomerName();
         String roomType;
+        String discountCode = reservation.getDiscountCode();
+        float discountMultiplier = 1.0f;
+        int daysFree = 0;
+        int startDay = reservation.getStartDay();
+        int endDay = reservation.getEndDay();
         
         if (roomMultiplier == 1.2f) {
             roomType = "Deluxe";
@@ -202,9 +208,35 @@ public class Modals {
             roomType = "Regular";
         }
         
-        String message = String.format("Reservation by: %s\nRoom Reserved: %s\nRoom Type %s\nCheck In Day: %d\nCheck Out Day: %d\nCost: %.2f", reservation.getCustomerName(), reservation.getRoomName(), roomType, reservation.getStartDay(), reservation.getEndDay(), reservation.getCost());
+        StringBuilder message = new StringBuilder();
+        String baseInfo = String.format("Reservation by: %s\nRoom Reserved: %s\nRoom Type %s\nCheck In Day: %d\nCheck Out Day: %d\nCost: %.2f\n", reservation.getCustomerName(), reservation.getRoomName(), roomType, reservation.getStartDay(), reservation.getEndDay(), reservation.getCost());
+        message.append(baseInfo);
         
-        JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
+        if (discountCode.equals("I_WORK_HERE")) {
+            message.append(String.format("Discount code: %s (0.90x)\n", discountCode));
+            discountMultiplier = 0.9f;
+        }
+        else if (discountCode.equals("STAY4_GET1") && endDay - startDay >= 5) {
+            message.append(String.format("Discount code: %s (Day %d is free)\n", discountCode, startDay));
+            daysFree = 1;
+        }
+        else if (discountCode.equals("PAYDAY") && ((startDay <= 15 && endDay > 15) || (startDay <= 30 && endDay > 30))) {
+            message.append(String.format("Discount code: %s (0.93x)\n", discountCode));
+            discountMultiplier = 0.93f;
+        }
+        
+        ArrayList<Integer> daysBetween = new ArrayList<>();
+
+        for (int i = reservation.getStartDay(); i < reservation.getEndDay(); i++) {
+            daysBetween.add(i);
+        }
+        
+        message.append(String.format("Price Breakdown from Day %d to Day %d\n", startDay, endDay - 1));
+        for (int j = daysFree; j < daysBetween.size(); j++) {
+            message.append(String.format("Day %d (%.2fx): %.2f\n", daysBetween.get(j), hotel.getDayMultipliers()[daysBetween.get(j) - 1], hotel.getBasePrice() * roomMultiplier * hotel.getDayMultipliers()[daysBetween.get(j) - 1] * discountMultiplier));
+        }
+        
+        JOptionPane.showMessageDialog(parent, message.toString(), title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -665,7 +697,7 @@ public class Modals {
         int option = JOptionPane.showConfirmDialog(parent, message, "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
         if (option == JOptionPane.YES_OPTION) {
-            model.reserveRoom(room, cost, name, startDay, endDay);
+            model.reserveRoom(room, cost, name, startDay, endDay, discountCode);
             JOptionPane.showMessageDialog(parent, "Reservation successfully booked.", "Success", JOptionPane.INFORMATION_MESSAGE);
         }
 

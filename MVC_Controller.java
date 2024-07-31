@@ -288,7 +288,7 @@ public class MVC_Controller {
      * @param roomType      the multiplier of the room reserved
      */
     public void switchToViewSelectedReservation(Reservation reservation, float roomType) {
-        Modals.showReservationDetails(view, reservation, roomType);
+        Modals.showReservationDetails(view, tempHotel, reservation, roomType);
     }
 
     /**
