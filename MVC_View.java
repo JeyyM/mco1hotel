@@ -23,6 +23,7 @@ public class MVC_View extends JFrame {
     private JButton reserveHotelButton;
     private JButton exitProgramButton;
 
+
     // Panels of other pages
     private JPanel mainPanel;
     private ManageHotelsPanel manageHotelsPanel;
@@ -41,6 +42,9 @@ public class MVC_View extends JFrame {
     }
     public void addReserveHotelListener(ActionListener listener) {
         reserveHotelButton.addActionListener(listener);
+    }
+    public void addExitProgramListener() {
+        exitProgramButton.addActionListener(e -> System.exit(0));
     }
 
     // Getters and Setters
@@ -138,6 +142,7 @@ public class MVC_View extends JFrame {
         mainPanel = new JPanel(new BorderLayout());
         initializeContent(mainPanel);
         add(mainPanel, BorderLayout.CENTER);
+        addExitProgramListener();
 
         setSize(menuSize, menuHeight);
         setVisible(true);
